@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<head>
+    <title>HTML and CSS Test</title>
+</head>
+<!--Use embedded shader code for now, in order to remove async loading complexity.-->
+
+<style>
+
+ul:not(.dropdown-menu) {
+    /* Nav bar bg style */
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #ab9b97;
+    height: 48px;
+    border-bottom: 4px solid #8d807d;
+}
+
+li:not(.dropdown-menuitem) {
+    /* Any text in the nav bar that's also not a dropdown item */
+    float: left;
+    background-color: #ab9b97;
+    border-bottom: 4px solid #8d807d;
+}
+
+li a {
+    /* Any text in the nav bar */
+    display: block;
+    color: black;
+    padding: 12px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+li a:hover:not(.active) {
+    /* What happens when you hover over items in the nav bar */
+    background-color: #8d807d;
+    text-decoration: none;
+    color: black;
+}
+
+.dropdown-menuitem {
+    /* Nothing but a flag */
+}
+
+.header-text-only {
+    /* A class given to any li (not li a) to give it the proper appearance without any interaction; i.e. for headers */
+    display: block;
+    color: black;
+    padding: 12px;
+    text-decoration: none;
+    border-bottom: 4px solid #8d807d;
+}
+
+.panel-area {
+    /* Nothing yet */
+}
+
+
+</style>
+
+<body>
+    
+    <!-- CSS Sheet -->
+    <link href="src/Client/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Main menu navigation bar -->
+    <ul>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">File<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-menuitem"><a href="#" id="menuFileOpen">Open</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-menuitem"><a href="#" id="menuFileSave">Save</a></li>
+            </ul>
+        </li>
+        <li><a href="#menuPanel">Panel</a></li>
+        
+    </ul>
+       
+    <div class="panel-area">
+        <ul>
+            <li class="header-text-only">Code Editor</li>
+        </ul>
+    </div>
+    
+    <div class="panel-area" id="testDiv">
+        
+    </div>
+    
+    <br>
+    <b>In this test:</b>
+    <br>
+    -Created new empty div and gave it an id<br>
+    -Populated it at runtime
+       
+    <!-- the following says there are javascript source code contained in 
+         the external source files
+    -->
+    
+    <!-- client external library -->
+    <script src="src/Client/externalLib/jquery.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    
+    <!-- css for the jquery widget-->
+    <link rel="stylesheet" media="screen" type="text/css" href="JQueryWidgets/bootstrapcolorpicker/dist/css/bootstrap-colorpicker.css" />
+    
+    <!--    Bootstrap (CSS) lib-->
+    <script src="src/Client/externalLib/bootstrap.min.js"> </script>
+    
+    <!--    JQuery Widgets-->
+    <script src="JQueryWidgets/bootstrapcolorpicker/dist/js/bootstrap-colorpicker.js"></script>
+    
+    <!--    Ace -->
+    <script src="src/Client/externalLib/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="src/Client/externalLib/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+    <script src="src/Client/externalLib/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
+    <script src="src/Client/externalLib/worker-javascript.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="src/Client/View.js"> </script>
+    
+    <canvas id="GLCanvas" width="1280" height="720">
+        <!-- GLCanvas is the area we will draw in: a 640x480 area. -->
+        Your browser does not support the HTML5 canvas.
+        <!-- this message will show only if WebGL clearing failed -->
+    </canvas>
+        
+</body>

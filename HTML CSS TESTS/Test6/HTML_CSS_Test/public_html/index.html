@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<head>
+    <title>HTML and CSS Test</title>
+</head>
+<!--Use embedded shader code for now, in order to remove async loading complexity.-->
+
+<style>
+
+li:not(.dropdown-menuitem) {
+    /* Any text in the nav bar that's also not a dropdown item */
+    float: left;
+    background-color: #ab9b97;
+    border-bottom: 4px solid #8d807d;
+}
+
+li.li-right {
+    /* Any text in the nav bar that's also not a dropdown item */
+    float: right;
+    background-color: #ab9b97;
+    border-bottom: 4px solid #8d807d;
+}
+
+li a {
+    /* Any text in the nav bar */
+    display: block;
+    color: black;
+    padding: 12px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+li a:hover:not(.active) {
+    /* What happens when you hover over items in the nav bar */
+    background-color: #8d807d;
+    text-decoration: none;
+    color: black;
+}
+
+.nav-menu {
+    /* A screenwide brown line for all header bars */
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #ab9b97;
+    height: 48px;
+    border-bottom: 4px solid #8d807d;
+}
+
+.dropdown-menuitem {
+    /* Nothing but a flag */
+}
+
+.header-text-only {
+    /* A class given to any li (not li a) to give it the proper appearance in a nav menu,
+    but without any interaction; i.e. for headers */
+    display: block;
+    color: black;
+    padding: 12px;
+    text-decoration: none;
+    border-bottom: 4px solid #8d807d;
+}
+
+.panel-body {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #8d807d;
+    height: 480px;
+    border-bottom: 4px solid #8d807d;
+}
+
+</style>
+
+<body>
+<!-- Original body load (uncomment this!)
+<body onload="
+        var myGame = new MyGame();
+        gEngine.Core.initializeEngineCore('GLCanvas', myGame);
+            "> -->
+    
+    <!-- CSS Sheet -->
+    <link href="src/Client/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Main menu navigation bar -->
+    <ul class="nav-menu">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">File<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-menuitem"><a href="#" id="menuFileOpen">Open</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-menuitem"><a href="#" id="menuFileSave">Save</a></li>
+            </ul>
+        </li>
+        <li><a href="#" id="menuPanel">Panel</a></li>
+        
+    </ul>
+    
+    <!-- Panels and GLCanvas -->
+    <div id="codeEditor"></div>
+    <div id="panelLeft"></div>
+    
+    <!-- GL Canvas
+    <div class="col-md-7">
+        <canvas id="GLCanvas" width="640" height="480">
+            Your browser does not support the HTML5 canvas.
+        </canvas>
+    </div> -->
+    
+    <div id="panelRight"></div>
+    
+    <br>
+    <b>In this test:</b>
+    <br>
+    -Added some components -- the rest will be done in a similar fashion.  They are currently misplaced in the Objects Panel.<br>
+    -Added Texture select drop down box<br>
+    -Press the + Texture button to verify selection<br>
+    -All information can be obtained with the .val() function<br>
+    
+       
+    <!-- the following says there are javascript source code contained in 
+         the external source files
+    -->
+    
+    <!-- client external library -->
+    <script src="src/Client/externalLib/jquery.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    
+    <!-- css for the jquery widget-->
+    <link rel="stylesheet" media="screen" type="text/css" href="JQueryWidgets/bootstrapcolorpicker/dist/css/bootstrap-colorpicker.css" />
+    
+    <!--    Bootstrap (CSS) lib-->
+    <script src="src/Client/externalLib/bootstrap.min.js"> </script>
+    
+    <!--    JQuery Widgets-->
+    <script src="JQueryWidgets/bootstrapcolorpicker/dist/js/bootstrap-colorpicker.js"></script>
+    
+    <!--    Ace -->
+    <script src="src/Client/externalLib/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="src/Client/externalLib/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+    <script src="src/Client/externalLib/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
+    <script src="src/Client/externalLib/worker-javascript.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="src/Client/View.js"> </script>
+    
+    <canvas id="GLCanvas" width="1280" height="720">
+        <!-- GLCanvas is the area we will draw in: a 640x480 area. -->
+        Your browser does not support the HTML5 canvas.
+        <!-- this message will show only if WebGL clearing failed -->
+    </canvas>
+        
+</body>
