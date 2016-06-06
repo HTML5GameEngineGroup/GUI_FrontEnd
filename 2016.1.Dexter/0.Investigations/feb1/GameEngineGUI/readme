@@ -1,0 +1,10 @@
+Updates:
+
+Disabled adding new scripts via component.  Instead, go Panels Menu → Edit Script (Update) to get an editor.
+    Determined how to make and customize a new panel.  As such, I’ve newly implemented the Ace text editor and fit it into a panel.
+    This editor can submit and retrieve the proper script.
+    Added an OK button.  Click it to apply the script (you can also see it in the old component).
+    The same error handling from before has been applied to Ace.  If your script has a bug, it is disabled until you edit it again, and you get an appropriate message.
+Implemented saving.  The GlobalCounter, html code of the objectlist, and every object’s content array will be merged into one object, which is converted into a JSON file and put into local storage.
+Implemented loading.  The JSON file is recovered (by name) from the local storage and then parsed.  The GlobalCounter and objectlist html is restored first.  Then, each content array is parsed.  For each, I build a new ObjectContent, GameObject, and Renderable from scratch and populate it with information.
+Determined how to access a button from within a panel (e.g. OK button in JavaScript Editor).
