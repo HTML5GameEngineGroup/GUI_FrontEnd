@@ -1,0 +1,15 @@
+Updates:
+
+Implemented a function editor for all GameObjects and an editor for each individual object.
+    All code from the function editor is inherited by all instances of all objects.
+    All code from the other editor is only inherited by instances of that particular object.
+    Clicking the play button runs the code once.
+Implemented Instantiation/Prefab.
+    Clicking a new game object creates both an object (invisible) and an instance (the square you see).
+    The editor is set to modify the object.
+    Everything on the canvas is considered an instance and you can left-click any instance while the play button is not pressed to edit it relative to its object (x/y/rotation is additive, w/h is multiplicative).  All of this saves to their respective variables, separate from that of the object.
+    Bug: for some reason you cannot click an instance and click to another instance after.  For now you have to click a new object in-between, then click again to the other instance.
+    You create instances by clicking the button with a glyphicon that appears under the object you want.  This creates a new instance at (0,0) relative to the original object’s location.
+    Instances inherit code in the manner mentioned in the first update of this list.
+    Instances cannot receive names or color variations from their objects.
+The code editors (update, function, code) have all been modified to support instantiation and prefab, even if the selected object is an instance.  Draw and update functions have been modified to support the changes as well.
