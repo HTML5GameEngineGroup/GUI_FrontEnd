@@ -1,0 +1,5 @@
+Updates:
+
+Added GL canvas and details panel
+Added right-click functionality for details (opens data in details panel -- doesn't save anything yet) and instantiate
+Added ability to download .js files
