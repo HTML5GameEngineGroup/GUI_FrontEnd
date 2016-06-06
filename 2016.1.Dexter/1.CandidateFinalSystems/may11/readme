@@ -1,0 +1,8 @@
+Updates:
+
+Added scene right-click menu and instance-delete
+Added a beige highlight to the selected item (in menus)
+Added color
+Added file operations (file IO with JSZip and FileSaver)
+Created and saved a test game
+Updated game engine to a later version, while making appropriate changes
