@@ -1,0 +1,5 @@
+Updates:
+
+Found a way to dynamically modify CSS when using class-based identification rather than id-based
+This allowed the styling to be less redundant. However, it also caused an undesirable tabbing effect (notice how the editor is slightly offset)
+Added the editor, but haven't resized it yet
