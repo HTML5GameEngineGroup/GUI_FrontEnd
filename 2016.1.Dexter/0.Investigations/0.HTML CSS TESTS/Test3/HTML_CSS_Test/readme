@@ -1,0 +1,6 @@
+Updates:
+
+Created new panel type with shorter size, also populated at runtime
+Used id-based CSS instead of class-based to allow for CSS modification at runtime, but only for a specific element (not yet sure if this will even be used)
+Added button click functionality directly (done differently than the other buttons, or it won't work)
+Reorganized some of the CSS classes since the "not" class checks were getting out of hand
