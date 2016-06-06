@@ -1,0 +1,7 @@
+Updates:
+
+Instantiate function added: instantiate(yourObjectHere);
+		In Breakout, press Space to instantiate a ball in the middle of the game.
+		Also, in Breakout, I added win/lose “text”
+Fixed bouncing bug in game by changing collision to be collisionEnter instead of Stay
+Code editors are now closed properly when the game is cleared (file new, file open)
