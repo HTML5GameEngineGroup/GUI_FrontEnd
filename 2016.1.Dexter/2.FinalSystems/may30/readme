@@ -1,0 +1,3 @@
+Updates:
+
+The game will now temporarily save before running, and re-load after stopping.  This prevents modification to the game during running.
