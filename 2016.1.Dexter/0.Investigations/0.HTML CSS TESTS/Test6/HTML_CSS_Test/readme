@@ -1,0 +1,6 @@
+Updates:
+
+Added some components -- the rest will be done in a similar fashion. They are currently misplaced in the Objects Panel.
+Added Texture select drop down box
+Press the + Texture button to verify selection
+All information can be obtained with the .val() function
