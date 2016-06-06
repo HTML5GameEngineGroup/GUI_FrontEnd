@@ -5,3 +5,4 @@ Instantiate function added: instantiate(yourObjectHere);
 		Also, in Breakout, I added win/lose “text”
 Fixed bouncing bug in game by changing collision to be collisionEnter instead of collisionStay
 Code editors are now closed properly when the game is cleared (file new, file open)
+The game is now saved temporarily before running.  After stopping the game, it is re-loaded.  This prevents runtime modifications (e.g. destroying a brick would otherwise permanently destroy the brick).
