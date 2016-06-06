@@ -1,0 +1,23 @@
+Updates:
+
+Added a temporary component to the Edit Object panel for testing purposes.
+Added support for inserting and running scripts.  It's added for update but should be extendable to other key functions.
+Added support for script error handling.
+    If your script has a bug, it will give you exactly 1 error message and it will NOT crash the page.
+    The error message will tell you what was wrong with your script (the console’s standard error message).
+    Then it will prevent the script from running but it will let you edit it.
+    If you edit it, it will try to run again.
+    This will repeat until the user enters a bug-free script.
+Added some hard-coded script limitations.  Currently, scripts will not allow the terms: $, document, window.  This blocks some of the ways to tamper with the UI.
+
+Here are some scripts to test:
+
+Display to console
+console.log(“hello world”);
+
+Animate something
+var xf = this.getXform(); xf.setXPos(xf.getXPos()+0.01);
+
+Error message
+console.log(100));
+$(document)
