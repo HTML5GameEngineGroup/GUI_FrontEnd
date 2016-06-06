@@ -1,0 +1,16 @@
+Updates:
+
+Reworked some existing features to support each Prefab having a list of GOs.
+
+(Before -> After)
+ParentGameObject (PGO) -> Now called Prefab
+GlobalObjectList -> Now called GlobalPrefabList
+GlobalInstanceList -> Deleted
+Each GO had a reference to PGO -> Each Prefab has a list of its GOs, and each GO has a reference back to the Prefab
+Function-create/edit and Instance-create loop through all instances to distribute the functions -> 
+They loop through only the instances of the prefab now.  I currently have a crude solution by using a WrappedFunction class and referencing that instead and re-declaring the function inside.  But, some functions are Functions; this is not the solution I want.
+
+Bug fixes/small changes:
+update() has been properly added to Prefab, which ensures all its instances get it.  The editor will now open properly when create/edit is clicked when the editor is already open, and when switching instances/prefabs.
+Making a new instance will ensure all old functions are transferred over.
+Each instance has its own xform (not "relative" anymore).
