@@ -1,0 +1,5 @@
+Updates:
+
+Implemented choose function.  This allows dynamic modification of the functions of objects (ParentGameObject), via any function that the user specifies, existing or not.
+    The play button is programmed to run the function “afunction()”, which is NOT defined in the code.  To test, we can dynamically define it.
+Literature Review Slides were added this week (so there is less code)
