@@ -1,0 +1,7 @@
+Updates:
+
+Object subclassing works now, but only default names so far (renaming not yet supported)
+Details panel is dynamic now and can be updated
+Code edits and saves, but I didn’t implement editing the entire code file at once
+The scene works
+Instantiation is implemented
