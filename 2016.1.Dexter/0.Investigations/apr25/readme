@@ -1,0 +1,18 @@
+Updates:
+
+Objects can dynamically change between a regular Class & GO (resets code to default).  Dynamic inheritance and un-inheritance works, but for now I don’t know how to deal with the constructor so I will reset the whole code.
+Renaming a class is now supported (more complicated than it sounds).  It remakes the class with the new name. Instances do it too since the “old” class is no longer any good.  But, the user must fix all related code manually (who knows where the user references his/her old class names).  Also the new name is rejected if not unique, while renaming.
+File -> String now works.  I will actually use it later.
+Code editor OK button now saves the code to the object for easy retrieval, as well as eval()-ing it to window[] to be used -- no iteration or parsing.  You will no longer see all the methods in GameObject (except a few that I selected, such as “update”) due to this process.
+Finally, instantiation of classes and GOs works.  Added right-click menu to instances.  Details will open up the panel.  Test it to see more.
+
+UI-related (both big and small):
+Bottom panel added.  Goal of this panel is to separate “scene-specific” items from “global” items, and allow the user to see both types at the same time.
+Switching tabs added.  Un-implemented tabs are: Textures, Scenes, Cameras.
+GLCanvas resizes/positions properly.  It will stay in proportion no matter what and optimize its area to be as large as possible.
+GLCanvas will stay centered at all times.
+Panel right disappears when the window is too thin to hold it and will reappear when there is enough room.
+Removed scroll bar for app (not needed at all).  However, panels might need their own scroll bars.
+Line breaks properly deleted when a list item is deleted.
+Tabs highlight brightly when hovered, and the current tab has a special look.
+Right-click menu progress: Object - all of it works.  Instance - only detail works.
