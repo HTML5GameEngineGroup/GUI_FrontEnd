@@ -1,0 +1,5 @@
+Updates:
+
+Added the objects menu and button
+Resizable menu height
+Right-click function disabled... if you right-click on one of the GameObjects, however, you get a custom menu
