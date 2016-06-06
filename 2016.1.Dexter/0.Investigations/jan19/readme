@@ -1,0 +1,6 @@
+Updates:
+
+Removed redundant reference variables in ObjectContent.  It directly edits the reference object now.
+Fixed a bug that allows the ObjectContent wrapper class to add new Content by making EditorPanel create new components when one doesn't exist.
+Implemented draggable on GLCanvas, panelEditObject and panelEditCamera.
+Implemented resizable GLCanvas with a window.onresize event.  It will always force itself to be 70% of the window width, with a height set based on the original proportions (640x480).  Also, edit panels are 250 pixels wide at all times.
