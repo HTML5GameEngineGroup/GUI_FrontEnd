@@ -1,0 +1,5 @@
+Updates:
+
+Second bar and some bottom-borders to distinguish the bars
+Main buttons are now bold (different than regular text)
+Headers like "Color Editor" have the same formatting but don't have hover or click interactions; use the new class "header-text-only"
