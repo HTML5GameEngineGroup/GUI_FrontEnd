@@ -1,0 +1,13 @@
+Updates:
+
+GO pixelTouch implementation change.
+		Neither GO rotated: Bbox to bbox
+		One or both GOs rotated: Both do circle to circle with an interior circle bound.  This is troublesome for large rectangles, though, since a majority of their mass will not be collidable.
+New bug found and fixed: [WIP game -> File-open a game] now works properly
+Repeated loading of the same file bug is now fixed.
+Camera bug is fixed, and cameras can now use interpolation.
+Floating code editors implemented
+    Allows multiple code editors as well, including drop shadow.
+    Also, if you mouse down a different editor, it will also appear on top.
+    Right-click menus had their z-indices modified to appear on top of everything (because they should), including the editors.
+    If the editor for a certain object is already opened, and you want to open another, the proper editor is just brought to the top so you can see it.  This is done with hash map (object id -> editor id).
