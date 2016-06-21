@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<head>
+    <title>JQueryUI tabs</title>
+	
+    <script src="jquery.js"></script>
+    <script src="jquery-ui.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"> </script>
+	<link rel="stylesheet" href="jquery-ui.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	
+	<script>
+		$( document ).ready(function() {
+			
+		
+			var tabs1 = $("#panelLeft").tabs();
+			
+			/*$("#sortable1").sortable({
+				opacity: 0.5,
+				stop: function() { //Called when any element is moved
+					tabs1.tabs("refresh");
+				},
+			});*/
+			
+	
+			//Resizing
+			$("#panelLeft").resizable({
+				handles: "e"
+			});
+			
+			
+			
+			var form;
+			var dialog = $( "#dialog" ).dialog({
+					autoOpen: false,
+					height: 300,
+					width: 350,
+					modal: false,
+					
+					
+			});
+			
+			$("#tab1header").draggable( {
+				
+				revert: false,
+				start: function(event, ui) {
+					ui.helper.data('dropped', false);
+				},
+				stop: function(event, ui) {
+					console.log("stop: dropped=" + ui.helper.data('dropped'));
+					dialog.dialog("open");
+					
+				}
+
+			});
+			
+			
+			
+			
+			
+		});
+		
+		
+	</script>
+</head>
+
+<body>
+    <div id="panelLeft">
+		<ul id="sortable1" class="connectedSortable">
+			<li id="tab1header"><a href="#tab1">Objects</a></li>
+			<li id="tab2header"><a href="#tab2">Textures</a></li>
+		</ul>
+		<div id="tab1">
+			<p>Objects content</p>
+		</div>
+		
+		<div id="tab2">
+			<p>Textures content </p>
+		</div>
+	</div>
+	
+	<div id="dialog" title="Basic dialog">
+		<p>Dialog example</p>
+	</div>
+</body>
+</html>
