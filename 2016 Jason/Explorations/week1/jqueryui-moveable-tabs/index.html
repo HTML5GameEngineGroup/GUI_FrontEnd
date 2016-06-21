@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<head>
+    <title>JQueryUI tabs</title>
+	
+    <script src="jquery.js"></script>
+    <script src="jquery-ui.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"> </script>
+	<link rel="stylesheet" href="jquery-ui.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	
+	<script>
+		$( document ).ready(function() {
+			var tabs1 = $("#panelLeft").tabs();
+			
+			$("#sortable1").sortable({
+				opacity: 0.5,
+				stop: function() { //Called when any element is moved
+					tabs1.tabs("refresh");
+				},
+				
+				receive : function(event, ui) { //Called when this set of tabs gets a new element
+				    var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> html
+					//Get the href, which contains the tab name that we need to move
+					var href = linkHTML.match(/href="([^"]*)/)[1]; 
+					var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
+					
+					//Remove the div from where it was and move it into this panel's div
+					$(href).detach().appendTo("#panelLeft");
+					
+					tabs1.tabs("refresh");
+					return true;
+				}
+					
+				
+			});
+			
+			var tabs2 = $("#panelBottom").tabs();
+			$("#sortable2").sortable({
+				opacity: 0.5,
+				stop: function() {
+					tabs2.tabs("refresh");
+				},
+				
+				receive : function(event, ui) {
+				    var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> information
+					//Get the href, which contains the tab name that we need to move
+					var href = linkHTML.match(/href="([^"]*)/)[1]; 
+					var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
+
+					$(href).detach().appendTo("#panelBottom");
+					
+					tabs2.tabs("refresh");
+					return true;
+				}
+			});
+			
+			var tabs3 = $("#panelRight").tabs();
+			$("#sortable3").sortable({
+				opacity: 0.5,
+				stop: function() {
+					tabs3.tabs("refresh");
+					
+				},
+				
+				receive : function(event, ui) {
+				    var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> information
+					//Get the href, which contains the tab name that we need to move
+					var href = linkHTML.match(/href="([^"]*)/)[1]; 
+					var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
+
+					$(href).detach().appendTo("#panelRight");
+					
+					tabs3.tabs("refresh");
+					return true;
+				}
+
+			});
+			
+			//Connect the three panels so they can move tabs between each other
+			$( "#sortable1, #sortable2, #sortable3").sortable({
+				opacity: 0.5,
+				connectWith: ".connectedSortable"
+				
+			});
+		
+			
+		});
+		
+		
+	</script>
+</head>
+
+<body>
+    <div id="panelLeft">
+		<ul id="sortable1" class="connectedSortable">
+			<li class="active"><a href="#tab1">Objects</a></li>
+			<li><a href="#tab2">Textures</a></li>
+		</ul>
+		<div id="tab1">
+			<p>Objects content</p>
+		</div>
+		
+		<div id="tab2">
+			<p>Textures content </p>
+		</div>
+	</div>
+	
+	<div id="panelBottom"">
+		<ul id="sortable2" class="connectedSortable">
+			<li><a href="#tab3">Scenes</a></li>
+			<li><a href="#tab4">Cameras</a></li>
+			<li><a href="#tab5">Instances</a></li>
+		</ul>
+		<div id="tab3">
+			<p>Scenes content</p>
+		</div>
+		<div id="tab4">
+			<p>Cameras content </p>
+		</div>
+		<div id="tab5">
+			<p>Instances content </p>
+		</div>
+	</div>
+	
+	<div id="panelRight">
+		<ul id="sortable3" class="connectedSortable">
+			<li><a href="#tab6">Details</a></li>
+		</ul>
+		<div id="tab6">
+			<p>Details content</p>
+		</div>
+		
+	</div>
+	
+</body>
+</html>

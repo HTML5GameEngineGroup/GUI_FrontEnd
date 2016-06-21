@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Draggable - Default functionality</title>
+  <link rel="stylesheet" href="jquery-ui.css">
+  <script src="jquery.js"></script>
+  <script src="jquery-ui.js"></script>
+
+  <style>
+  #draggable { width: 150px; height: 150px; padding: 0.5em; }
+  
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+	}
+
+  li {
+    display: inline;
+  }
+  </style>
+  <script type="text/javascript">
+ 
+$( init );
+ 
+function init() {
+  $('#hometag').draggable();
+  $('#newstag').draggable();
+  $('#contact').draggable();
+}
+ 
+</script>
+</head>
+<body>
+ <ul class="nav-menu">
+ 
+
+  <div id="hometag">
+  <li><a href="#home">Objects</a></li>
+  </div>
+  
+  <div id="newstag">
+  <li><a href="#news">Textures</a></li>
+  </div>
+  
+ 
+  
+</ul>
+
+ 
+ 
+</body>
+</html>
