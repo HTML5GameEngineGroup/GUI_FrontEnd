@@ -17,10 +17,11 @@
 	}
 
 	#panelBottom {
-		position: fixed;
+		position: fixed !important;
 		bottom: 0;
 		height: 234px;
 		width: 100%;
+		
 	}
 	#panelLeft {
     float: left;
@@ -33,9 +34,9 @@
 	<script>
 		$( document ).ready(function() {
 			
-		
 			var tabs2 = $("#panelBottom").tabs();
 			
+			//tabs2.height($(document).height() - $("#panelBottom").css("height"));
 			$("#sortable2").sortable({
 				opacity: 0.5,
 				stop: function() {
@@ -58,7 +59,8 @@
 		
 			var tabs1 = $("#panelLeft").tabs();
 			
-			tabs1.height($("#panelBottom").css("top")); //Set left panel height to the top of bottom panel
+			//tabs1.height($("#panelBottom").css("top")); //Set left panel height to the top of bottom panel
+			tabs1.height($(document).height() - parseInt($("#panelBottom").css("height")) - 10);
 			
 			$("#sortable1").sortable({
 				opacity: 0.5,
@@ -84,7 +86,7 @@
 			
 			//Right panel 
 			var tabs3 = $("#panelRight").tabs();
-			tabs3.height($("#panelBottom").css("top")); //Set right panel height to the top of bottom panel
+			tabs3.height($(document).height() - parseInt($("#panelBottom").css("height")) - 10); //Set right panel height to the top of bottom panel
 			
 			$("#sortable3").sortable({
 				opacity: 0.5,
@@ -123,8 +125,9 @@
 				handles: "n",	
 				resize: function(event, ui) {
 					//Resize the left and right panels so they follow the bottom panel
-					$("#panelRight").css("height", ui.position.top);
-					$("#panelLeft").css("height", ui.position.top);
+					$("#panelRight").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 5);
+					$("#panelLeft").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 5);
+					ui.position.top = $(document).height() - ui.size.height; //Works without this in firefox, not with chrome
 				}
 			});
 			$("#panelRight").resizable({
