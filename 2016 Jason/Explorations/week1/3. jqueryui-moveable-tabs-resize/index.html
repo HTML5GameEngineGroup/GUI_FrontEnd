@@ -17,7 +17,7 @@
 	}
 
 	#panelBottom {
-		position: fixed !important;
+		position: fixed;
 		bottom: 0;
 		height: 234px;
 		width: 100%;
@@ -139,7 +139,10 @@
 			});
 			
 			
-		
+			$( window ).resize(function() {
+				$("#panelRight").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 5);
+				$("#panelLeft").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 5);
+			});
 			
 		});
 		

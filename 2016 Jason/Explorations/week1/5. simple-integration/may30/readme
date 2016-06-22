@@ -1,0 +1,3 @@
+Updates:
+
+The game is now saved temporarily before running.  After stopping the game, it is re-loaded.  This prevents runtime modifications (e.g. destroying a brick would otherwise permanently destroy the brick).
