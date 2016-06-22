@@ -16,11 +16,19 @@
 		width: 234px;
 		height: 234px;
 	}
+	
+	#panelFloater {
+		float: center;
+		width: 234px;
+		height: 234px;
+		position: fixed; 
+		top: 50%;
+		left: 50%;
+	}
 	</style>
 	<script>
 		$( document ).ready(function() {
-			$.ui.draggable.prototype.destroy = function (ul, item) { }; 
-		
+			
 			var tabs1 = $("#panelLeft").tabs();
 			
 			$("#sortable1").sortable({
@@ -47,42 +55,42 @@
 					
 				},
 				
-				drag: function(event, ui) {
-					console.log(ui.position);
-				},
-				
 				stop: function(event, ui) {
 					console.log("stop: dropped=" + ui.helper.data('dropped'));
-					$("#tab1").detach().appendTo("#dialog");
-					//tabheader.removeClass("ui-draggable-dragging");
-					tabheader.detach();
-					dialog.dialog("open");
+
+					$("body").append('<div id="panelFloater"><ul id="floatersortable" class="connectedSortable"></ul></div></div>');
+					var floaterTabs = $("#panelFloater").tabs();
+			
+					var floatingTabs = $("#floatersortable");
+					tabheader.removeAttr("style");
+					tabheader.detach().appendTo(floatingTabs);
+					$("#tab1").detach().appendTo("#panelFloater");
+					
 					tabs1.tabs("refresh");
+					floaterTabs.tabs("refresh");
+					
+					$("#panelFloater").resizable({
+					});
+					
+					$("#panelFloater").draggable({
+					});
+					
+					$( "#sortable1, #floatersortable").sortable({
+						opacity: 0.5,
+						connectWith: ".connectedSortable"
+					});
+					
+					$("#floatersortable").sortable({
+						opacity: 0.5,
+						stop: function() { //Called when any element is moved
+							floaterTabs.tabs("refresh");
+						},
+					});
 					
 				}
-				
+			});
 
-			});
-			
-			var dialog = $( "#dialog" ).dialog({
-					autoOpen: false,
-					height: 300,
-					width: 350,
-					modal: false, 
-					
-			});
-			//From http://stackoverflow.com/questions/3806781/drag-jquery-draggable-out-of-its-parent-jquery-dialog
-			$("#dialog").draggable({
-				
-				revert: 'invalid',
-				helper:'clone',
-				appendTo: 'body',
-				containment: 'DOM',
-				zIndex: 1500,
-				addClasses: false
-				
-			});
-			$("#panelLeft").droppable({
+			/*$("#panelLeft").droppable({
 				accept: "#dialog",
 				activeClass: "ui-state-hover",
 				hoverClass: "ui-state-active",
@@ -98,7 +106,7 @@
 					dialog.dialog("close");
 
 				}
-			});
+			});*/
 			
 			
 			
@@ -111,10 +119,6 @@
 </head>
 
 <body>
-
-	<div id="movehere">
-	
-	</div>
 
     <div id="panelLeft">
 		<ul id="sortable1" class="connectedSortable">
@@ -129,9 +133,6 @@
 			<p>Textures content </p>
 		</div>
 	</div>
-	
-	<div id="dialog" title="Objects">
-		
-	</div>
+
 </body>
 </html>
