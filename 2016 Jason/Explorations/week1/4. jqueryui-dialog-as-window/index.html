@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-    <title>JQueryUI tabs</title>
+    <title>JQueryUI tab to window</title>
 	
     <script src="jquery.js"></script>
     <script src="jquery-ui.js"></script>
@@ -10,18 +10,25 @@
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	
+	<style>
+	#panelLeft {
+		float: left;
+		width: 234px;
+		height: 234px;
+	}
+	</style>
 	<script>
 		$( document ).ready(function() {
 			
 		
 			var tabs1 = $("#panelLeft").tabs();
 			
-			/*$("#sortable1").sortable({
+			$("#sortable1").sortable({
 				opacity: 0.5,
 				stop: function() { //Called when any element is moved
 					tabs1.tabs("refresh");
 				},
-			});*/
+			});
 			
 	
 			//Resizing
@@ -41,7 +48,8 @@
 					
 			});
 			
-			$("#tab1header").draggable( {
+			var tabheader = $("#tab1header");
+			tabheader.draggable( {
 				
 				revert: false,
 				start: function(event, ui) {
@@ -49,10 +57,36 @@
 				},
 				stop: function(event, ui) {
 					console.log("stop: dropped=" + ui.helper.data('dropped'));
+					$("#tab1").detach().appendTo("#dialog");
+					tabheader.detach();
 					dialog.dialog("open");
-					
+
 				}
 
+			});
+			
+			$("#dialog").draggable({
+				revert: 'invalid',
+				zIndex: 1500,
+				start: function(event, ui) {
+					//$("dialog").detach().appendTo("#movehere");
+				}
+
+			});
+			$("#panelLeft").droppable({
+				accept: "#dialog",
+				activeClass: "ui-state-hover",
+				hoverClass: "ui-state-active",
+				drop: function( event, ui ) {
+					console.log("dropped");
+					tabheader.removeAttr("style");
+					tabheader.appendTo("#sortable1");
+					
+					$("#tab1").detach().appendTo("#panelLeft");
+					tabs1.tabs("refresh");
+					dialog.dialog("close");
+					
+				}
 			});
 			
 			
@@ -66,6 +100,11 @@
 </head>
 
 <body>
+
+	<div id="movehere">
+	
+	</div>
+
     <div id="panelLeft">
 		<ul id="sortable1" class="connectedSortable">
 			<li id="tab1header"><a href="#tab1">Objects</a></li>
@@ -80,8 +119,8 @@
 		</div>
 	</div>
 	
-	<div id="dialog" title="Basic dialog">
-		<p>Dialog example</p>
+	<div id="dialog" title="Objects">
+		
 	</div>
 </body>
 </html>
