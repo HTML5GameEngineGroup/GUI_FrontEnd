@@ -40,17 +40,6 @@
 			
 			var tabheader = $("#tab1header");
 			tabheader.draggable( {
-				
-				
-				start: function(event, ui) {
-					ui.helper.data('dropped', false);
-					
-				},
-				
-				drag: function(event, ui) {
-					console.log(ui.position);
-				},
-				
 				stop: function(event, ui) {
 					console.log("stop: dropped=" + ui.helper.data('dropped'));
 					$("#tab1").detach().appendTo("#dialog");
@@ -58,10 +47,9 @@
 					tabheader.detach();
 					dialog.dialog("open");
 					tabs1.tabs("refresh");
-					
+					tabheader.draggable( "option", "disabled", true );
 				}
 				
-
 			});
 			
 			var dialog = $( "#dialog" ).dialog({

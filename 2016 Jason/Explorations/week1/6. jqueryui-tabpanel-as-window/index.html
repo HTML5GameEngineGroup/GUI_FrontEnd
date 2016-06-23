@@ -36,6 +36,19 @@
 				stop: function() { //Called when any element is moved
 					tabs1.tabs("refresh");
 				},
+				
+				receive : function(event, ui) { //Called when this set of tabs gets a new element
+				    var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> html
+					//Get the href, which contains the tab name that we need to move
+					var href = linkHTML.match(/href="([^"]*)/)[1]; 
+					var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
+					
+					//Remove the div from where it was and move it into this panel's div
+					$(href).detach().appendTo("#panelLeft");
+					
+					tabs1.tabs("refresh");
+					return true;
+				}
 			});
 			
 	
@@ -69,49 +82,44 @@
 					tabs1.tabs("refresh");
 					floaterTabs.tabs("refresh");
 					
-					$("#panelFloater").resizable({
+					/*$("#panelFloater").resizable({
 					});
 					
 					$("#panelFloater").draggable({
-					});
+					});*/
 					
-					$( "#sortable1, #floatersortable").sortable({
-						opacity: 0.5,
-						connectWith: ".connectedSortable"
-					});
+					
 					
 					$("#floatersortable").sortable({
 						opacity: 0.5,
 						stop: function() { //Called when any element is moved
 							floaterTabs.tabs("refresh");
 						},
+						
+						receive : function(event, ui) { //Called when this set of tabs gets a new element
+							var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> html
+							//Get the href, which contains the tab name that we need to move
+							var href = linkHTML.match(/href="([^"]*)/)[1]; 
+							var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
+							
+							//Remove the div from where it was and move it into this panel's div
+							$(href).detach().appendTo("#panelFloater");
+							
+							floaterTabs.tabs("refresh");
+							return true;
+						}
 					});
+					
+					$( "#sortable1, #floatersortable").sortable({
+						opacity: 0.5,
+						connectWith: ".connectedSortable"
+					});
+					tabheader.draggable( "option", "disabled", true );
+		
 					
 				}
 			});
 
-			/*$("#panelLeft").droppable({
-				accept: "#dialog",
-				activeClass: "ui-state-hover",
-				hoverClass: "ui-state-active",
-				drop: function( event, ui ) {
-					console.log("dropped");
-					tabheader.removeAttr("style");
-					tabheader.removeClass("ui-state-hover");
-					tabheader.removeClass("ui-draggable-dragging");
-					tabheader.appendTo("#sortable1");
-					
-					$("#tab1").detach().appendTo("#panelLeft");
-					tabs1.tabs("refresh");
-					dialog.dialog("close");
-
-				}
-			});*/
-			
-			
-			
-			
-			
 		});
 		
 		
