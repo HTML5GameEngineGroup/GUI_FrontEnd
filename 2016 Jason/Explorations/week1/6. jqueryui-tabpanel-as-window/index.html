@@ -22,21 +22,33 @@
 		width: 234px;
 		height: 234px;
 		position: fixed; 
-		top: 50%;
-		left: 50%;
+		
 	}
 	</style>
 	<script>
+	
+		var mouseX = 0;
+		var mouseY = 0;
 		$( document ).ready(function() {
+			
+			//Constantly poll the mouse position so we can place the window at the right place
+			$(document).on('mousemove', function(e){
+				mouseY = e.pageY;
+				mouseX = e.pageX;
+				
+			});
+			
 			
 			var tabs1 = $("#panelLeft").tabs();
 			
+			//Make the initial tabs sortable within that panel
 			$("#sortable1").sortable({
 				opacity: 0.5,
 				stop: function() { //Called when any element is moved
 					tabs1.tabs("refresh");
 				},
 				
+				//Transfer the tab internal data when a tab is moved
 				receive : function(event, ui) { //Called when this set of tabs gets a new element
 				    var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> html
 					//Get the href, which contains the tab name that we need to move
@@ -46,6 +58,12 @@
 					//Remove the div from where it was and move it into this panel's div
 					$(href).detach().appendTo("#panelLeft");
 					
+					//When the floating panel has no tabs (No li elements)
+					if ($('#floatersortable li').length == 0) {
+						$("#panelFloater").remove(); //Delete the panel
+						//Re-enable drag behavior so we can create a new window
+						tabheader.draggable( "option", "disabled", false );
+					}
 					tabs1.tabs("refresh");
 					return true;
 				}
@@ -57,66 +75,84 @@
 				handles: "e"
 			});
 			
+			//Check for a valid drop within the panel
+			$("#panelLeft").droppable({
+				accept: "#tab1header",
+				drop: function(event, ui) {
+					ui.helper.data("dropped", true);
+				}
+			});
 			
 			
 			var tabheader = $("#tab1header");
+			
+			//Draggable behavior for ONE tab (The "objects" tab)
 			tabheader.draggable( {
-				
+				revert: "valid", //Put the tab back if we tried to drop within the current panel
 				
 				start: function(event, ui) {
 					ui.helper.data('dropped', false);
-					
 				},
 				
 				stop: function(event, ui) {
-					console.log("stop: dropped=" + ui.helper.data('dropped'));
-
-					$("body").append('<div id="panelFloater"><ul id="floatersortable" class="connectedSortable"></ul></div></div>');
-					var floaterTabs = $("#panelFloater").tabs();
-			
-					var floatingTabs = $("#floatersortable");
-					tabheader.removeAttr("style");
-					tabheader.detach().appendTo(floatingTabs);
-					$("#tab1").detach().appendTo("#panelFloater");
-					
-					tabs1.tabs("refresh");
-					floaterTabs.tabs("refresh");
-					
-					/*$("#panelFloater").resizable({
-					});
-					
-					$("#panelFloater").draggable({
-					});*/
-					
-					
-					
-					$("#floatersortable").sortable({
-						opacity: 0.5,
-						stop: function() { //Called when any element is moved
-							floaterTabs.tabs("refresh");
-						},
+				
+					if (ui.helper.data("dropped") == false) { //If we dropped the tab OUTSIDE of the panel
+						//Set up the HTML for a new panel, panelFloater
+						$("body").append('<div id="panelFloater"><ul id="floatersortable" class="connectedSortable"></ul></div></div>');
+						var floaterTabs = $("#panelFloater").tabs();
+				
+						var floatingTabs = $("#floatersortable");
+						tabheader.removeAttr("style"); //Dragging gives some style elements that we don't want
+						tabheader.detach().appendTo(floatingTabs); //Take the dragged tab header and put it on the new panel
+						$("#tab1").detach().appendTo("#panelFloater"); //Take the tab contents and put it on the new panel
 						
-						receive : function(event, ui) { //Called when this set of tabs gets a new element
-							var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> html
-							//Get the href, which contains the tab name that we need to move
-							var href = linkHTML.match(/href="([^"]*)/)[1]; 
-							var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
+						tabs1.tabs("refresh");
+						floaterTabs.tabs("refresh");
+						
+						//Make this new panel draggable and resizeable, so it feels like a window
+						$("#panelFloater").resizable({
+						});
+						
+						$("#panelFloater").draggable({
+						});
+						
+						//Place the panel at the dropped mouse position
+						$("#panelFloater").css("top", mouseY);
+						$("#panelFloater").css("left", mouseX);
+						
+						//Give this panel the same behavior as the initial panel
+						$("#floatersortable").sortable({
+							opacity: 0.5,
+							stop: function() { //Called when any element is moved
+								floaterTabs.tabs("refresh");
+							},
 							
-							//Remove the div from where it was and move it into this panel's div
-							$(href).detach().appendTo("#panelFloater");
+							receive : function(event, ui) { //Called when this set of tabs gets a new element
+								var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> html
+								//Get the href, which contains the tab name that we need to move
+								var href = linkHTML.match(/href="([^"]*)/)[1]; 
+								var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
+								
+								//Remove the div from where it was and move it into this panel's div
+								$(href).detach().appendTo("#panelFloater");
+								
+								floaterTabs.tabs("refresh");
+								return true;
+							}
+						});
+						
+						//Make it so this panel and the other panel can drag tabs between each other
+						$( "#sortable1, #floatersortable").sortable({
+							opacity: 0.5,
+							connectWith: ".connectedSortable",
 							
-							floaterTabs.tabs("refresh");
-							return true;
-						}
-					});
-					
-					$( "#sortable1, #floatersortable").sortable({
-						opacity: 0.5,
-						connectWith: ".connectedSortable"
-					});
-					tabheader.draggable( "option", "disabled", true );
-		
-					
+							
+						});
+						//Disable dragging so that tabs can be moved around
+						//Draggable may be overriding sortable behavior
+						tabheader.draggable( "option", "disabled", true );
+			
+					}
 				}
 			});
 
