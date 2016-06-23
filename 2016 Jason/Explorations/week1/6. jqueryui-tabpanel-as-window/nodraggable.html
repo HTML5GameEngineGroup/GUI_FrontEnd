@@ -40,65 +40,17 @@
 			
 			
 			var tabs1 = $("#panelLeft").tabs();
+			var tabheader = $("#tab1header");
 			
 			//Make the initial tabs sortable within that panel
 			$("#sortable1").sortable({
 				opacity: 0.5,
 				
-				stop: function() { //Called when any element is moved
-					tabs1.tabs("refresh");
-				},
-				
-				//Transfer the tab internal data when a tab is moved
-				receive : function(event, ui) { //Called when this set of tabs gets a new element
-				    var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> html
-					//Get the href, which contains the tab name that we need to move
-					var href = linkHTML.match(/href="([^"]*)/)[1]; 
-					var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
-					
-					//Remove the div from where it was and move it into this panel's div
-					$(href).detach().appendTo("#panelLeft");
-					
-					//When the floating panel has no tabs (No li elements)
-					if ($('#floatersortable li').length == 0) {
-						$("#panelFloater").remove(); //Delete the panel
-						//Re-enable drag behavior so we can create a new window
-						tabheader.draggable( "option", "disabled", false );
-					}
-					tabs1.tabs("refresh");
-					return true;
-				}
-			});
-			
-	
-			//Resizing
-			$("#panelLeft").resizable({
-				handles: "e"
-			});
-			
-			//Check for a valid drop within the panel
-			$("#panelLeft").droppable({
-				accept: "#tab1header",
-				drop: function(event, ui) {
-					ui.helper.data("dropped", true);
-				}
-			});
-			
-			
-			var tabheader = $("#tab1header");
-			
-			//Draggable behavior for ONE tab (The "objects" tab)
-			tabheader.draggable( {
-				revert: "valid", //Put the tab back if we tried to drop within the current panel
-				
-				start: function(event, ui) {
-					ui.helper.data('dropped', false);
-				},
-				
-				stop: function(event, ui) {
-				
-					if (ui.helper.data("dropped") == false) { //If we dropped the tab OUTSIDE of the panel
-						//Set up the HTML for a new panel, panelFloater
+				sort: function() {
+					//Check mouseX and mouseY. If we're out of the element, create the new panel.
+					//console.log(mouseX + " " + mouseY);
+
+					if (!mouseInElement(tabs1)) {
 						$("body").append('<div id="panelFloater"><ul id="floatersortable" class="connectedSortable"></ul></div></div>');
 						var floaterTabs = $("#panelFloater").tabs();
 				
@@ -149,16 +101,70 @@
 							
 							
 						});
-						//Disable dragging so that tabs can be moved around
-						//Draggable may be overriding sortable behavior
-						tabheader.draggable( "option", "disabled", true );
-			
 					}
+					
+				},
+				stop: function() { //Called when any element is moved
+					tabs1.tabs("refresh");
+					
+				},
+				
+				//Transfer the tab internal data when a tab is moved
+				receive : function(event, ui) { //Called when this set of tabs gets a new element
+				    var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> html
+					//Get the href, which contains the tab name that we need to move
+					var href = linkHTML.match(/href="([^"]*)/)[1]; 
+					var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
+					
+					//Remove the div from where it was and move it into this panel's div
+					$(href).detach().appendTo("#panelLeft");
+					
+					//When the floating panel has no tabs (No li elements)
+					if ($('#floatersortable li').length == 0) {
+						$("#panelFloater").remove(); //Delete the panel
+						//Re-enable drag behavior so we can create a new window
+						tabheader.draggable( "option", "disabled", false );
+					}
+					tabs1.tabs("refresh");
+					return true;
+				}
+			});
+			
+	
+			//Resizing
+			$("#panelLeft").resizable({
+				handles: "e"
+			});
+			
+			//Check for a valid drop within the panel
+			$("#panelLeft").droppable({
+				accept: "#tab1header",
+				drop: function(event, ui) {
+					ui.helper.data("dropped", true);
 				}
 			});
 
 		});
 		
+		var mouseInElement = function(element) {
+			var elementHeight = elementCSSPixelToInt(element, "height");
+			var elementWidth = elementCSSPixelToInt(element, "width");
+			var elementTop = elementCSSPixelToInt(element, "top");
+			var elementLeft = elementCSSPixelToInt(element, "left");
+			
+			if (mouseX > elementLeft && mouseX < elementLeft + elementWidth &&
+				mouseY > elementTop && mouseY < elementTop + elementHeight) {
+				return true;
+			} 
+			return false;
+		};
+		
+		var elementCSSPixelToInt = function(element, cssString) {
+			var elementString = element.css(cssString);
+			elementString.substring(0, elementString.length - 2); // Get rid of px
+			return parseInt(elementString);
+			
+		}
 	</script>
 </head>
 
