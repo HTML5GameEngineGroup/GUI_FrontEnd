@@ -34,22 +34,23 @@
 	<script>
 		$( document ).ready(function() {
 			
-			var tabs2 = $("#panelBottom").tabs();
+			// This whole section is essentially copy pasted once for each panel
 			
-			//tabs2.height($(document).height() - $("#panelBottom").css("height"));
-			$("#sortable2").sortable({
-				opacity: 0.5,
-				stop: function() {
+			var tabs2 = $("#panelBottom").tabs(); //Create the tabs
+			
+			$("#sortable2").sortable({ //Make the second tab panel (bottom) sortable within itself
+				opacity: 0.5, //Opacity while "sorting"
+				stop: function() { //Refresh the tabs after a sort
 					tabs2.tabs("refresh");
 				},
 				
-				receive : function(event, ui) {
+				receive : function(event, ui) { //When we drag a tab from panel to panel, also move the content of the tab
 				    var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> information
 					//Get the href, which contains the tab name that we need to move
 					var href = linkHTML.match(/href="([^"]*)/)[1]; 
 					var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
-
-					$(href).detach().appendTo("#panelBottom");
+					
+					$(href).detach().appendTo("#panelBottom"); //Actually detach and move the tab
 					
 					tabs2.tabs("refresh");
 					return true;
@@ -116,7 +117,7 @@
 				
 			});
 			
-			//Resizing
+			//Resizing -- some specific details
 			$("#panelLeft").resizable({
 				handles: "e"
 				
@@ -138,7 +139,7 @@
 				}
 			});
 			
-			
+			//On window resize
 			$( window ).resize(function() {
 				$("#panelRight").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 5);
 				$("#panelLeft").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 5);
