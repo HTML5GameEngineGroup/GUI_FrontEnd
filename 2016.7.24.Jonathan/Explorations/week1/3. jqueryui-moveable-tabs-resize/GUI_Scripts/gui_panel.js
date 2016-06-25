@@ -25,12 +25,16 @@ var GuiPanel = function (PanelID, Height){
     return this;
 };
 
-GuiPanel.prototype.addTab = function ( TabName ){
-    var tab = '<li><a href="#' + this.PanelID + '">Scenes</a></li>';
-    $(this.PanelID + " UL").addBack(tab);
-    var tabContent = '<div id=#' + this.PanelID + '><p>Instances content </p></div>';
-    $(this.PanelID).addBack(tabContent);
-    this.guiTab.tabs("refresh");
+GuiPanel.prototype.addTab = function ( tabName ){
+    // ADD TAB THE PANELS TAB BAR
+    $(this.PanelID + " ul").append(
+        '<li><a href="#' + tabName + '">' + tabName + '</a></li>'
+    );
+    // ADD CONTENT CONTENT SHOULD GO INSIDE THIS SECTION
+    $(this.PanelID).append(
+        '<div id="' + tabName + '">' + tabName + ' content </div>'
+    );
+    this.guiTab.tabs("refresh"); // MUST BE REFRESHED
 };
 
 $( document ).ready(function() {
@@ -38,7 +42,7 @@ $( document ).ready(function() {
     // Create panels
     var panelID = "#panelBottom";
     var bottomPanel = new GuiPanel(panelID);
-    bottomPanel.addTab();
+    bottomPanel.addTab("hi");
 
     panelID = "#panelLeft";
     // height of side panels is based on distance from bottom panel to the top
