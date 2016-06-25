@@ -25,15 +25,22 @@ var GuiPanel = function (PanelID, Height){
     return this;
 };
 
-GuiPanel.prototype.addTab = function ( tabName ){
+// adds an empty tab to this panel
+GuiPanel.prototype.addTab = function ( tabID ){
     // ADD TAB THE PANELS TAB BAR
-    $(this.PanelID + " ul").append(
-        '<li><a href="#' + tabName + '">' + tabName + '</a></li>'
-    );
+    var newTab = new GuiPanelTab(tabID);
+    // $(this.PanelID + " ul").append(
+    //     '<li><a href="#' + tabID + '">' + tabID + '</a></li>'
+    // );
+    // // ADD CONTENT CONTENT SHOULD GO INSIDE THIS SECTION
+    // $(this.PanelID).append(
+    //     '<div id="' + tabID + '">' + tabID + ' content </div>'
+    // );
+    newTab.setID("hi hi");
+
+    $(this.PanelID + " ul").append(newTab.$top);
     // ADD CONTENT CONTENT SHOULD GO INSIDE THIS SECTION
-    $(this.PanelID).append(
-        '<div id="' + tabName + '">' + tabName + ' content </div>'
-    );
+    $(this.PanelID).append(newTab.$content_container);
     this.guiTab.tabs("refresh"); // MUST BE REFRESHED
 };
 
