@@ -23,14 +23,14 @@ var GuiPanelTab = function (tabID){
 
 // sets the ID of the tab and modifys any relevent 
 GuiPanelTab.prototype.setID = function( newTabID ) {
-    alert("tabid = " + this.tabID);
+    //alert("tabid = " + this.tabID);
     // create tab_top
 
-    alert($('a[href="#' + this.tabID + '"]').prop('href'));
+    //alert($('a[href="#' + this.tabID + '"]').prop('href'));
     $('a[href="#' + this.tabID + '"]').prop('href', '#' + newTabID);
 
     this.tabID = newTabID;
-    alert(this.tabID);
+    //alert(this.tabID);
 };
 
 GuiPanelTab.prototype.getTabTop = function () {

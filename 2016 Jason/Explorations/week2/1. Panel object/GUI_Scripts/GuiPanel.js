@@ -11,31 +11,15 @@ $(document).on('mousemove', function(e){
 	mouseX = e.pageX;	
 });
  
-var GuiPanelGroup = function() {
-	this.panelList = [];
-	
-};
 
-GuiPanelGroup.prototype.addPanel = function(guiPanel) {
-	this.panelList.push(guiPanel);
-	
-	var panelConnectorString = "";
-	
-	for (var i = 0; i < this.panelList.length; i++) {
-		panelConnectorString += this.panelList[i].PanelID + "Sortable";
-		if (i != this.panelList.length-1) panelConnectorString += ", ";
-	};
-	
-	$(panelConnectorString).sortable({
-        opacity: 0.5,
-        connectWith: ".connectedSortable"
-    });
-};
- 
-var GuiPanel = function (PanelID, Height){
+var GuiPanel = function (PanelID, panelGroup, panelType, Height){
     this.PanelID = PanelID;
     this.guiTab = $(PanelID).tabs(); //Create the tabs
 	
+	this.panelGroupRef = panelGroup;
+	this.panelGroupRef.addPanel(this);
+	
+	this.panelType = panelType;
 	
     if (Height !== undefined) this.guiTab.height(Height);
 	
@@ -43,11 +27,19 @@ var GuiPanel = function (PanelID, Height){
 	var tabs = $(PanelID).tabs();
     $(PanelID + "Sortable").sortable({ //Make the second tab panel (bottom) sortable within itself
         opacity: 0.5, //Opacity while "sorting"
-        stop: function() { //Refresh the tabs after a sort
+        stop: function(event, ui) { //Refresh the tabs after a sort
             tabs.tabs("refresh");
 			
-			
-			
+			if (panelType == "default") { //Behavior that we don't want for a floating tab window
+				if (!mouseInPanelList(panelGroup.panelList)) {
+
+					var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> information
+					//Get the href, which contains the tab name that we need to move
+					var href = linkHTML.match(/href="([^"]*)/)[1];
+					
+					panelGroup.createFloatingPanel(ui.item, href);
+				}
+			}
         },
 
         receive : function(event, ui) { //When we drag a tab from panel to panel, also move the content of the tab
@@ -57,8 +49,12 @@ var GuiPanel = function (PanelID, Height){
             var href = linkHTML.match(/href="([^"]*)/)[1];
             var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
 			
-			
             $(href).detach().appendTo(PanelID); //Actually detach and move the tab
+			
+			if ($('#panelFloaterSortable li').length == 0) {
+				$("#panelFloater").remove(); //Delete the panel
+				panelGroup.removePanel("#panelFloater");
+			}
 			
             tabs.tabs("refresh");
             return true;
@@ -83,20 +79,16 @@ $( document ).ready(function() {
 	var panelGroup = new GuiPanelGroup();
     // Create panels
     var panelID = "#panelBottom";
-    var bottomPanel = new GuiPanel(panelID);
+    var bottomPanel = new GuiPanel(panelID, panelGroup, "default");
     bottomPanel.addTab("hi");
 	
     panelID = "#panelLeft";
     // height of side panels is based on distance from bottom panel to the top
     var panelHeight = $(document).height() - parseInt($("#panelBottom").css("height")) - 10;
-    var leftPanel = new GuiPanel(panelID, panelHeight);
+    var leftPanel = new GuiPanel(panelID, panelGroup ,"default", panelHeight);
 
     panelID = "#panelRight";
-    var rightPanel = new GuiPanel(panelID, panelHeight);
-
-	panelGroup.addPanel(bottomPanel);
-	panelGroup.addPanel(leftPanel);
-	panelGroup.addPanel(rightPanel);
+    var rightPanel = new GuiPanel(panelID, panelGroup, "default", panelHeight);
 
     //Resizing -- some specific details
     $("#panelLeft").resizable({ handles: "e" });
@@ -118,7 +110,7 @@ $( document ).ready(function() {
 
         }
     });
-
+	
     //On window resize
     $( window ).resize(function() {
 		//$("#panelBottom").css("top", $(document).height() - $("$panelBottom").height());
@@ -133,7 +125,7 @@ $( document ).ready(function() {
 var mouseInElement = function(element) {
 	
 	var position = element.position();
-
+	
 	//If mouseX, mouseY is within the bounds of the element
 	if (mouseX > position.left && mouseX < position.left + element.width() &&
 		mouseY > position.top && mouseY < position.top + element.height()) {
@@ -141,3 +133,15 @@ var mouseInElement = function(element) {
 	} 
 	return false;
 };
+
+var mouseInPanelList = function(panelList) {
+
+	for (var i = 0; i < panelList.length; i++) {
+		var tab = $(panelList[i].PanelID).tabs();
+		var returnValue = mouseInElement(tab);
+		if (returnValue) return true;
+		
+	}
+	
+	return false;
+}
