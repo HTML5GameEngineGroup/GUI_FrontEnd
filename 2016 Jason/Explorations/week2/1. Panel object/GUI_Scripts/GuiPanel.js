@@ -12,14 +12,23 @@ $(document).on('mousemove', function(e){
 });
  
 
-var GuiPanel = function (PanelID, panelGroup, panelType, Height){
+GuiPanelType = Object.freeze({
+	TOP: 0,
+	BOTTOM: 1,
+	LEFT: 2,
+	RIGHT: 3,
+	FLOATING: 4
+});
+ 
+var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
     this.PanelID = PanelID;
     this.guiTab = $(PanelID).tabs(); //Create the tabs
-	
+	this.panelType = panelType;
 	this.panelGroupRef = panelGroup;
 	this.panelGroupRef.addPanel(this);
 	
-	this.panelType = panelType;
+	
+	
 	
     if (Height !== undefined) this.guiTab.height(Height);
 	
@@ -30,7 +39,7 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height){
         stop: function(event, ui) { //Refresh the tabs after a sort
             tabs.tabs("refresh");
 			
-			if (panelType == "default") { //Behavior that we don't want for a floating tab window
+			if (panelType != GuiPanelType.FLOATING) { //Behavior that we don't want for a floating tab window
 				if (!mouseInPanelList(panelGroup.panelList)) {
 
 					var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> information
@@ -79,19 +88,24 @@ $( document ).ready(function() {
 	var panelGroup = new GuiPanelGroup();
     // Create panels
     var panelID = "#panelBottom";
-    var bottomPanel = new GuiPanel(panelID, panelGroup, "default");
+    var bottomPanel = new GuiPanel(panelID, panelGroup, GuiPanelType.BOTTOM);
     bottomPanel.addTab("hi");
 	
     panelID = "#panelLeft";
     // height of side panels is based on distance from bottom panel to the top
     var panelHeight = $(document).height() - parseInt($("#panelBottom").css("height")) - 10;
-    var leftPanel = new GuiPanel(panelID, panelGroup ,"default", panelHeight);
+    var leftPanel = new GuiPanel(panelID, panelGroup ,GuiPanelType.LEFT, panelHeight);
 
     panelID = "#panelRight";
-    var rightPanel = new GuiPanel(panelID, panelGroup, "default", panelHeight);
-
+    var rightPanel = new GuiPanel(panelID, panelGroup, GuiPanelType.RIGHT, panelHeight);
+	
+	/*
+	$("#panelRight").css("height", window.innerHeight - parseInt($("#panelBottom").css("top")) - 5);
+    $("#panelLeft").css("height", window.innerHeight - parseInt($("#panelBottom").css("top")) - 5);
     //Resizing -- some specific details
-    $("#panelLeft").resizable({ handles: "e" });
+    $("#panelLeft").resizable({ handles: "e" 
+	
+	});
 
     $("#panelBottom").resizable({
         handles: "n",
@@ -99,6 +113,7 @@ $( document ).ready(function() {
             //Resize the left and right panels so they follow the bottom panel
             $("#panelRight").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 5);
             $("#panelLeft").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 5);
+			$("#tab1").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 55);
             ui.position.top = $(document).height() - ui.size.height; //Works without this in firefox, not with chrome
         }
     });
@@ -114,10 +129,10 @@ $( document ).ready(function() {
     //On window resize
     $( window ).resize(function() {
 		//$("#panelBottom").css("top", $(document).height() - $("$panelBottom").height());
-        $("#panelRight").css("height", $(document).height() - parseInt($("#panelBottom").css("top")) - 5);
-        $("#panelLeft").css("height", $(document).height() - parseInt($("#panelBottom").css("top")) - 5);
+       // $("#panelRight").css("height", $(document).height() - parseInt($("#panelBottom").css("top")) - 5);
+        //$("#panelLeft").css("height", $(document).height() - parseInt($("#panelBottom").css("top")) - 5);
     });
-
+	*/
 });
 
 
