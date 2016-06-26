@@ -27,6 +27,9 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
 	this.panelGroupRef = panelGroup;
 	this.panelGroupRef.addPanel(this);
 	
+	
+	
+	
     if (Height !== undefined) this.guiTab.height(Height);
 	
 	
@@ -95,11 +98,9 @@ $( document ).ready(function() {
     panelID = "#panelRight";
     var rightPanel = new GuiPanel(panelID, panelGroup, GuiPanelType.RIGHT, panelHeight);
 	
-	
-	$("#panelRight").css("height", window.innerHeight - parseInt($("#panelBottom").css("height")) - 5);
-	
-    $("#panelLeft").css("height", window.innerHeight - parseInt($("#panelBottom").css("height")) - 5);
 	/*
+	$("#panelRight").css("height", window.innerHeight - parseInt($("#panelBottom").css("top")) - 5);
+    $("#panelLeft").css("height", window.innerHeight - parseInt($("#panelBottom").css("top")) - 5);
     //Resizing -- some specific details
     $("#panelLeft").resizable({ handles: "e" 
 	
