@@ -51,7 +51,7 @@
 					var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
 					
 					$(href).detach().appendTo("#panelBottom"); //Actually detach and move the tab
-					
+					console.log(href);
 					tabs2.tabs("refresh");
 					return true;
 				}
