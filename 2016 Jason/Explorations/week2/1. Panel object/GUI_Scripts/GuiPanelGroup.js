@@ -8,7 +8,8 @@ var GuiPanelGroup = function() {
 GuiPanelGroup.prototype.addPanel = function(guiPanel) {
 	this.panelList.push(guiPanel);
 	this.setResizeFunction(guiPanel);
-	//this.addTabStyle(guiPanel);
+	this.addTabStyle(guiPanel);
+	//this.setTabHeight(guiPanel);
 	
 	var panelConnectorString = "";
 	
@@ -59,11 +60,44 @@ GuiPanelGroup.prototype.resizeBottom = function(panel) {
 			for (var i = 0; i < leftPanels.length; i++) {
 				//Adjust height according to bottom panel
 				$(leftPanels[i].PanelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
+				
+				var tabList = $(leftPanels[i].PanelID + "Sortable");
+				var tabs = tabList.find("li");
+				for (var i = 0; i < tabs.length; i++) {
+					
+					var linkHTML = tabs[i].innerHTML;
+					var href = linkHTML.match(/href="([^"]*)/)[1];
+					//var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
+
+					$(href).css("height", $(window).height() - $(panelID).height());
+				}
+				
 			}
 			
 			for (var i = 0; i < rightPanels.length; i++) {
 				//Adjust height according to bottom panel
 				$(rightPanels[i].PanelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
+				
+				var tabList = $(leftPanels[i].PanelID + "Sortable");
+				var tabs = tabList.find("li");
+				for (var i = 0; i < tabs.length; i++) {
+					
+					var linkHTML = tabs[i].innerHTML;
+					var href = linkHTML.match(/href="([^"]*)/)[1];
+					//var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
+
+					$(href).css("height", $(window).height() - $(panelID).height() - 60);
+				}
+				
+			}
+			
+			var tabList = $(panel.PanelID + "Sortable");
+			var tabs = tabList.find("li");
+			for (var i = 0; i < tabs.length; i++) {
+				
+				var linkHTML = tabs[i].innerHTML;
+				var href = linkHTML.match(/href="([^"]*)/)[1];
+				$(href).css("height", $(panelID).height() - 60);
 			}
 			
             ui.position.top = $(window).height() - ui.size.height; //Works without this in firefox, not with chrome
@@ -106,6 +140,7 @@ GuiPanelGroup.prototype.resizeRight = function(panel) {
     });
 	$(panelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
 	
+	
 	$( window ).resize(function() {
 		var bottomPanels = panel.panelGroupRef.getPanelsOfType(GuiPanelType.BOTTOM);
 		var heightSum = 0; //Sum up the heights of all the bottom panels
@@ -117,7 +152,24 @@ GuiPanelGroup.prototype.resizeRight = function(panel) {
 };
 
 GuiPanelGroup.prototype.resizeFloating = function(panelID) {
-	$("#panelFloater").resizable({});
+	$("#panelFloater").resizable({
+		
+		resize: function(event, ui) {
+			var tabList = $("#panelFloaterSortable");
+			var tabs = tabList.find("li");
+			for (var i = 0; i < tabs.length; i++) {
+				
+				var linkHTML = tabs[i].innerHTML;
+				var href = linkHTML.match(/href="([^"]*)/)[1];
+				//var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
+
+				$(href).css("height", $("#panelFloater").height() - 60);
+				//console.log($(panelID).height());
+			}
+		}
+	});
+	
+	
 }
 
 GuiPanelGroup.prototype.removePanel = function(panelID) {
@@ -156,8 +208,20 @@ GuiPanelGroup.prototype.createFloatingPanel = function(tabheader, tab) {
 	this.refreshAll();
 	
 	//Make this new panel draggable and resizeable, so it feels like a window
-	$("#panelFloater").resizable({
-	});
+	//$("#panelFloater").resizable({
+	//});
+	
+	var tabList = $("#panelFloaterSortable");
+	var tabs = tabList.find("li");
+	for (var i = 0; i < tabs.length; i++) {
+		
+		var linkHTML = tabs[i].innerHTML;
+		var href = linkHTML.match(/href="([^"]*)/)[1];
+		//var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
+
+		$(href).css("height", $("#panelFloater").height() - 60);
+		//console.log($(panelID).height());
+	}
 	
 	//Make the floating panel draggable only by the top bar
 	$("#panelFloater").draggable({
@@ -197,19 +261,11 @@ GuiPanelGroup.prototype.addTabStyle = function(panel) {
 		var href = linkHTML.match(/href="([^"]*)/)[1];
 		//var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
 		
-		$(href).attr("style", "overflow: scroll");
+		$(href).attr("style", "overflow: auto");
 		
-		$(href).css("height", $(window).height() - 400);
+		var bottomPanels = this.getPanelsOfType(GuiPanelType.BOTTOM);
+		
+		$(href).css("height", $(window).height() - $(bottomPanels[0].PanelID).height() - 60);
 	}
-	/*tabList.tabs().each(function(index) {
-		console.log($(this).html());
-		var linkHTML = $(this).html();
-		var href = linkHTML.match(/href="([^"]*)/)[1];
-		var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
-		
-		console.log(divID);
-	});*/
 	
-	
-			
 };
