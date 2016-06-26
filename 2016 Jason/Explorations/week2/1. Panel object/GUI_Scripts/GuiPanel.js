@@ -61,7 +61,6 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
             $(href).detach().appendTo(PanelID); //Actually detach and move the tab
 			
 			if ($('#panelFloaterSortable li').length == 0) {
-				$("#panelFloater").remove(); //Delete the panel
 				panelGroup.removePanel("#panelFloater");
 			}
 			
@@ -73,14 +72,13 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
 };
 
 // adds an empty tab to this panel
-GuiPanel.prototype.addTab = function ( tabID ){
+GuiPanel.prototype.addNewTab = function ( tabID ){
     // ADD TAB THE PANELS TAB BAR
     var newTab = new GuiPanelTab(tabID);
-    newTab.setID("hi hi");
 
-    $(this.PanelID + " ul").append(newTab.$top);
+    $(this.PanelID + " ul").append(newTab.getHeader());
     // ADD CONTENT CONTENT SHOULD GO INSIDE THIS SECTION
-    $(this.PanelID).append(newTab.$content_container);
+    $(this.PanelID).append(newTab.getContentContainer());
     this.guiTab.tabs("refresh"); // MUST BE REFRESHED
 };
 
@@ -88,8 +86,9 @@ $( document ).ready(function() {
 	var panelGroup = new GuiPanelGroup();
     // Create panels
     var panelID = "#panelBottom";
-    var bottomPanel = new GuiPanel(panelID, panelGroup, GuiPanelType.BOTTOM);
-    bottomPanel.addTab("hi");
+    
+    var bottomPanel = new GuiPanel(panelID, panelGroup, "default");
+    bottomPanel.addNewTab("hi");
 	
     panelID = "#panelLeft";
     // height of side panels is based on distance from bottom panel to the top

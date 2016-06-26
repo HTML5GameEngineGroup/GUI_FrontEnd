@@ -21,8 +21,9 @@ var GuiPanelTab = function (tabID){
     return this;
 };
 
-// sets the ID of the tab and modifys any relevent 
+// sets the ID of the tab and modifies any relevant
 GuiPanelTab.prototype.setID = function( newTabID ) {
+    //todo: NOT CURRENTLY WORKING
     alert("tabid = " + this.tabID);
     // create tab_top
 
