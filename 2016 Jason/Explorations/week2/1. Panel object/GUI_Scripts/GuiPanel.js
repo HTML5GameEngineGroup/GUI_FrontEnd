@@ -59,6 +59,7 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
 			
 			if ($('#panelFloaterSortable li').length == 0) {
 				panelGroup.removePanel("#panelFloater");
+				$("#panelFloater").remove(); //Delete the panel
 			}
 			
             tabs.tabs("refresh");
@@ -84,7 +85,7 @@ $( document ).ready(function() {
     // Create panels
     var panelID = "#panelBottom";
     
-    var bottomPanel = new GuiPanel(panelID, panelGroup, "default");
+    var bottomPanel = new GuiPanel(panelID, panelGroup, GuiPanelType.BOTTOM);
     bottomPanel.addNewTab("hi");
 	
     panelID = "#panelLeft";
