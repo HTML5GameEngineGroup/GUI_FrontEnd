@@ -7,21 +7,56 @@ var GuiPanelTab = function (tabID){
     if (tabID === undefined || typeof tabID !==  'string') {
         throw "tabID must be a string";
     }
+    // jquery object representing the tab_content
     this.tabID = tabID;                     // stores tabName
-    this.content = [];                      // stores the content to place into the tab_content
+    this.content = {};                      // stores the content to place into the tab_content
 
     // jquery object representing the tab_top
     this.headerID = tabID + 'Header';
 
-    // jquery object representing the tab_content
-    this.contentID = tabID + " Content";    // Place holder until real content is put in
     return this;
 };
 
-GuiPanelTab.prototype.getHeader = function () {
+// returns a new jquery tab_header
+GuiPanelTab.prototype.createHeader = function () {
     return $('<li id="' + this.headerID + '"><a href="#' + this.tabID + '">' + this.tabID + '</a></li>');
 };
 
+// returns a new jquery tab_content
+GuiPanelTab.prototype.createContentContainer = function () {
+    return $('<div id="' + this.tabID + '">' + this.tabID + " content" + '</div>');
+};
+
+// returns the current jquery header_information
+GuiPanelTab.prototype.getHeader = function() {
+    var $header = $('#' + this.headerID);
+    if ($header.length < 1) throw "no header found";
+    else return $header;
+};
+
+// returns the current jquery content_container
 GuiPanelTab.prototype.getContentContainer = function () {
-    return $('<div id="#' + this.contentID + '">' + this.content + '</div>');
+    var $content = $('#' + this.tabID);
+    if ($content.length < 1) throw "no content found";
+    else return $content;
+};
+
+// appends jquery/html to the tab
+GuiPanelTab.prototype.appendContent = function ( contentID, contentHTML ) {
+    this.content[contentID] = true;
+    $('#' + this.tabID).append( contentHTML );
+};
+
+// removes content with ID contentID
+GuiPanelTab.prototype.removeContent = function ( contentID ) {
+    if (!(contentID in this.content)) throw contentID + " not found";
+    else {
+        delete this.content[contentID];
+        $('#' + contentID).remove();
+    }
+};
+
+// returns the tab id
+GuiPanelTab.prototype.getID = function () {
+    return '#' + this.tabID;
 };

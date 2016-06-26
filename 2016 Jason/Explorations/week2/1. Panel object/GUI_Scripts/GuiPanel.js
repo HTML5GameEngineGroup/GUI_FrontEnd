@@ -71,69 +71,18 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
 
 // adds an empty tab to this panel
 GuiPanel.prototype.addNewTab = function ( tabID ){
-    // ADD TAB THE PANELS TAB BAR
-    var newTab = new GuiPanelTab(tabID);
-
-    $(this.PanelID + " ul").append(newTab.getHeader());
-    // ADD CONTENT CONTENT SHOULD GO INSIDE THIS SECTION
-    $(this.PanelID).append(newTab.getContentContainer());
+    var newTab = new GuiPanelTab(tabID);						//create new tab
+    $(this.PanelID + " ul").append(newTab.createHeader());		//create tab header add to doc
+    $(this.PanelID).append(newTab.createContentContainer());	//create tab content add to doc
     this.guiTab.tabs("refresh"); // MUST BE REFRESHED
 };
 
-$( document ).ready(function() {
-	var panelGroup = new GuiPanelGroup();
-    // Create panels
-    var panelID = "#panelBottom";
-    
-    var bottomPanel = new GuiPanel(panelID, panelGroup, GuiPanelType.BOTTOM);
-    bottomPanel.addNewTab("hi");
-	
-    panelID = "#panelLeft";
-    // height of side panels is based on distance from bottom panel to the top
-    var panelHeight = $(document).height() - parseInt($("#panelBottom").css("height")) - 10;
-    var leftPanel = new GuiPanel(panelID, panelGroup ,GuiPanelType.LEFT, panelHeight);
-
-    panelID = "#panelRight";
-    var rightPanel = new GuiPanel(panelID, panelGroup, GuiPanelType.RIGHT, panelHeight);
-	
-	
-	$("#panelRight").css("height", window.innerHeight - parseInt($("#panelBottom").css("height")) - 5);
-	
-    $("#panelLeft").css("height", window.innerHeight - parseInt($("#panelBottom").css("height")) - 5);
-	/*
-    //Resizing -- some specific details
-    $("#panelLeft").resizable({ handles: "e" 
-	
-	});
-
-    $("#panelBottom").resizable({
-        handles: "n",
-        resize: function(event, ui) {
-            //Resize the left and right panels so they follow the bottom panel
-            $("#panelRight").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 5);
-            $("#panelLeft").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 5);
-			$("#tab1").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 55);
-            ui.position.top = $(document).height() - ui.size.height; //Works without this in firefox, not with chrome
-        }
-    });
-
-    $("#panelRight").resizable({
-        handles: "w",
-        resize: function(event, ui) { //Fix for right panel repositioning on resize
-            ui.position.left = 0;
-
-        }
-    });
-	
-    //On window resize
-    $( window ).resize(function() {
-		//$("#panelBottom").css("top", $(document).height() - $("$panelBottom").height());
-       // $("#panelRight").css("height", $(document).height() - parseInt($("#panelBottom").css("top")) - 5);
-        //$("#panelLeft").css("height", $(document).height() - parseInt($("#panelBottom").css("top")) - 5);
-    });
-	*/
-});
-
+// adds a tab object to the current panel
+GuiPanel.prototype.addTab = function ( guiPanelTab ){
+	$(this.PanelID + " ul").append(guiPanelTab.getHeader());
+	$(this.PanelID).append(guiPanelTab.getContentContainer());
+	this.guiTab.tabs("refresh"); // MUST BE REFRESHED
+};
 
 //Checks if the mouse position (Global variables mouseX and mouseY) is within specified element
 var mouseInElement = function(element) {
@@ -156,6 +105,5 @@ var mouseInPanelList = function(panelList) {
 		if (returnValue) return true;
 		
 	}
-	
 	return false;
 }

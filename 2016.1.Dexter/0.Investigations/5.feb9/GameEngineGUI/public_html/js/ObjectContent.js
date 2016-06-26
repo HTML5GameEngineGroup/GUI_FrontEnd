@@ -159,7 +159,7 @@ var ObjectContent = function(referencedObj, isInstance){
     };
     
     // Add new content at the end
-    this.addContent = function(name, value) {
+    this.appendContent = function(name, value) {
         this.contents.push(new Content(name, value));
     };
     

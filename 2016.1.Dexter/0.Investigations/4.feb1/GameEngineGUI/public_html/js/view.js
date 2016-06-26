@@ -154,7 +154,7 @@ $( "#fileLoad" ).click(function() {
         restoredContent.setScriptUpdate(array[8].value);
         var j;
         for (j = 9; j < array.length; j++) {
-            restoredContent.addContent(array[j].label, array[j].value);
+            restoredContent.appendContent(array[j].label, array[j].value);
         }
         console.log(xf.getXPos());
         Global_ObjectList.push(restoredContent);

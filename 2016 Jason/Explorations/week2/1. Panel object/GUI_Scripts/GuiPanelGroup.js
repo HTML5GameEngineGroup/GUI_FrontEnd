@@ -267,5 +267,4 @@ GuiPanelGroup.prototype.addTabStyle = function(panel) {
 		
 		$(href).css("height", $(window).height() - $(bottomPanels[0].PanelID).height() - 60);
 	}
-	
 };

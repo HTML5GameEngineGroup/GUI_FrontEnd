@@ -177,7 +177,7 @@ $( "#fileLoad" ).click(function() {
         restoredContent.setCode(array[9].value);
         var j;
         for (j = 10; j < array.length; j++) {
-            restoredContent.addContent(array[j].label, array[j].value);
+            restoredContent.appendContent(array[j].label, array[j].value);
         }
         Global_ObjectList.push(restoredContent);
     }
