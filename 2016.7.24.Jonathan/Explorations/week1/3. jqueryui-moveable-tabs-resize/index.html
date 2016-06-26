@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<head>
+    <title>JQueryUI tabs</title>
+	
+    <script src="jquery.js"></script>
+    <script src="jquery-ui.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <!-- GUI OBJECT FILES -->
+	<script src="GUI_Scripts/GuiPanel.js"></script>
+    <script src="GUI_Scripts/GuiPanelTab.js"></script>
+
+	<link rel="stylesheet" href="jquery-ui.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	
+	<style>
+	#panelRight {
+		float: right;
+		width: 234px;
+	}
+
+	#panelBottom {
+		position: fixed;
+		bottom: 0;
+		height: 234px;
+		width: 100%;
+		
+	}
+	#panelLeft {
+    float: left;
+    width: 234px;
+	}
+	
+	</style>
+	
+	
+
+</head>
+
+<body>
+    <div id="panelLeft">
+		<ul id="panelLeftSortable" class="connectedSortable">
+			<li class="active"><a href="#tab1">Objects</a></li>
+			<li><a href="#tab2">Textures</a></li>
+		</ul>
+		<div id="tab1">
+			<p>Objects content</p>
+		</div>
+		
+		<div id="tab2">
+			<p>Textures content </p>
+		</div>
+	</div>
+	
+	<div id="panelBottom">
+		<ul id="panelBottomSortable" class="connectedSortable">
+			<li><a href="#tab3">Scenes</a></li>
+			<li><a href="#tab4">Cameras</a></li>
+			<li><a href="#tab5">Instances</a></li>
+		</ul>
+		<div id="tab3">
+			<p>Scenes content</p>
+		</div>
+		<div id="tab4">
+			<p>Cameras content </p>
+		</div>
+		<div id="tab5">
+			<p>Instances content </p>
+		</div>
+	</div>
+	
+	<div id="panelRight">
+		<ul id="panelRightSortable" class="connectedSortable">
+			<li><a href="#tab6">Details</a></li>
+		</ul>
+		<div id="tab6">
+			<p>Details content</p>
+		</div>
+		
+	</div>
+	
+</body>
+</html>
