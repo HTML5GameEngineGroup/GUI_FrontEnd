@@ -67,6 +67,7 @@ GuiPanelGroup.prototype.resizeBottom = function(panel) {
 
 	$( window ).resize(function() {
 		$(panelID).css("top", $(window).height() - $(panelID).height());
+		panel.panelGroupRef.resizeLeftRightHelper(panel);
     });
 };
 
