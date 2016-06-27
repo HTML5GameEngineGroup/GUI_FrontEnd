@@ -8,18 +8,17 @@ $( document ).ready(function() {
 
     var bottomPanel = new GuiPanel(panelID, panelGroup, GuiPanelType.BOTTOM);
     bottomPanel.addNewTab("hi");
-    var tab2 = new GuiPanelTab("bye");
+    // var tab2 = new GuiPanelTab("bye");
     // bottomPanel.addTab(tab2);
-    tab2.appendContent("<p> hi there sucka </p>");
+    // tab2.appendContent("<p> hi there sucka </p>");
 
     panelID = "#panelLeft";
     // height of side panels is based on distance from bottom panel to the top
     var panelHeight = $(document).height() - parseInt($("#panelBottom").css("height")) - 10;
     var leftPanel = new GuiPanel(panelID, panelGroup ,GuiPanelType.LEFT, panelHeight);
-
     panelID = "#panelRight";
     var rightPanel = new GuiPanel(panelID, panelGroup, GuiPanelType.RIGHT, panelHeight);
-
+    leftPanel.moveTabToThisPanel("hi");
 
     $("#panelRight").css("height", window.innerHeight - parseInt($("#panelBottom").css("height")) - 5);
 

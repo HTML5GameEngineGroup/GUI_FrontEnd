@@ -2,7 +2,7 @@
 
 var GuiPanelGroup = function() {
 	this.panelList = [];
-	
+	this.tabMap = {};
 };
 
 GuiPanelGroup.prototype.addPanel = function(guiPanel) {
@@ -10,7 +10,6 @@ GuiPanelGroup.prototype.addPanel = function(guiPanel) {
 	this.setResizeFunction(guiPanel);
 	this.addTabStyle(guiPanel);
 	//this.setTabHeight(guiPanel);
-	
 	var panelConnectorString = "";
 	
 	for (var i = 0; i < this.panelList.length; i++) {
@@ -168,8 +167,6 @@ GuiPanelGroup.prototype.resizeFloating = function(panelID) {
 			}
 		}
 	});
-	
-	
 }
 
 GuiPanelGroup.prototype.removePanel = function(panelID) {
@@ -253,9 +250,8 @@ GuiPanelGroup.prototype.getPanelsOfType = function(panelType) {
 
 GuiPanelGroup.prototype.addTabStyle = function(panel) {
 	var tabList = $(panel.PanelID + "Sortable");
-
-	
 	var tabs = tabList.find("li");
+	
 	for (var i = 0; i < tabs.length; i++) {
 		var linkHTML = tabs[i].innerHTML;
 		var href = linkHTML.match(/href="([^"]*)/)[1];
@@ -267,4 +263,12 @@ GuiPanelGroup.prototype.addTabStyle = function(panel) {
 		
 		$(href).css("height", $(window).height() - $(bottomPanels[0].PanelID).height() - 60);
 	}
+};
+
+GuiPanelGroup.prototype.addTab = function (tabID, theTab) {
+	this.tabMap[tabID] = theTab;
+};
+
+GuiPanelGroup.prototype.getTab = function (tabID) {
+	return this.tabMap[tabID];
 };

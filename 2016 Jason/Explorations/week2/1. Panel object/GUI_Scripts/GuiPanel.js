@@ -29,7 +29,6 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
 	
     if (Height !== undefined) this.guiTab.height(Height);
 	
-	
 	var tabs = $(PanelID).tabs();
     $(PanelID + "Sortable").sortable({ //Make the second tab panel (bottom) sortable within itself
         opacity: 0.5, //Opacity while "sorting"
@@ -72,15 +71,20 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
 // adds an empty tab to this panel
 GuiPanel.prototype.addNewTab = function ( tabID ){
     var newTab = new GuiPanelTab(tabID);						//create new tab
+	this.panelGroupRef.addTab(tabID, newTab);
     $(this.PanelID + " ul").append(newTab.createHeader());		//create tab header add to doc
     $(this.PanelID).append(newTab.createContentContainer());	//create tab content add to doc
     this.guiTab.tabs("refresh"); // MUST BE REFRESHED
 };
 
-// adds a tab object to the current panel
-GuiPanel.prototype.addTab = function ( guiPanelTab ){
-	$(this.PanelID + " ul").append(guiPanelTab.getHeader());
-	$(this.PanelID).append(guiPanelTab.getContentContainer());
+// moves tab object to the current panel, tab must be in the DOM already
+GuiPanel.prototype.moveTabToThisPanel = function ( tabID ){
+	var guiPanelTab = this.panelGroupRef.getTab( tabID );
+	var $header = guiPanelTab.getHeader().detach();
+	$(this.PanelID + ' ul').append($header);
+
+	var $content = guiPanelTab.getContentContainer().detach();
+	$(this.PanelID).append($content);
 	this.guiTab.tabs("refresh"); // MUST BE REFRESHED
 };
 
