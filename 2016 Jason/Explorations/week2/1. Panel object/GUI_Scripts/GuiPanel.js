@@ -72,20 +72,22 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
 GuiPanel.prototype.addNewTab = function ( tabID ){
     var newTab = new GuiPanelTab(tabID);						//create new tab
 	this.panelGroupRef.addTab(tabID, newTab);
-    $(this.PanelID + " ul").append(newTab.createHeader());		//create tab header add to doc
-    $(this.PanelID).append(newTab.createContentContainer());	//create tab content add to doc
-    this.guiTab.tabs("refresh"); // MUST BE REFRESHED
+    $(this.PanelID + " ul").append(newTab.createHeader());		//create tab_header add to panel
+    $(this.PanelID).append(newTab.createContentContainer());	//create empty tab_content add to panel
+    this.guiTab.tabs("refresh");
 };
 
 // moves tab object to the current panel, tab must be in the DOM already
 GuiPanel.prototype.moveTabToThisPanel = function ( tabID ){
-	var guiPanelTab = this.panelGroupRef.getTab( tabID );
-	var $header = guiPanelTab.getHeader().detach();
-	$(this.PanelID + ' ul').append($header);
-
+	// remove tab_header from any panel, append to back of this one
+	var guiPanelTab = this.panelGroupRef.getTab( tabID );	// find the tab_header
+	var $header = guiPanelTab.getHeader().detach();			// remove it
+	$(this.PanelID + ' ul').append($header);				// attach to this panel
+	
+	// remove tab_content from any panel, append to back of this one
 	var $content = guiPanelTab.getContentContainer().detach();
 	$(this.PanelID).append($content);
-	this.guiTab.tabs("refresh"); // MUST BE REFRESHED
+	this.guiTab.tabs("refresh");
 };
 
 //Checks if the mouse position (Global variables mouseX and mouseY) is within specified element
