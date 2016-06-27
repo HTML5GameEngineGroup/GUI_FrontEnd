@@ -5,11 +5,13 @@ var GuiPanelGroup = function() {
 	this.tabMap = {};
 };
 
+// Add a new panel to the list. Set resize functions and make the panels sortable between eachother
 GuiPanelGroup.prototype.addPanel = function(guiPanel) {
 	this.panelList.push(guiPanel);
-	this.setResizeFunction(guiPanel);
-	this.addTabStyle(guiPanel);
-	//this.setTabHeight(guiPanel);
+	this.setResizeFunction(guiPanel); //Resize based on panel type
+	this.addTabStyle(guiPanel); //Make panels scrollable
+	
+	//Connect the panels with jquery ui sortable
 	var panelConnectorString = "";
 	
 	for (var i = 0; i < this.panelList.length; i++) {
@@ -24,6 +26,7 @@ GuiPanelGroup.prototype.addPanel = function(guiPanel) {
 	
 };
 
+//Sets a specific resize function for specified panel type
 GuiPanelGroup.prototype.setResizeFunction = function(panel) {
 	switch(panel.panelType) {
 		case GuiPanelType.BOTTOM:
@@ -46,66 +49,77 @@ GuiPanelGroup.prototype.setResizeFunction = function(panel) {
 	}
 };
 
+//Resize behavior for a panel on the bottom of the page. Pushes up panels on the right and left
 GuiPanelGroup.prototype.resizeBottom = function(panel) {
 	var panelID = panel.PanelID;
 	
 	$(panelID).resizable({
-        handles: "n",
+        handles: "n", //Only resize upward
         resize: function(event, ui) {
-            //If we have right or left panels, adjust their height according to the bottom panel
-			var leftPanels = panel.panelGroupRef.getPanelsOfType(GuiPanelType.LEFT);
-			var rightPanels = panel.panelGroupRef.getPanelsOfType(GuiPanelType.RIGHT);
+           
+			panel.panelGroupRef.resizeLeftRightHelper(panel);
 			
-			for (var i = 0; i < leftPanels.length; i++) {
-				//Adjust height according to bottom panel
-				$(leftPanels[i].PanelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
-				
-				var tabList = $(leftPanels[i].PanelID + "Sortable");
-				var tabs = tabList.find("li");
-				for (var i = 0; i < tabs.length; i++) {
-					
-					var linkHTML = tabs[i].innerHTML;
-					var href = linkHTML.match(/href="([^"]*)/)[1];
-					//var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
-
-					$(href).css("height", $(window).height() - $(panelID).height());
-				}
-				
-			}
-			
-			for (var i = 0; i < rightPanels.length; i++) {
-				//Adjust height according to bottom panel
-				$(rightPanels[i].PanelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
-				
-				var tabList = $(leftPanels[i].PanelID + "Sortable");
-				var tabs = tabList.find("li");
-				for (var i = 0; i < tabs.length; i++) {
-					
-					var linkHTML = tabs[i].innerHTML;
-					var href = linkHTML.match(/href="([^"]*)/)[1];
-					//var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
-
-					$(href).css("height", $(window).height() - $(panelID).height() - 60);
-				}
-				
-			}
-			
-			var tabList = $(panel.PanelID + "Sortable");
-			var tabs = tabList.find("li");
-			for (var i = 0; i < tabs.length; i++) {
-				
-				var linkHTML = tabs[i].innerHTML;
-				var href = linkHTML.match(/href="([^"]*)/)[1];
-				$(href).css("height", $(panelID).height() - 60);
-			}
+			panel.panelGroupRef.resizeBottomHelper(panel);
 			
             ui.position.top = $(window).height() - ui.size.height; //Works without this in firefox, not with chrome
         }
     });
-	
+
 	$( window ).resize(function() {
 		$(panelID).css("top", $(window).height() - $(panelID).height());
     });
+};
+
+GuiPanelGroup.prototype.resizeBottomHelper = function(panel) {
+	var panelID = panel.PanelID;
+	var tabList = $(panel.PanelID + "Sortable");
+	var tabs = tabList.find("li");
+	for (var i = 0; i < tabs.length; i++) {
+		
+		var linkHTML = tabs[i].innerHTML;
+		var href = linkHTML.match(/href="([^"]*)/)[1];
+		$(href).css("height", $(panelID).height() - 60);
+	}
+};
+
+GuiPanelGroup.prototype.resizeLeftRightHelper = function(panel) {
+	var panelID = panel.PanelID;
+	var leftPanels = panel.panelGroupRef.getPanelsOfType(GuiPanelType.LEFT); //Get all panels of type left
+	var rightPanels = panel.panelGroupRef.getPanelsOfType(GuiPanelType.RIGHT); //Get all panels of type right
+	
+	for (var i = 0; i < leftPanels.length; i++) {
+		//Adjust height of actual panel based on bottom panel
+		$(leftPanels[i].PanelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
+		
+		panel.panelGroupRef.resizeLeftRightTabContentPane(leftPanels[i]);
+		
+	}
+	//Same process for right panels
+	for (var i = 0; i < rightPanels.length; i++) {
+		//Adjust height according to bottom panel
+		$(rightPanels[i].PanelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
+		panel.panelGroupRef.resizeLeftRightTabContentPane(rightPanels[i]);
+	}
+};
+
+GuiPanelGroup.prototype.resizeLeftRightTabContentPane = function(panel) {
+		//Get the list of tab content containers
+		var tabList = $(panel.PanelID + "Sortable");
+		var tabs = tabList.find("li");
+		
+		for (var i = 0; i < tabs.length; i++) {
+			//For each tab content container, resize it so that the scrollbar will fit
+			var linkHTML = tabs[i].innerHTML;
+			var href = linkHTML.match(/href="([^"]*)/)[1];
+			
+			var heightSum = 0;
+			var bottomPanels = panel.panelGroupRef.getPanelsOfType(GuiPanelType.BOTTOM);
+			for (var j = 0; j < bottomPanels.length; j++) {
+				heightSum += $(bottomPanels[j].PanelID).height();
+			}
+			
+			$(href).css("height", $(window).height() - heightSum - 60);
+		}
 };
 
 GuiPanelGroup.prototype.resizeTop = function(panel) {
@@ -114,9 +128,10 @@ GuiPanelGroup.prototype.resizeTop = function(panel) {
 	
 };
 
+//Resize for left type panels
 GuiPanelGroup.prototype.resizeLeft = function(panel) {
 	 var panelID = panel.PanelID;
-	 $(panelID).resizable({ handles: "e" });
+	 $(panelID).resizable({ handles: "e" }); //Just resize to the right
 	 $(panelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
 	 
 	 $( window ).resize(function() {
@@ -131,13 +146,13 @@ GuiPanelGroup.prototype.resizeLeft = function(panel) {
 
 GuiPanelGroup.prototype.resizeRight = function(panel) {
 	var panelID = panel.PanelID;
-	$("#panelRight").resizable({
+	$(panelID).resizable({
         handles: "w",
         resize: function(event, ui) { //Fix for right panel repositioning on resize
             ui.position.left = 0;
         }
     });
-	$(panelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
+	$(panelID).css("height", $(window).height() - parseInt($(panelID).css("height")));
 	
 	
 	$( window ).resize(function() {
@@ -204,10 +219,6 @@ GuiPanelGroup.prototype.createFloatingPanel = function(tabheader, tab) {
 	
 	this.refreshAll();
 	
-	//Make this new panel draggable and resizeable, so it feels like a window
-	//$("#panelFloater").resizable({
-	//});
-	
 	var tabList = $("#panelFloaterSortable");
 	var tabs = tabList.find("li");
 	for (var i = 0; i < tabs.length; i++) {
@@ -238,6 +249,7 @@ GuiPanelGroup.prototype.refreshAll = function() {
 	}
 };
 
+//Get all panels of a specific type
 GuiPanelGroup.prototype.getPanelsOfType = function(panelType) {
 	var panelArray = [];
 	for (var i = 0; i < this.panelList.length; i++) {
@@ -248,6 +260,7 @@ GuiPanelGroup.prototype.getPanelsOfType = function(panelType) {
 	return panelArray;
 };
 
+//Add scrollbars to all tab containers
 GuiPanelGroup.prototype.addTabStyle = function(panel) {
 	var tabList = $(panel.PanelID + "Sortable");
 	var tabs = tabList.find("li");

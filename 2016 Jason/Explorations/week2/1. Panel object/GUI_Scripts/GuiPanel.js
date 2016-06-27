@@ -33,7 +33,7 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
     $(PanelID + "Sortable").sortable({ //Make the second tab panel (bottom) sortable within itself
         opacity: 0.5, //Opacity while "sorting"
         stop: function(event, ui) { //Refresh the tabs after a sort
-            tabs.tabs("refresh");
+            //tabs.tabs("refresh");
 			
 			if (panelType != GuiPanelType.FLOATING) { //Behavior that we don't want for a floating tab window
 				if (!mouseInPanelList(panelGroup.panelList)) {
@@ -59,6 +59,14 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
 			if ($('#panelFloaterSortable li').length == 0) {
 				panelGroup.removePanel("#panelFloater");
 				$("#panelFloater").remove(); //Delete the panel
+			}
+			
+			if (panelType == GuiPanelType.LEFT || panelType == GuiPanelType.RIGHT) {
+				var bottomPanels = panelGroup.getPanelsOfType(GuiPanelType.BOTTOM);
+				panelGroup.resizeLeftRightHelper(bottomPanels[0]);
+			} else if (panelType == GuiPanelType.BOTTOM) {
+				var bottomPanels = panelGroup.getPanelsOfType(GuiPanelType.BOTTOM);
+				panelGroup.resizeBottomHelper(bottomPanels[0]);
 			}
 			
             tabs.tabs("refresh");
