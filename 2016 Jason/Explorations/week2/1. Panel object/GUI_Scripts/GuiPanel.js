@@ -56,10 +56,14 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
 			
             $(href).detach().appendTo(PanelID); //Actually detach and move the tab
 			
-			if ($('#panelFloaterSortable li').length == 0) {
-				panelGroup.removePanel("#panelFloater");
-				$("#panelFloater").remove(); //Delete the panel
+			for (var i = 0; i < panelGroup.floatingPanelList.length; i++) {
+				var panelID = panelGroup.floatingPanelList[i].PanelID;
+				if ($(panelID + 'Sortable li').length == 0) {
+					panelGroup.removePanel(panelID);
+					$(panelID).remove(); //Delete the panel
+				}
 			}
+			
 
 			
 			

@@ -2,12 +2,18 @@
 
 var GuiPanelGroup = function() {
 	this.panelList = [];
+	this.floatingPanelList = [];
+	this.numFloatingPanels = 0;
 	this.tabMap = {};
 };
 
 // Add a new panel to the list. Set resize functions and make the panels sortable between eachother
 GuiPanelGroup.prototype.addPanel = function(guiPanel) {
-	this.panelList.push(guiPanel);
+	if (guiPanel.panelType == GuiPanelType.FLOATING) {
+		this.floatingPanelList.push(guiPanel);
+	} else {
+		this.panelList.push(guiPanel);
+	}
 	this.setResizeFunction(guiPanel); //Resize based on panel type
 	this.addTabStyle(guiPanel); //Make panels scrollable
 	
@@ -15,10 +21,19 @@ GuiPanelGroup.prototype.addPanel = function(guiPanel) {
 	var panelConnectorString = "";
 	
 	for (var i = 0; i < this.panelList.length; i++) {
-		panelConnectorString += this.panelList[i].PanelID + "Sortable";
-		if (i != this.panelList.length-1) panelConnectorString += ", ";
-	};
+		panelConnectorString += this.panelList[i].PanelID + "Sortable, ";
+		//if (i != this.panelList.length-1) panelConnectorString += ", ";
+	}
 
+	if (this.floatingPanelList.length == 0) {
+		panelConnectorString = panelConnectorString.substring(0, panelConnectorString.length-2);
+	}
+	
+	for (var i = 0; i < this.floatingPanelList.length; i++) {
+		panelConnectorString += this.floatingPanelList[i].PanelID + "Sortable";
+		if (i != this.floatingPanelList.length-1) panelConnectorString += ", ";
+	}
+	
 	$(panelConnectorString).sortable({
         opacity: 0.5,
         connectWith: ".connectedSortable"
@@ -36,6 +51,41 @@ GuiPanelGroup.prototype.addPanel = function(guiPanel) {
 	}
 	
 };
+
+GuiPanelGroup.prototype.removePanel = function(panelID) {
+	for (var i = 0; i < this.panelList.length; i++) {
+
+		if (this.panelList[i].PanelID == panelID)
+			this.panelList.splice(i, 1);
+	}
+	
+	for (var i = 0; i < this.floatingPanelList.length; i++) {
+
+		if (this.floatingPanelList[i].PanelID == panelID)
+			this.floatingPanelList.splice(i, 1);
+	}
+
+	var panelConnectorString = "";
+	
+	for (var i = 0; i < this.panelList.length; i++) {
+		panelConnectorString += this.panelList[i].PanelID + "Sortable, ";
+		//if (i != this.panelList.length-1) panelConnectorString += ", ";
+	}
+
+	if (this.floatingPanelList.length == 0) {
+		panelConnectorString = panelConnectorString.substring(0, panelConnectorString.length-2);
+	}
+	
+	for (var i = 0; i < this.floatingPanelList.length; i++) {
+		panelConnectorString += this.floatingPanelList[i].PanelID + "Sortable";
+		if (i != this.floatingPanelList.length-1) panelConnectorString += ", ";
+	}
+
+	$(panelConnectorString).sortable({
+        opacity: 0.5,
+        connectWith: ".connectedSortable"
+    });
+}
 
 //Sets a specific resize function for specified panel type
 GuiPanelGroup.prototype.setResizeFunction = function(panel) {
@@ -183,10 +233,11 @@ GuiPanelGroup.prototype.getBottomPanelsHeight = function() {
 };
 
 GuiPanelGroup.prototype.resizeFloating = function(panelID) {
-	$("#panelFloater").resizable({
+	var numFloating = this.numFloatingPanels.toString();
+	$("#panelFloater"  + numFloating).resizable({
 		
 		resize: function(event, ui) {
-			var tabList = $("#panelFloaterSortable");
+			var tabList = $("#panelFloater" + numFloating + "Sortable");
 			var tabs = tabList.find("li");
 			for (var i = 0; i < tabs.length; i++) {
 				
@@ -194,57 +245,43 @@ GuiPanelGroup.prototype.resizeFloating = function(panelID) {
 				var href = linkHTML.match(/href="([^"]*)/)[1];
 				//var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
 
-				$(href).css("height", $("#panelFloater").height() - 60);
+				$(href).css("height", $("#panelFloater" + numFloating).height() - 60);
 				//console.log($(panelID).height());
 			}
 		}
 	});
 	
-	var tabList = $("#panelFloaterSortable");
+	var tabList = $("#panelFloater" + numFloating + "Sortable");
 	var tabs = tabList.find("li");
 	for (var i = 0; i < tabs.length; i++) {
 		var linkHTML = tabs[i].innerHTML;
 		var href = linkHTML.match(/href="([^"]*)/)[1];
-		$(href).css("height", $("#panelFloater").height() - 60);
+		$(href).css("height", $("#panelFloater" + this.numFloatingPanels.toString()).height() - 60);
 	}
 }
 
-GuiPanelGroup.prototype.removePanel = function(panelID) {
-	for (var i = 0; i < this.panelList.length; i++) {
 
-		if (this.panelList[i].PanelID == panelID)
-			this.panelList.splice(i, 1);
-	}
-
-	var panelConnectorString = "";
-	
-	for (var i = 0; i < this.panelList.length; i++) {
-		panelConnectorString += this.panelList[i].PanelID + "Sortable";
-		if (i != this.panelList.length-1) panelConnectorString += ", ";
-	}
-
-	$(panelConnectorString).sortable({
-        opacity: 0.5,
-        connectWith: ".connectedSortable"
-    });
-}
 
 GuiPanelGroup.prototype.createFloatingPanel = function(tabheader, tab) {
-	$("body").append('<div id="panelFloater"><ul id="panelFloaterSortable" class="connectedSortable"></ul></div></div>');
-	var floaterTabs = $("#panelFloater").tabs(); 
+	$("body").append('<div id="panelFloater' + this.numFloatingPanels.toString() + '"><ul id="panelFloater' + this.numFloatingPanels.toString() +'Sortable" class="connectedSortable"></ul></div></div>');
+	var floaterTabs = $("#panelFloater" + this.numFloatingPanels.toString()).tabs();  
 	
-	var panelID = "#panelFloater";
+	var panelID = "#panelFloater" + this.numFloatingPanels.toString();
     var floatingPanel = new GuiPanel(panelID, this, GuiPanelType.FLOATING);
 	
+	$(panelID).css("position", "fixed");
+	$(panelID).css("height", "234px");
+	$(panelID).css("width", "234px");
+	
 	//Attach the dragged tab and its content to the new panel
-	var floatingTabs = $("#panelFloaterSortable");
+	var floatingTabs = $("#panelFloater" + this.numFloatingPanels.toString() + "Sortable");
 	tabheader.removeAttr("style"); //Dragging gives some style elements that we don't want
 	tabheader.detach().appendTo(floatingTabs); //Take the dragged tab header and put it on the new panel
-	$(tab).detach().appendTo("#panelFloater"); //Take the tab contents and put it on the new panel
+	$(tab).detach().appendTo(panelID); //Take the tab contents and put it on the new panel
 	
 	this.refreshAll();
 	
-	var tabList = $("#panelFloaterSortable");
+	var tabList = $("#panelFloater" + this.numFloatingPanels.toString() + "Sortable");
 	var tabs = tabList.find("li");
 	for (var i = 0; i < tabs.length; i++) {
 		
@@ -252,18 +289,20 @@ GuiPanelGroup.prototype.createFloatingPanel = function(tabheader, tab) {
 		var href = linkHTML.match(/href="([^"]*)/)[1];
 		//var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
 
-		$(href).css("height", $("#panelFloater").height() - 60);
+		$(href).css("height", $("#panelFloater"+ this.numFloatingPanels.toString()).height() - 60);
 		//console.log($(panelID).height());
 	}
 	
 	//Make the floating panel draggable only by the top bar
-	$("#panelFloater").draggable({
-		handle: "#panelFloaterSortable"
+	$(panelID).draggable({
+		handle: "#panelFloater" + this.numFloatingPanels.toString() + "Sortable"
 	});
 	
 	//Place the panel at the dropped mouse position
-	$("#panelFloater").css("top", mouseY);
-	$("#panelFloater").css("left", mouseX);
+	$(panelID).css("top", mouseY);
+	$(panelID).css("left", mouseX);
+	
+	this.numFloatingPanels++;
 	
 };
 
@@ -273,6 +312,15 @@ GuiPanelGroup.prototype.refreshAll = function() {
 		
 		var panelID = this.panelList[i].PanelID;
 		this.panelList[i].guiTab.tabs("refresh");
+		
+		var tabWidth = this.getTabsWidth(panelID);
+		$(panelID).width(Math.max($(panelID).width(), tabWidth));
+	}
+	
+	for (var i = 0; i < this.floatingPanelList.length; i++) {
+		
+		var panelID = this.floatingPanelList[i].PanelID;
+		this.floatingPanelList[i].guiTab.tabs("refresh");
 		
 		var tabWidth = this.getTabsWidth(panelID);
 		$(panelID).width(Math.max($(panelID).width(), tabWidth));
