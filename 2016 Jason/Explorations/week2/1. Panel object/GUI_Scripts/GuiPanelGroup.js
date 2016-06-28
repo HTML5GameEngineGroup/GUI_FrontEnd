@@ -24,6 +24,17 @@ GuiPanelGroup.prototype.addPanel = function(guiPanel) {
         connectWith: ".connectedSortable"
     });
 	
+	var bottomPanels = this.getPanelsOfType(GuiPanelType.BOTTOM);
+	if (bottomPanels.length > 0 && (guiPanel.panelType == GuiPanelType.RIGHT || guiPanel.panelType == GuiPanelType.LEFT)) {
+		//this.resizeLeftRightHelper(bottomPanels[0]);
+		$(guiPanel.PanelID).height($(window).height() - this.getBottomPanelsHeight() - 20);
+	} 
+	
+	//If the bottom panel is added last, need to update the positions of any left/right panels
+	if (guiPanel.panelType == GuiPanelType.BOTTOM) {
+		this.resizeLeftRightHelper(guiPanel);
+	}
+	
 };
 
 //Sets a specific resize function for specified panel type
@@ -83,6 +94,7 @@ GuiPanelGroup.prototype.resizeBottomHelper = function(panel) {
 	}
 };
 
+
 GuiPanelGroup.prototype.resizeLeftRightHelper = function(panel) {
 	var panelID = panel.PanelID;
 	var leftPanels = panel.panelGroupRef.getPanelsOfType(GuiPanelType.LEFT); //Get all panels of type left
@@ -113,11 +125,7 @@ GuiPanelGroup.prototype.resizeLeftRightTabContentPane = function(panel) {
 			var linkHTML = tabs[i].innerHTML;
 			var href = linkHTML.match(/href="([^"]*)/)[1];
 			
-			var heightSum = 0;
-			var bottomPanels = panel.panelGroupRef.getPanelsOfType(GuiPanelType.BOTTOM);
-			for (var j = 0; j < bottomPanels.length; j++) {
-				heightSum += $(bottomPanels[j].PanelID).height();
-			}
+			var heightSum = this.getBottomPanelsHeight();
 			
 			$(href).css("height", $(window).height() - heightSum - 60);
 		}
@@ -136,11 +144,7 @@ GuiPanelGroup.prototype.resizeLeft = function(panel) {
 	 $(panelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
 	 
 	 $( window ).resize(function() {
-		var bottomPanels = panel.panelGroupRef.getPanelsOfType(GuiPanelType.BOTTOM);
-		var heightSum = 0; //Sum up the heights of all the bottom panels
-		for (var i = 0; i < bottomPanels.length; i++) {
-			heightSum += $(bottomPanels[i].PanelID).height();
-		}
+		var heightSum = panel.panelGroupRef.getBottomPanelsHeight();
 		$(panelID).css("height", $(window).height() - heightSum - 5);
     });
 };
@@ -157,13 +161,18 @@ GuiPanelGroup.prototype.resizeRight = function(panel) {
 	
 	
 	$( window ).resize(function() {
-		var bottomPanels = panel.panelGroupRef.getPanelsOfType(GuiPanelType.BOTTOM);
-		var heightSum = 0; //Sum up the heights of all the bottom panels
-		for (var i = 0; i < bottomPanels.length; i++) {
-			heightSum += $(bottomPanels[i].PanelID).height();
-		}
+		var heightSum = panel.panelGroupRef.getBottomPanelsHeight();
 		$(panelID).css("height", $(window).height() - heightSum - 5);
     });
+};
+
+GuiPanelGroup.prototype.getBottomPanelsHeight = function() {
+	var bottomPanels = this.getPanelsOfType(GuiPanelType.BOTTOM);
+	var heightSum = 0; //Sum up the heights of all the bottom panels
+	for (var i = 0; i < bottomPanels.length; i++) {
+		heightSum += $(bottomPanels[i].PanelID).height();
+	}
+	return heightSum;
 };
 
 GuiPanelGroup.prototype.resizeFloating = function(panelID) {
@@ -183,6 +192,14 @@ GuiPanelGroup.prototype.resizeFloating = function(panelID) {
 			}
 		}
 	});
+	
+	var tabList = $("#panelFloaterSortable");
+	var tabs = tabList.find("li");
+	for (var i = 0; i < tabs.length; i++) {
+		var linkHTML = tabs[i].innerHTML;
+		var href = linkHTML.match(/href="([^"]*)/)[1];
+		$(href).css("height", $("#panelFloater").height() - 60);
+	}
 }
 
 GuiPanelGroup.prototype.removePanel = function(panelID) {
@@ -273,9 +290,9 @@ GuiPanelGroup.prototype.addTabStyle = function(panel) {
 		
 		$(href).attr("style", "overflow: auto");
 		
-		var bottomPanels = this.getPanelsOfType(GuiPanelType.BOTTOM);
+		var bottomPanelHeight = this.getBottomPanelsHeight();
 		
-		$(href).css("height", $(window).height() - $(bottomPanels[0].PanelID).height() - 60);
+		$(href).css("height", $(window).height() - bottomPanelHeight - 60);
 	}
 };
 

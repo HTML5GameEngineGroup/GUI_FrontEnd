@@ -61,11 +61,10 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
 				$("#panelFloater").remove(); //Delete the panel
 			}
 			
-			if (panelType == GuiPanelType.LEFT || panelType == GuiPanelType.RIGHT) {
-				var bottomPanels = panelGroup.getPanelsOfType(GuiPanelType.BOTTOM);
+			var bottomPanels = panelGroup.getPanelsOfType(GuiPanelType.BOTTOM);
+			if ((panelType == GuiPanelType.LEFT || panelType == GuiPanelType.RIGHT) && bottomPanels.length > 0) {
 				panelGroup.resizeLeftRightHelper(bottomPanels[0]);
 			} else if (panelType == GuiPanelType.BOTTOM) {
-				var bottomPanels = panelGroup.getPanelsOfType(GuiPanelType.BOTTOM);
 				panelGroup.resizeBottomHelper(bottomPanels[0]);
 			}
 			
