@@ -60,6 +60,8 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
 				panelGroup.removePanel("#panelFloater");
 				$("#panelFloater").remove(); //Delete the panel
 			}
+
+			
 			
 			var bottomPanels = panelGroup.getPanelsOfType(GuiPanelType.BOTTOM);
 			if ((panelType == GuiPanelType.LEFT || panelType == GuiPanelType.RIGHT) && bottomPanels.length > 0) {
@@ -68,7 +70,7 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
 				panelGroup.resizeBottomHelper(bottomPanels[0]);
 			}
 			
-            tabs.tabs("refresh");
+            panelGroup.refreshAll();
             return true;
         }
     });

@@ -140,7 +140,12 @@ GuiPanelGroup.prototype.resizeTop = function(panel) {
 //Resize for left type panels
 GuiPanelGroup.prototype.resizeLeft = function(panel) {
 	 var panelID = panel.PanelID;
-	 $(panelID).resizable({ handles: "e" }); //Just resize to the right
+	 $(panelID).resizable({ handles: "e",
+		resize: function(event, ui) {
+			var tabWidth = panel.panelGroupRef.getTabsWidth(panelID);
+			ui.size.width = Math.max(ui.size.width, tabWidth);
+		}
+	 }); //Just resize to the right
 	 $(panelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
 	 
 	 $( window ).resize(function() {
@@ -155,6 +160,8 @@ GuiPanelGroup.prototype.resizeRight = function(panel) {
         handles: "w",
         resize: function(event, ui) { //Fix for right panel repositioning on resize
             ui.position.left = 0;
+			var tabWidth = panel.panelGroupRef.getTabsWidth(panelID);
+			ui.size.width = Math.max(ui.size.width, tabWidth);
         }
     });
 	$(panelID).css("height", $(window).height() - parseInt($(panelID).css("height")));
@@ -263,7 +270,12 @@ GuiPanelGroup.prototype.createFloatingPanel = function(tabheader, tab) {
 //Refresh all panels within the group
 GuiPanelGroup.prototype.refreshAll = function() {
 	for (var i = 0; i < this.panelList.length; i++) {
+		
+		var panelID = this.panelList[i].PanelID;
 		this.panelList[i].guiTab.tabs("refresh");
+		
+		var tabWidth = this.getTabsWidth(panelID);
+		$(panelID).width(Math.max($(panelID).width(), tabWidth));
 	}
 };
 
@@ -294,6 +306,22 @@ GuiPanelGroup.prototype.addTabStyle = function(panel) {
 		
 		$(href).css("height", $(window).height() - bottomPanelHeight - 60);
 	}
+};
+
+GuiPanelGroup.prototype.getTabsWidth = function(panelID) {
+	var widthInPixel = 0;
+	
+	var tabList = $(panelID + "Sortable li");
+	
+	tabList.each(function(index) {
+		widthInPixel += ($(this).width());
+		var padding = $(this).css("border-top-right-radius");
+		padding = parseInt(padding.substring(0, padding.length - 2));
+		widthInPixel += 15;
+	});
+	
+	return widthInPixel;
+
 };
 
 GuiPanelGroup.prototype.addTab = function (tabID, theTab) {
