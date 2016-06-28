@@ -237,12 +237,16 @@ GuiPanelGroup.prototype.getBottomPanelsHeight = function() {
 	return heightSum;
 };
 
-GuiPanelGroup.prototype.resizeFloating = function(panelID) {
+GuiPanelGroup.prototype.resizeFloating = function(panel) {
+	var panelID = panel.PanelID;
 	var numFloating = this.numFloatingPanels.toString();
-	$("#panelFloater"  + numFloating).resizable({
+	$(panelID).resizable({
 		
 		resize: function(event, ui) {
-			var tabList = $("#panelFloater" + numFloating + "Sortable");
+			var tabWidth = panel.panelGroupRef.getTabsWidth(panelID);
+			ui.size.width = Math.max(ui.size.width, tabWidth);
+			
+			var tabList = $(panelID + "Sortable");
 			var tabs = tabList.find("li");
 			for (var i = 0; i < tabs.length; i++) {
 				
