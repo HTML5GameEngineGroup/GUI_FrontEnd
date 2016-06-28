@@ -36,7 +36,10 @@ GuiPanelGroup.prototype.addPanel = function(guiPanel) {
 	
 	$(panelConnectorString).sortable({
         opacity: 0.5,
-        connectWith: ".connectedSortable"
+		//helper: 'clone',
+		//appendTo: 'body',
+		//zIndex: 10000,
+        connectWith: ".connectedSortable",
     });
 	
 	var bottomPanels = this.getPanelsOfType(GuiPanelType.BOTTOM);
@@ -83,6 +86,8 @@ GuiPanelGroup.prototype.removePanel = function(panelID) {
 
 	$(panelConnectorString).sortable({
         opacity: 0.5,
+		appendTo: 'body',
+		zIndex: 10000,
         connectWith: ".connectedSortable"
     });
 }
@@ -295,7 +300,8 @@ GuiPanelGroup.prototype.createFloatingPanel = function(tabheader, tab) {
 	
 	//Make the floating panel draggable only by the top bar
 	$(panelID).draggable({
-		handle: "#panelFloater" + this.numFloatingPanels.toString() + "Sortable"
+		handle: "#panelFloater" + this.numFloatingPanels.toString() + "Sortable",
+		stack: "div" //Make currently dragged panel stack on top of other panels/divs
 	});
 	
 	//Place the panel at the dropped mouse position

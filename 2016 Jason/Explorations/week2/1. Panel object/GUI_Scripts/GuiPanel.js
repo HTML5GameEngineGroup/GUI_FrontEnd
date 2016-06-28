@@ -32,6 +32,7 @@ var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
 	var tabs = $(PanelID).tabs();
     $(PanelID + "Sortable").sortable({ //Make the second tab panel (bottom) sortable within itself
         opacity: 0.5, //Opacity while "sorting"
+		
         stop: function(event, ui) { //Refresh the tabs after a sort
             //tabs.tabs("refresh");
 			
