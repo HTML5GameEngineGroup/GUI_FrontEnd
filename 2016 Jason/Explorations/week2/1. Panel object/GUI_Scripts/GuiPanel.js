@@ -2,15 +2,7 @@
  * Created by MetaBlue on 6/24/16.
  */
 
-//Poll mouse movement
-var mouseX = 0;
-var mouseY = 0;
 
-$(document).on('mousemove', function(e){
-	mouseY = e.pageY;
-	mouseX = e.pageX;	
-});
- 
 
 GuiPanelType = Object.freeze({
 	TOP: 0,
@@ -28,14 +20,13 @@ var GuiPanel = function (PanelID, panelType, Height) {
     if (Height !== undefined) this.guiTab.height(Height);
 	
 	var tabs = $(PanelID).tabs();
-    $(PanelID + "Sortable").sortable({ //Make the second tab panel (bottom) sortable within itself
+    $(PanelID + "Sortable").sortable({ 
         opacity: 0.5, //Opacity while "sorting"
 		
         stop: function(event, ui) { //Refresh the tabs after a sort
-            //tabs.tabs("refresh");
-			
+
 			if (panelType != GuiPanelType.FLOATING) { //Behavior that we don't want for a floating tab window
-				if (!mouseInPanelList(gGuiBase.Core.panelList)) {
+				if (!gGuiBase.Core.mouseInPanelList()) {
 
 					var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> information
 					//Get the href, which contains the tab name that we need to move
@@ -55,22 +46,12 @@ var GuiPanel = function (PanelID, panelType, Height) {
 			
             $(href).detach().appendTo(PanelID); //Actually detach and move the tab
 			
-			for (var i = 0; i < gGuiBase.Core.floatingPanelList.length; i++) {
-				var panelID = gGuiBase.Core.floatingPanelList[i].PanelID;
-				if ($(panelID + 'Sortable li').length == 0) {
-					gGuiBase.Core.removePanel(panelID);
-					$(panelID).remove(); //Delete the panel
-				}
-			}
+			gGuiBase.Core.removeEmptyFloatingPanels();
 			
-
-			
-			
-			var bottomPanels = gGuiBase.Core.getPanelsOfType(GuiPanelType.BOTTOM);
-			if ((panelType == GuiPanelType.LEFT || panelType == GuiPanelType.RIGHT) && bottomPanels.length > 0) {
-				gGuiBase.Core.resizeLeftRightHelper(bottomPanels[0]);
+			if ((panelType == GuiPanelType.LEFT || panelType == GuiPanelType.RIGHT)) {
+				gGuiBase.Core.resizeLeftRightHelper();
 			} else if (panelType == GuiPanelType.BOTTOM) {
-				gGuiBase.Core.resizeBottomHelper(bottomPanels[0]);
+				gGuiBase.Core.resizeBottomHelper();
 			}
 			
             gGuiBase.Core.refreshAll();
@@ -89,6 +70,13 @@ GuiPanel.prototype.addNewTab = function ( tabID ){
     this.guiTab.tabs("refresh");
 };
 
+GuiPanel.prototype.addTab = function ( tab ){						//create new tab
+	gGuiBase.Core.addTab(tab.tabID, tab);
+    $(this.PanelID + " ul").append(tab.createHeader());		//create tab_header add to panel
+    $(this.PanelID).append(tab.createContentContainer());	//create empty tab_content add to panel
+    this.guiTab.tabs("refresh");
+};
+
 // moves tab object to the current panel, tab must be in the DOM already
 GuiPanel.prototype.moveTabToThisPanel = function ( tabID ){
 	// remove tab_header from any panel, append to back of this one
@@ -102,26 +90,3 @@ GuiPanel.prototype.moveTabToThisPanel = function ( tabID ){
 	this.guiTab.tabs("refresh");
 };
 
-//Checks if the mouse position (Global variables mouseX and mouseY) is within specified element
-var mouseInElement = function(element) {
-	
-	var position = element.position();
-	
-	//If mouseX, mouseY is within the bounds of the element
-	if (mouseX > position.left && mouseX < position.left + element.width() &&
-		mouseY > position.top && mouseY < position.top + element.height()) {
-		return true;
-	} 
-	return false;
-};
-
-var mouseInPanelList = function(panelList) {
-
-	for (var i = 0; i < panelList.length; i++) {
-		var tab = $(panelList[i].PanelID).tabs();
-		var returnValue = mouseInElement(tab);
-		if (returnValue) return true;
-		
-	}
-	return false;
-}

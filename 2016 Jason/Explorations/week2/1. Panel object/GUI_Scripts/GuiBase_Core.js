@@ -1,13 +1,34 @@
-//GUI Base core functionality
-var gGuiBase = gGuiBase || { };
+/*-----------------------------------------------------------------------------
+//	GUI Base core
+//	Controls the resizing and sorting between GuiPanels, and maintains objects that
+//	need to be globally referenced 
+//
+//	Author: Jason Herold/Thoof
+-----------------------------------------------------------------------------*/
+var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.Core = (function() {
-	var panelList = [];
-	var floatingPanelList = [];
+	var panelList = []; //List for static panels
+	var floatingPanelList = []; //List for floating panels
 	var tabMap = {};
 	var numFloatingPanels = 0;
+	var numFloatingPanelsCreated = 0;
+	
+	//Constants
+	var MIN_PANEL_PADDING = 5;
+	var PANEL_PADDING = 12;
+	var TAB_HEIGHT = 60;
 
+	//For polling mouse position
+	var mouseX = 0;
+	var mouseY = 0;
 
+	//Constantly poll our mouse position
+	$(document).on('mousemove', function(e){
+		mouseY = e.pageY;
+		mouseX = e.pageX;	
+	});
+ 
 	// Add a new panel to the list. Set resize functions and make the panels sortable between eachother
 	var addPanel = function(guiPanel) {
 		if (guiPanel.panelType == GuiPanelType.FLOATING) {
@@ -21,51 +42,58 @@ gGuiBase.Core = (function() {
 		//Connect the panels with jquery ui sortable
 		var panelConnectorString = "";
 		
+		//Add the static panels to the list
 		for (var i = 0; i < panelList.length; i++) {
 			panelConnectorString += panelList[i].PanelID + "Sortable, ";
 		}
-
+		
+		//If no floating panels, remove the last comma
 		if (floatingPanelList.length == 0) {
 			panelConnectorString = panelConnectorString.substring(0, panelConnectorString.length-2);
 		}
 		
-		
+		//Add the floating panels to the list
 		for (var i = 0; i < floatingPanelList.length; i++) {
 			panelConnectorString += floatingPanelList[i].PanelID + "Sortable";
 			if (i != floatingPanelList.length-1) panelConnectorString += ", ";
 		}
 		
+		//Final string should look like #panelLeftSortable, #panelRightSortable, #panelFloater0Sortable
 		$(panelConnectorString).sortable({
 			opacity: 0.5,
 			connectWith: ".connectedSortable",
 		});
 		
+		
 		var bottomPanels = getPanelsOfType(GuiPanelType.BOTTOM);
 		if (bottomPanels.length > 0 && (guiPanel.panelType == GuiPanelType.RIGHT || guiPanel.panelType == GuiPanelType.LEFT)) {
-			//resizeLeftRightHelper(bottomPanels[0]);
 			$(guiPanel.PanelID).height($(window).height() - getBottomPanelsHeight() - 20);
 		} 
 		
 		//If the bottom panel is added last, need to update the positions of any left/right panels
 		if (guiPanel.panelType == GuiPanelType.BOTTOM) {
-			resizeLeftRightHelper(guiPanel);
+			resizeLeftRightHelper();
 		}
 	
 	};
 
+	//Remove a panel from the list based on ID
 	var removePanel = function(panelID) {
+		//Remove from static panel list if present
 		for (var i = 0; i < panelList.length; i++) {
-
 			if (panelList[i].PanelID == panelID)
 				panelList.splice(i, 1);
 		}
 		
+		//Remove from floating panel list if present
 		for (var i = 0; i < floatingPanelList.length; i++) {
 
-			if (floatingPanelList[i].PanelID == panelID)
+			if (floatingPanelList[i].PanelID == panelID) {
 				floatingPanelList.splice(i, 1);
+			}
 		}
-
+		
+		//Update the sortable behavior
 		var panelConnectorString = "";
 		
 		for (var i = 0; i < panelList.length; i++) {
@@ -116,46 +144,48 @@ gGuiBase.Core = (function() {
 	var resizeBottom = function(panel) {
 		var panelID = panel.PanelID;
 		
-		
 		$(panelID).resizable({
 			handles: "n", //Only resize upward
 			resize: function(event, ui) {
-			   
-				resizeLeftRightHelper(panel);
-				
-				resizeBottomHelper(panel);
-				
+				resizeBottomHelper();
+				resizeLeftRightHelper(); //Resize left and right's height according to the bottom panel
 				ui.position.top = $(window).height() - ui.size.height; //Works without this in firefox, not with chrome
 			}
 		});
-
+		
+		//Also resize on window resize
 		$( window ).resize(function() {
 			$(panelID).css("top", $(window).height() - $(panelID).height());
-			resizeLeftRightHelper(panel);
+			resizeLeftRightHelper();
 		});
 	};
-
-	var resizeBottomHelper = function(panel) {
-		var panelID = panel.PanelID;
-		var tabList = $(panel.PanelID + "Sortable");
-		var tabs = tabList.find("li");
-		for (var i = 0; i < tabs.length; i++) {
-			
-			var linkHTML = tabs[i].innerHTML;
-			var href = linkHTML.match(/href="([^"]*)/)[1];
-			$(href).css("height", $(panelID).height() - 60);
+	
+	//Handle bottom resize
+	var resizeBottomHelper = function() {
+		var bottomPanels = getPanelsOfType(GuiPanelType.BOTTOM);
+		
+		for (var i = 0; i < bottomPanels.length; i++) {
+			var panelID = bottomPanels[i].PanelID;
+			var tabList = $(panelID + "Sortable");
+			var tabs = tabList.find("li");
+			for (var i = 0; i < tabs.length; i++) {
+				
+				var linkHTML = tabs[i].innerHTML;
+				var href = linkHTML.match(/href="([^"]*)/)[1];
+				$(href).css("height", $(panelID).height() - TAB_HEIGHT);
+			}
 		}
 	};
 
-
-	var resizeLeftRightHelper = function(panel) {
-		var panelID = panel.PanelID;
+	//Handle left/right resize
+	var resizeLeftRightHelper = function() {
 		var leftPanels = getPanelsOfType(GuiPanelType.LEFT); //Get all panels of type left
 		var rightPanels = getPanelsOfType(GuiPanelType.RIGHT); //Get all panels of type right
 		
+		var bottomPanelsHeight = getBottomPanelsHeight();
 		for (var i = 0; i < leftPanels.length; i++) {
 			//Adjust height of actual panel based on bottom panel
-			$(leftPanels[i].PanelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
+			$(leftPanels[i].PanelID).css("height", $(window).height() - bottomPanelsHeight - PANEL_PADDING);
 			
 			resizeLeftRightTabContentPane(leftPanels[i]);
 			
@@ -163,11 +193,12 @@ gGuiBase.Core = (function() {
 		//Same process for right panels
 		for (var i = 0; i < rightPanels.length; i++) {
 			//Adjust height according to bottom panel
-			$(rightPanels[i].PanelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
+			$(rightPanels[i].PanelID).css("height", $(window).height() - bottomPanelsHeight - PANEL_PADDING);
 			resizeLeftRightTabContentPane(rightPanels[i]);
 		}
 	};
 
+	//Resize the left or right content pane so that the scrollbar fits
 	var resizeLeftRightTabContentPane = function(panel) {
 			//Get the list of tab content containers
 			var tabList = $(panel.PanelID + "Sortable");
@@ -180,7 +211,7 @@ gGuiBase.Core = (function() {
 				
 				var heightSum = getBottomPanelsHeight();
 				
-				$(href).css("height", $(window).height() - heightSum - 60);
+				$(href).css("height", $(window).height() - heightSum - TAB_HEIGHT);
 			}
 	};
 
@@ -199,14 +230,15 @@ gGuiBase.Core = (function() {
 				ui.size.width = Math.max(ui.size.width, tabWidth);
 			}
 		 }); //Just resize to the right
-		 $(panelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - 5);
+		 $(panelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - MIN_PANEL_PADDING);
 		 
 		 $( window ).resize(function() {
 			var heightSum = getBottomPanelsHeight();
-			$(panelID).css("height", $(window).height() - heightSum - 5);
+			$(panelID).css("height", $(window).height() - heightSum - MIN_PANEL_PADDING);
 		});
 	};
 
+	//Resize for right type panels
 	var resizeRight = function(panel) {
 		var panelID = panel.PanelID;
 		$(panelID).resizable({
@@ -222,10 +254,11 @@ gGuiBase.Core = (function() {
 		
 		$( window ).resize(function() {
 			var heightSum = getBottomPanelsHeight();
-			$(panelID).css("height", $(window).height() - heightSum - 5);
+			$(panelID).css("height", $(window).height() - heightSum - MIN_PANEL_PADDING);
 		});
 	};
 
+	//Get the combined height of all bottom panels, for use in resizing
 	var getBottomPanelsHeight = function() {
 		var bottomPanels = getPanelsOfType(GuiPanelType.BOTTOM);
 		var heightSum = 0; //Sum up the heights of all the bottom panels
@@ -235,9 +268,10 @@ gGuiBase.Core = (function() {
 		return heightSum;
 	};
 
+	//Resizes floating panel tab content pane
 	var resizeFloating = function(panel) {
 		var panelID = panel.PanelID;
-		var numFloating = numFloatingPanels.toString();
+		//var numFloating = numFloatingPanels.toString();
 		$(panelID).resizable({
 			
 			resize: function(event, ui) {
@@ -252,58 +286,60 @@ gGuiBase.Core = (function() {
 					var href = linkHTML.match(/href="([^"]*)/)[1];
 					//var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
 
-					$(href).css("height", $("#panelFloater" + numFloating).height() - 60);
+					$(href).css("height", $(panelID).height() - TAB_HEIGHT);
 					//console.log($(panelID).height());
 				}
 			}
 		});
 		
-		var tabList = $("#panelFloater" + numFloating + "Sortable");
+		var tabList = $(panelID + "Sortable");
 		var tabs = tabList.find("li");
 		for (var i = 0; i < tabs.length; i++) {
 			var linkHTML = tabs[i].innerHTML;
 			var href = linkHTML.match(/href="([^"]*)/)[1];
-			$(href).css("height", $("#panelFloater" + numFloatingPanels.toString()).height() - 60);
+			$(href).css("height", $(panelID).height() - TAB_HEIGHT);
 		}
 	}
 
-
-
+	//Creates a floating panel with the div "panelFloater<Some number>" and the sortable "panelFloater<Some number>Sortable"
 	var createFloatingPanel = function(tabheader, tab) {
-		$("body").append('<div id="panelFloater' + numFloatingPanels.toString() + '"><ul id="panelFloater' + numFloatingPanels.toString() +'Sortable" class="connectedSortable"></ul></div></div>');
-		var floaterTabs = $("#panelFloater" + numFloatingPanels.toString()).tabs();  
 		
-		var panelID = "#panelFloater" + numFloatingPanels.toString();
+		var uniqueID = findUniqueFloatingPanelID();
+		var panelID = "#panelFloater" + uniqueID;
+		var panelSortable = panelID + "Sortable";
+		
+		$("body").append('<div id="panelFloater' + uniqueID + '"><ul id="panelFloater' + uniqueID +'Sortable" class="connectedSortable"></ul></div></div>');
+		var floaterTabs = $(panelID).tabs();  
+		
 		var floatingPanel = new GuiPanel(panelID, GuiPanelType.FLOATING);
 		addPanel(floatingPanel);
 		
+		//Apply floater css elements
 		$(panelID).css("position", "fixed");
 		$(panelID).css("height", "234px");
 		$(panelID).css("width", "234px");
 		
 		//Attach the dragged tab and its content to the new panel
-		var floatingTabs = $("#panelFloater" + numFloatingPanels.toString() + "Sortable");
+		var floatingTabs = $(panelSortable);
 		tabheader.removeAttr("style"); //Dragging gives some style elements that we don't want
 		tabheader.detach().appendTo(floatingTabs); //Take the dragged tab header and put it on the new panel
 		$(tab).detach().appendTo(panelID); //Take the tab contents and put it on the new panel
 		
 		refreshAll();
 		
-		var tabList = $("#panelFloater" + numFloatingPanels.toString() + "Sortable");
+		var tabList = $(panelSortable);
 		var tabs = tabList.find("li");
 		for (var i = 0; i < tabs.length; i++) {
 			
 			var linkHTML = tabs[i].innerHTML;
 			var href = linkHTML.match(/href="([^"]*)/)[1];
-			//var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
-
-			$(href).css("height", $("#panelFloater"+ numFloatingPanels.toString()).height() - 60);
-			//console.log($(panelID).height());
+			
+			$(href).css("height", $(panelID).height() - TAB_HEIGHT);
 		}
 		
 		//Make the floating panel draggable only by the top bar
 		$(panelID).draggable({
-			handle: "#panelFloater" + numFloatingPanels.toString() + "Sortable",
+			handle: panelSortable,
 			stack: "div" //Make currently dragged panel stack on top of other panels/divs
 		});
 		
@@ -311,11 +347,30 @@ gGuiBase.Core = (function() {
 		$(panelID).css("top", mouseY);
 		$(panelID).css("left", mouseX);
 		
-		
-		
 		numFloatingPanels++;
-		
+		numFloatingPanelsCreated++;
 	};
+	
+	var removeEmptyFloatingPanels = function() {
+		for (var i = 0; i < floatingPanelList.length; i++) {
+			var panelID = floatingPanelList[i].PanelID;
+			if ($(panelID + 'Sortable li').length == 0) {
+				gGuiBase.Core.removePanel(panelID);
+				$(panelID).remove(); //Delete the panel
+				numFloatingPanels--; //Currently creating a new panel # every time. Need to find unique number
+			}
+		}
+	};
+	
+	//Check what floating panel id #s are in use, and pick the smallest
+	var findUniqueFloatingPanelID = function() {
+		for (var i = 0; i <= numFloatingPanelsCreated; i++) {
+			if (!$("#panelFloater" + i).length > 0) { //Panel doesn't exist
+				return i;
+			}
+		}
+		return -1;
+	}
 
 	//Refresh all panels within the group
 	var refreshAll = function() {
@@ -363,7 +418,7 @@ gGuiBase.Core = (function() {
 			
 			var bottomPanelHeight = getBottomPanelsHeight();
 			
-			$(href).css("height", $(window).height() - bottomPanelHeight - 60);
+			$(href).css("height", $(window).height() - bottomPanelHeight - TAB_HEIGHT);
 		}
 	};
 
@@ -385,26 +440,58 @@ gGuiBase.Core = (function() {
 
 	var addTab = function (tabID, theTab) {
 		tabMap[tabID] = theTab;
+		$(tabID).css("overflow", "auto");
 	};
 
 	var getTab = function (tabID) {
 		return tabMap[tabID];
 	};
 	
+	//Checks if the mouse position (Global variables mouseX and mouseY) is within specified element
+	var mouseInElement = function(element) {
+		
+		var position = element.position();
+		
+		//If mouseX, mouseY is within the bounds of the element
+		if (mouseX > position.left && mouseX < position.left + element.width() &&
+			mouseY > position.top && mouseY < position.top + element.height()) {
+			return true;
+		} 
+		return false;
+	};
+
+	//Checks if mouse position is in any of the panels in the panel list
+	var mouseInPanelList = function() {
+		for (var i = 0; i < panelList.length; i++) {
+			var tab = $(panelList[i].PanelID).tabs();
+			var returnValue = mouseInElement(tab);
+			if (returnValue) return true;
+			
+		}
+		
+		for (var i = 0; i < floatingPanelList.length; i++) {
+			var tab = $(floatingPanelList[i].PanelID).tabs();
+			var returnValue = mouseInElement(tab);
+			if (returnValue) return true;
+		}
+		
+		return false;
+	};
+	
+	//Public functions and variables
 	var mPublic = {
         addPanel: addPanel,
         removePanel: removePanel,
         refreshAll: refreshAll,
         resizeLeftRightHelper: resizeLeftRightHelper,
         resizeBottomHelper: resizeBottomHelper,
-        getBottomPanelsHeight: getBottomPanelsHeight,
 		createFloatingPanel: createFloatingPanel,
-		getPanelsOfType: getPanelsOfType,
+		removeEmptyFloatingPanels: removeEmptyFloatingPanels,
 		addTab: addTab,
 		getTab: getTab,
-		
-		floatingPanelList: floatingPanelList,
-		panelList: panelList
+		mouseInElement: mouseInElement,
+		mouseInPanelList: mouseInPanelList
+
     };
 
     return mPublic;
