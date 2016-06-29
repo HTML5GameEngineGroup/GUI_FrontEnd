@@ -20,10 +20,12 @@ GuiPanelType = Object.freeze({
 	FLOATING: 4
 });
  
-var GuiPanel = function (PanelID, panelType, Height) {
+var GuiPanel = function (PanelID, panelGroup, panelType, Height) {
     this.PanelID = PanelID;
     this.guiTab = $(PanelID).tabs(); //Create the tabs
 	this.panelType = panelType;
+	this.panelGroupRef = panelGroup;
+	this.panelGroupRef.addPanel(this);
 	
     if (Height !== undefined) this.guiTab.height(Height);
 	
@@ -35,13 +37,13 @@ var GuiPanel = function (PanelID, panelType, Height) {
             //tabs.tabs("refresh");
 			
 			if (panelType != GuiPanelType.FLOATING) { //Behavior that we don't want for a floating tab window
-				if (!mouseInPanelList(gGuiBase.Core.panelList)) {
+				if (!mouseInPanelList(panelGroup.panelList)) {
 
 					var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> information
 					//Get the href, which contains the tab name that we need to move
 					var href = linkHTML.match(/href="([^"]*)/)[1];
 					
-					gGuiBase.Core.createFloatingPanel(ui.item, href);
+					panelGroup.createFloatingPanel(ui.item, href);
 				}
 			}
         },
@@ -55,10 +57,10 @@ var GuiPanel = function (PanelID, panelType, Height) {
 			
             $(href).detach().appendTo(PanelID); //Actually detach and move the tab
 			
-			for (var i = 0; i < gGuiBase.Core.floatingPanelList.length; i++) {
-				var panelID = gGuiBase.Core.floatingPanelList[i].PanelID;
+			for (var i = 0; i < panelGroup.floatingPanelList.length; i++) {
+				var panelID = panelGroup.floatingPanelList[i].PanelID;
 				if ($(panelID + 'Sortable li').length == 0) {
-					gGuiBase.Core.removePanel(panelID);
+					panelGroup.removePanel(panelID);
 					$(panelID).remove(); //Delete the panel
 				}
 			}
@@ -66,14 +68,14 @@ var GuiPanel = function (PanelID, panelType, Height) {
 
 			
 			
-			var bottomPanels = gGuiBase.Core.getPanelsOfType(GuiPanelType.BOTTOM);
+			var bottomPanels = panelGroup.getPanelsOfType(GuiPanelType.BOTTOM);
 			if ((panelType == GuiPanelType.LEFT || panelType == GuiPanelType.RIGHT) && bottomPanels.length > 0) {
-				gGuiBase.Core.resizeLeftRightHelper(bottomPanels[0]);
+				panelGroup.resizeLeftRightHelper(bottomPanels[0]);
 			} else if (panelType == GuiPanelType.BOTTOM) {
-				gGuiBase.Core.resizeBottomHelper(bottomPanels[0]);
+				panelGroup.resizeBottomHelper(bottomPanels[0]);
 			}
 			
-            gGuiBase.Core.refreshAll();
+            panelGroup.refreshAll();
             return true;
         }
     });
@@ -83,7 +85,7 @@ var GuiPanel = function (PanelID, panelType, Height) {
 // adds an empty tab to this panel
 GuiPanel.prototype.addNewTab = function ( tabID ){
     var newTab = new GuiPanelTab(tabID);						//create new tab
-	gGuiBase.Core.addTab(tabID, newTab);
+	this.panelGroupRef.addTab(tabID, newTab);
     $(this.PanelID + " ul").append(newTab.createHeader());		//create tab_header add to panel
     $(this.PanelID).append(newTab.createContentContainer());	//create empty tab_content add to panel
     this.guiTab.tabs("refresh");
@@ -92,7 +94,7 @@ GuiPanel.prototype.addNewTab = function ( tabID ){
 // moves tab object to the current panel, tab must be in the DOM already
 GuiPanel.prototype.moveTabToThisPanel = function ( tabID ){
 	// remove tab_header from any panel, append to back of this one
-	var guiPanelTab = gGuiBase.Core.getTab( tabID );	// find the tab_header
+	var guiPanelTab = this.panelGroupRef.getTab( tabID );	// find the tab_header
 	var $header = guiPanelTab.getHeader().detach();			// remove it
 	$(this.PanelID + ' ul').append($header);				// attach to this panel
 	
