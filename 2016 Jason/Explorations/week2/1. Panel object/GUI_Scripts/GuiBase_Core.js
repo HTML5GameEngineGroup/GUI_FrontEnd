@@ -359,7 +359,7 @@ gGuiBase.Core = (function() {
 			var href = linkHTML.match(/href="([^"]*)/)[1];
 			//var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
 			
-			$(href).attr("style", "overflow: auto");
+			$(href).css("overflow", "auto");
 			
 			var bottomPanelHeight = getBottomPanelsHeight();
 			

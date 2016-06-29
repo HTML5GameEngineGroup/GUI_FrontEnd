@@ -7,7 +7,7 @@ $( document ).ready(function() {
 	
 	var panelID = "#panelBottom";
     var bottomPanel = new GuiPanel(panelID, GuiPanelType.BOTTOM);
-    bottomPanel.addNewTab("hi");
+    //bottomPanel.addNewTab("hi");
 	
     panelID = "#panelLeft";
     // height of side panels is based on distance from bottom panel to the top
