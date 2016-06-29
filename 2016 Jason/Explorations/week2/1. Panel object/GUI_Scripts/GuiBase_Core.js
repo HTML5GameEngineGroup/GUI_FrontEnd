@@ -357,7 +357,7 @@ gGuiBase.Core = (function() {
 			if ($(panelID + 'Sortable li').length == 0) {
 				gGuiBase.Core.removePanel(panelID);
 				$(panelID).remove(); //Delete the panel
-				numFloatingPanels--; //Currently creating a new panel # every time. Need to find unique number
+				numFloatingPanels--; 
 			}
 		}
 	};

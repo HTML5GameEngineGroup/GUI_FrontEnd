@@ -25,7 +25,7 @@ var GuiPanel = function (PanelID, panelType, Height) {
 		
         stop: function(event, ui) { //Refresh the tabs after a sort
 
-			if (panelType != GuiPanelType.FLOATING) { //Behavior that we don't want for a floating tab window
+			if ($(PanelID + 'Sortable li').length > 1) { //Behavior that we don't want for a floating tab window
 				if (!gGuiBase.Core.mouseInPanelList()) {
 
 					var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> information
