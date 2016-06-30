@@ -23,7 +23,6 @@ SelectList.prototype.setHTML = function() {
 SelectList.prototype.addElement = function(listElement) {
 	this.list.push(listElement);
 	this.setHTML();
-	console.log("fml");
 };
 
 SelectList.prototype.setOnSelect = function (onSelectFunction) {
