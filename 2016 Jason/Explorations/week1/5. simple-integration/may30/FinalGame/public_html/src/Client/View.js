@@ -28,20 +28,20 @@ var DETAILS_OBJECTS_OFFSETS = [150, 75, 120];
 
 
 $(document).ready(function() {
-    
+
     gGameCore = new GameCore();
-    
+
     createPanelLeft();
     createPanelRight();
     createPanelBottom();
-    
+
     // Removes the scroll bar
     $('body').addClass('disable-scroll');
     $('body').css('background-color', '#4d4948');
     $('#menuFileOpenInput').hide();
-	
+
 	var tabs2 = $("#panelBottom").tabs();
-			
+
 			//tabs2.height($(document).height() - $("#panelBottom").css("height"));
 			//tabs2.height($(document).height() - $("#panelBottom").css("height"));
 			$("#sortable2").sortable({
@@ -49,87 +49,87 @@ $(document).ready(function() {
 				stop: function() {
 					tabs2.tabs("refresh");
 				},
-				
+
 				receive : function(event, ui) {
 				    var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> information
 					//Get the href, which contains the tab name that we need to move
-					var href = linkHTML.match(/href="([^"]*)/)[1]; 
+					var href = linkHTML.match(/href="([^"]*)/)[1];
 					var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
 
 					$(href).detach().appendTo("#panelBottom");
-					
+
 					tabs2.tabs("refresh");
 					return true;
 				}
 			});
-			
-		
+
+
 			var tabs1 = $("#panelLeft").tabs();
-			
+
 			//tabs1.height($("#panelBottom").css("top")); //Set left panel height to the top of bottom panel
 			tabs1.height($(document).height() - parseInt($("#panelBottom").css("height")) - 10);
-			
+
 			$("#sortable1").sortable({
 				opacity: 0.5,
 				stop: function() { //Called when any element is moved
 					tabs1.tabs("refresh");
 				},
-				
+
 				receive : function(event, ui) { //Called when this set of tabs gets a new element
 				    var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> html
 					//Get the href, which contains the tab name that we need to move
-					var href = linkHTML.match(/href="([^"]*)/)[1]; 
+					var href = linkHTML.match(/href="([^"]*)/)[1];
 					var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
-					
+
 					//Remove the div from where it was and move it into this panel's div
 					$(href).detach().appendTo("#panelLeft");
-					
+
 					tabs1.tabs("refresh");
 					return true;
 				}
-					
-				
+
+
 			});
-			
-			//Right panel 
+
+			//Right panel
 			var tabs3 = $("#panelRight").tabs();
 			tabs3.height($(document).height() - parseInt($("#panelBottom").css("height")) - 10); //Set right panel height to the top of bottom panel
-			
+
 			$("#sortable3").sortable({
 				opacity: 0.5,
 				stop: function() {
 					tabs3.tabs("refresh");
-					
+
 				},
-				
+
 				receive : function(event, ui) {
 				    var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> information
 					//Get the href, which contains the tab name that we need to move
-					var href = linkHTML.match(/href="([^"]*)/)[1]; 
+					var href = linkHTML.match(/href="([^"]*)/)[1];
 					var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
 
 					$(href).detach().appendTo("#panelRight");
-					
+
 					tabs3.tabs("refresh");
 					return true;
 				}
 
 			});
-			
+
 			//Connect the three panels so they can move tabs between each other
 			$( "#sortable1, #sortable2, #sortable3").sortable({
 				opacity: 0.5,
 				connectWith: ".connectedSortable"
-				
+
 			});
-			
+
 			//Resizing
 			$("#panelLeft").resizable({
 				handles: "e"
-				
+
 			});
 			$("#panelBottom").resizable({
-				handles: "n",	
+				handles: "n",
 				resize: function(event, ui) {
 					//Resize the left and right panels so they follow the bottom panel
 					$("#panelRight").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 5);
@@ -141,32 +141,32 @@ $(document).ready(function() {
 				handles: "w",
 				resize: function(event, ui) { //Fix for right panel repositioning on resize
 					ui.position.left = 0;
-					
+
 				}
 			});
-			
-			
+
+
 			$( window ).resize(function() {
 				$("#panelRight").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 5);
 				$("#panelLeft").css("height", $(document).height() - parseInt($("#panelBottom").css("height")) - 5);
 			});
-			
 
-	
-    
+
+
+
     // Resize the window once to make everything fit
     windowResize();
 });
 
 $('#menuFileNew').click(function(event) {
     cleanUpGameCore();
-    
+
     gCurrentScene = new ClientScene(0);
     gGameCore.getSceneList().push(gCurrentScene);
     gEngine.GameLoop.stop();
     gEngine.GameLoop.stop();
     gEngine.Core.startScene(gCurrentScene);
-    
+
     refreshAllPanels();
 });
 

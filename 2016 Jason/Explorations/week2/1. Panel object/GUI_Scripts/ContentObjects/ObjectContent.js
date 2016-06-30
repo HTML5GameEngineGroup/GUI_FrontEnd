@@ -32,10 +32,12 @@ ObjectContent.prototype.initializeEventHandling = function () {
 	this.objectSelectList.setOnSelect(onListSelect);
 	// this.textField.setOnFocusOut(onTextFieldFocusOut);
 	// this.testSlider.setOnSliderChange(onSliderChange);
+
 };
 
 ObjectContent.prototype.buttonOnClick = function() {
 	var list = gGuiBase.Core.findWidgetByID("#objectSelectList1");
+	gGameCore.createDefaultObject(1, 1);
 	list.addElement("list item added");
 	gGuiBase.Core.refreshAllTabContent();
 };
