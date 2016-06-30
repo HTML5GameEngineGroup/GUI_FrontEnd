@@ -10,7 +10,12 @@ $( document ).ready(function() {
     //bottomPanel.addNewTab("hi");
 
 	var extraTab = new GuiPanelTab("Extra");
+	var objectsTabContent = new ObjectContent("objectsContent");
+
+	
 	bottomPanel.addTab(extraTab);
+	extraTab.addContent(objectsTabContent);
+
 	
 	//var bottomPanelContent = new ObjectsContent();
 	

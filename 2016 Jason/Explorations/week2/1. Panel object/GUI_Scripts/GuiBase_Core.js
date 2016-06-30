@@ -478,6 +478,12 @@ gGuiBase.Core = (function() {
 		return false;
 	};
 	
+	var inheritPrototype = function (subClass, superClass) {
+        var prototype = Object.create(superClass.prototype);
+        prototype.constructor = subClass;
+        subClass.prototype = prototype;
+	};
+	
 	//Public functions and variables
 	var mPublic = {
         addPanel: addPanel,
@@ -490,8 +496,9 @@ gGuiBase.Core = (function() {
 		addTab: addTab,
 		getTab: getTab,
 		mouseInElement: mouseInElement,
-		mouseInPanelList: mouseInPanelList
-
+		mouseInPanelList: mouseInPanelList,
+		
+		inheritPrototype: inheritPrototype
     };
 
     return mPublic;

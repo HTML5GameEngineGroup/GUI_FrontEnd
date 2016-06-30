@@ -9,7 +9,7 @@ var GuiPanelTab = function (tabID){
     }
     // jquery object representing the tab_content
     this.tabID = tabID;                     // stores tabName
-    this.content = {};                      // stores the content to place into the tab_content
+    this.content = [];                      // stores the content to place into the tab_content
 
     // jquery object representing the tab_top
     this.headerID = tabID + 'Header';
@@ -39,6 +39,12 @@ GuiPanelTab.prototype.getContentContainer = function () {
     var $content = $('#' + this.tabID);
     if ($content.length < 1) throw "no content found";
     else return $content;
+};
+
+GuiPanelTab.prototype.addContent = function(contentobject) {
+	this.content.push(contentobject);
+	this.appendContent(contentobject.getID(), contentobject.getHTMLContent());
+	contentobject.initializeEventHandling();
 };
 
 // appends jquery/html to the tab
