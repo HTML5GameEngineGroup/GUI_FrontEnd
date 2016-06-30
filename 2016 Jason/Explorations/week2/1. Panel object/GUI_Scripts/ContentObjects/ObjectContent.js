@@ -2,6 +2,7 @@
 function ObjectContent(tabContentID) {
 	this.objectAddButton = null;
 	this.objectSelectList = null;
+	this.textField = null;
 	GuiTabContent.call(this, tabContentID);
 }
 
@@ -15,11 +16,15 @@ ObjectContent.prototype.initialize = function () {
 	this.objectSelectList = new SelectList("objectSelectList1", testArray);
 	this.widgetList.push(this.objectSelectList);
 	
+	this.textField = new TextField("textField1");
+	this.widgetList.push(this.textField);
+	
 };
 
 ObjectContent.prototype.initializeEventHandling = function () {
 	this.objectAddButton.setOnClick(this.buttonOnClick);
 	this.objectSelectList.setOnSelect(onListSelect);
+	this.textField.setOnFocusOut(onTextFieldFocusOut);
 
 };
 
@@ -30,7 +35,11 @@ ObjectContent.prototype.buttonOnClick = function() {
 };
 
 var onListSelect = function(selectedElement) {
-	console.log(selectedElement);
+	alert(selectedElement);
+};
+
+var onTextFieldFocusOut = function() {
+	alert("focus out");
 };
 
 
