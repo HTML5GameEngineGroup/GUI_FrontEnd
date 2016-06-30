@@ -518,7 +518,7 @@ gGuiBase.Core = (function() {
 			var tabContents = tabList[i].getContent();
 			
 			for (var j = 0; j < tabContents.length; j++) {
-				var widget = tabContents[i].findWidgetByID(id);
+				var widget = tabContents[j].findWidgetByID(id);
 				if (widget !== null) {
 					return widget;
 				}
