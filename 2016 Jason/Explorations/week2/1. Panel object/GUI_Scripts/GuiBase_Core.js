@@ -64,7 +64,7 @@ gGuiBase.Core = (function() {
 		//Final string should look like #panelLeftSortable, #panelRightSortable, #panelFloater0Sortable
 		$(panelConnectorString).sortable({
 			opacity: 0.5,
-			connectWith: ".connectedSortable",
+			connectWith: ".connectedSortable"
 		});
 		
 		
@@ -118,7 +118,7 @@ gGuiBase.Core = (function() {
 			zIndex: 10000,
 			connectWith: ".connectedSortable"
 		});
-	}
+	};
 
 	//Sets a specific resize function for specified panel type
 	var setResizeFunction = function(panel) {
@@ -302,7 +302,7 @@ gGuiBase.Core = (function() {
 			var href = linkHTML.match(/href="([^"]*)/)[1];
 			$(href).css("height", $(panelID).height() - TAB_HEIGHT);
 		}
-	}
+	};
 
 	//Creates a floating panel with the div "panelFloater<Some number>" and the sortable "panelFloater<Some number>Sortable"
 	var createFloatingPanel = function(tabheader, tab) {
@@ -433,6 +433,7 @@ gGuiBase.Core = (function() {
 		tabList.each(function(index) {
 			widthInPixel += ($(this).width());
 			var padding = $(this).css("border-top-right-radius");
+			//todo what is this for?
 			padding = parseInt(padding.substring(0, padding.length - 2));
 			widthInPixel += 15;
 		});
@@ -531,7 +532,7 @@ gGuiBase.Core = (function() {
 		for (var i = 0; i < tabList.length; i++) {
 			tabList[i].refreshContent();
 		}
-	}
+	};
 	
 	//Public functions and variables
 	var mPublic = {

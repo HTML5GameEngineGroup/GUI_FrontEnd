@@ -4,6 +4,7 @@ function ObjectContent(tabContentID) {
 	this.objectSelectList = null;
 	this.textField = null;
 	this.testSlider = null;
+	this.widgetList = null;
 	GuiTabContent.call(this, tabContentID);
 }
 
@@ -15,26 +16,26 @@ ObjectContent.prototype.initialize = function () {
 	
 	var testArray = ["list1", "list2", "list3"];
 	this.objectSelectList = new SelectList("objectSelectList1", testArray);
+	// this.objectSelectList = new SelectList("objectSelectList1", []);
 	this.widgetList.push(this.objectSelectList);
-	
-	this.textField = new TextField("textField1");
-	this.widgetList.push(this.textField);
-	
-	this.testSlider = new Slider("TestSlider1");
-	this.widgetList.push(this.testSlider);
+
+	// this.textField = new TextField("textField1");
+	// this.widgetList.push(this.textField);
+
+	// this.testSlider = new Slider("TestSlider1");
+	// this.widgetList.push(this.testSlider);
 	
 };
 
 ObjectContent.prototype.initializeEventHandling = function () {
 	this.objectAddButton.setOnClick(this.buttonOnClick);
 	this.objectSelectList.setOnSelect(onListSelect);
-	this.textField.setOnFocusOut(onTextFieldFocusOut);
-	this.testSlider.setOnSliderChange(onSliderChange);
-
+	// this.textField.setOnFocusOut(onTextFieldFocusOut);
+	// this.testSlider.setOnSliderChange(onSliderChange);
 };
 
 ObjectContent.prototype.buttonOnClick = function() {
-	var list = gGuiBase.Core.findWidgetByID("#objectSelectList1")
+	var list = gGuiBase.Core.findWidgetByID("#objectSelectList1");
 	list.addElement("list item added");
 	gGuiBase.Core.refreshAllTabContent();
 };

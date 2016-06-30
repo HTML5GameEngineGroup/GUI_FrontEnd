@@ -24,7 +24,7 @@ GuiTabContent.prototype.getHTMLContent = function () {
 		htmlString += this.widgetList[i].getWidgetHTML();
 	}
 	
-	htmlString += '</div>'
+	htmlString += '</div>';
 	return htmlString;
 };
 
@@ -34,7 +34,7 @@ GuiTabContent.prototype.findWidgetByID = function(id) {
 			return this.widgetList[i];
 	}
 	return null;
-}
+};
 
 // returns the tab id
 GuiTabContent.prototype.getID = function () {

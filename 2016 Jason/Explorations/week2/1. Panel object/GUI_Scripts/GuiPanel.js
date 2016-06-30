@@ -65,14 +65,14 @@ var GuiPanel = function (PanelID, panelType, Height) {
 GuiPanel.prototype.addNewTab = function ( tabID ){
     var newTab = new GuiPanelTab(tabID);						//create new tab
 	gGuiBase.Core.addTab(tabID, newTab);
-    $(this.PanelID + " ul").append(newTab.createHeader());		//create tab_header add to panel
+    $(this.PanelID + "Sortable").append(newTab.createHeader());		//create tab_header add to panel
     $(this.PanelID).append(newTab.createContentContainer());	//create empty tab_content add to panel
     this.guiTab.tabs("refresh");
 };
 
 GuiPanel.prototype.addTab = function ( tab ){						//create new tab
 	gGuiBase.Core.addTab(tab.tabID, tab);
-    $(this.PanelID + " ul").append(tab.createHeader());		//create tab_header add to panel
+    $(this.PanelID + "Sortable").append(tab.createHeader());		//create tab_header add to panel
     $(this.PanelID).append(tab.createContentContainer());	//create empty tab_content add to panel
     this.guiTab.tabs("refresh");
 };

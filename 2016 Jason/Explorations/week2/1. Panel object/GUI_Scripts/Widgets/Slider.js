@@ -9,7 +9,7 @@ Slider.prototype.initializeWidget = function () {
 };
 
 Slider.prototype.setHTML = function() {
-	this.htmlSnippet = '<div id="' + this.widgetID + '">';
+	this.htmlSnippet = '<div id="' + this.widgetID + '"></div>';
 };
 
 Slider.prototype.setOnSliderChange = function (onSliderChangeFunction) {
