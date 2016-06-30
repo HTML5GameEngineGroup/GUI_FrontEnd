@@ -28,7 +28,15 @@ GuiTabContent.prototype.getHTMLContent = function () {
 	return htmlString;
 };
 
+GuiTabContent.prototype.findWidgetByID = function(id) {
+	for (var i = 0; i < this.widgetList.length; i++) {
+		if (id == this.widgetList[i].getID())
+			return this.widgetList[i];
+	}
+	return null;
+}
+
 // returns the tab id
 GuiTabContent.prototype.getID = function () {
-    return '#' + this.tabID;
+    return '#' + this.tabContentID;
 };

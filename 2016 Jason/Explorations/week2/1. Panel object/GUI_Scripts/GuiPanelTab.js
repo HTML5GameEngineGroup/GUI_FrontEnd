@@ -41,10 +41,24 @@ GuiPanelTab.prototype.getContentContainer = function () {
     else return $content;
 };
 
+GuiPanelTab.prototype.getContent = function() {
+	return this.content;
+};
+
 GuiPanelTab.prototype.addContent = function(contentobject) {
 	this.content.push(contentobject);
 	this.appendContent(contentobject.getID(), contentobject.getHTMLContent());
 	contentobject.initializeEventHandling();
+};
+
+GuiPanelTab.prototype.refreshContent = function() {
+
+	$(this.getID()).empty();
+
+	for (var i = 0; i < this.content.length; i++) {
+		this.appendContent(this.content[i].getID(), this.content[i].getHTMLContent());
+		this.content[i].initializeEventHandling();
+	}
 };
 
 // appends jquery/html to the tab

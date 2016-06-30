@@ -11,6 +11,9 @@ gGuiBase.Core = (function() {
 	var panelList = []; //List for static panels
 	var floatingPanelList = []; //List for floating panels
 	var tabMap = {};
+	
+	var tabList = [];
+	
 	var numFloatingPanels = 0;
 	var numFloatingPanelsCreated = 0;
 	
@@ -441,6 +444,7 @@ gGuiBase.Core = (function() {
 	var addTab = function (tabID, theTab) {
 		tabMap[tabID] = theTab;
 		$(tabID).css("overflow", "auto");
+		tabList.push(theTab);
 	};
 
 	var getTab = function (tabID) {
@@ -484,6 +488,51 @@ gGuiBase.Core = (function() {
         subClass.prototype = prototype;
 	};
 	
+	var findPanelObjectByID = function(id) {
+		for (var i = 0; i < panelList.length; i++) {
+			if (panelList[i].PanelID = id)
+				return panelList[i];
+		}
+		return null;
+	};
+	
+	var findTabContentByID = function (id) {
+		
+		for (var i = 0; i < tabList.length; i++) {
+			var tabContents = tabList[i].getContent();
+			
+			for (var j = 0; j < tabContents.length; j++) {
+				console.log(tabContents[j]);
+				console.log(tabContents[j].getID() + " " + id);
+				if (tabContents[j].getID() == id)
+					
+					return tabContents[i];
+			}
+		}
+		
+	};
+	
+	var findWidgetByID = function (id) {
+		
+		for (var i = 0; i < tabList.length; i++) {
+			var tabContents = tabList[i].getContent();
+			
+			for (var j = 0; j < tabContents.length; j++) {
+				var widget = tabContents[i].findWidgetByID(id);
+				if (widget !== null) {
+					return widget;
+				}
+			}
+		}
+		
+	};
+	
+	var refreshAllTabContent = function() {
+		for (var i = 0; i < tabList.length; i++) {
+			tabList[i].refreshContent();
+		}
+	}
+	
 	//Public functions and variables
 	var mPublic = {
         addPanel: addPanel,
@@ -497,6 +546,9 @@ gGuiBase.Core = (function() {
 		getTab: getTab,
 		mouseInElement: mouseInElement,
 		mouseInPanelList: mouseInPanelList,
+		findTabContentByID: findTabContentByID,
+		findWidgetByID: findWidgetByID,
+		refreshAllTabContent: refreshAllTabContent,
 		
 		inheritPrototype: inheritPrototype
     };

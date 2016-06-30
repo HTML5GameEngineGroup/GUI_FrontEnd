@@ -16,9 +16,6 @@ $( document ).ready(function() {
 	bottomPanel.addTab(extraTab);
 	extraTab.addContent(objectsTabContent);
 
-	
-	//var bottomPanelContent = new ObjectsContent();
-	
     panelID = "#panelLeft";
     // height of side panels is based on distance from bottom panel to the top
     //var panelHeight = $(window).height() - gGuiBase.Core.getBottomPanelsHeight() - 20;
