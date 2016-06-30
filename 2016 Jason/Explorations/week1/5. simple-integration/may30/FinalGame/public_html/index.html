@@ -170,14 +170,23 @@ li a:hover:not(.active):not(.current-tab) {
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">File<span class="caret"></span></a>
             <ul class="dropdown-menu">
-                <li class="menu-item"><a href="#" id="menuFileNew"><span class="glyphicon glyphicon-plus"></span>&nbsp New</a></li>
+                <li class="menu-item">
+                    <a href="#" id="menuFileNew"><span class="glyphicon glyphicon-plus"></span>&nbsp New</a>
+                </li>
                 <!--<li role="separator" class="divider"></li>-->
-                <li class="menu-item"><a href="#" id="menuFileOpen"><span class="glyphicon glyphicon-folder-open"></span>&nbsp Open</a><input type="file" id="menuFileOpenInput" name="files[]" onchange="fileOpen()"></li>
+                <li class="menu-item">
+                    <a href="#" id="menuFileOpen"><span class="glyphicon glyphicon-folder-open"></span>&nbsp Open</a>
+                    <input type="file" id="menuFileOpenInput" name="files[]" onchange="fileOpen()">
+                </li>
                 <!--<li role="separator" class="divider"></li>-->
-                <li class="menu-item"><a href="#" id="menuFileSave"><span class="glyphicon glyphicon-floppy-disk"></span>&nbsp Save</a></li>
+                <li class="menu-item">
+                    <a href="#" id="menuFileSave"><span class="glyphicon glyphicon-floppy-disk"></span>&nbsp Save</a>
+                </li>
             </ul>
         </li>
-        <li><a href="#" id="menuRun">Run</a></li>
+        <li>
+            <a href="#" id="menuRun">Run</a>
+        </li>
         <!--<li><input type="file" id="uploadCodeObject" name="files[]" onchange="uploadJS()"/></li> (Use me to show File to String)-->
     </ul>
     
@@ -213,7 +222,7 @@ li a:hover:not(.active):not(.current-tab) {
 		</div>
 	</div>
 	
-    <div id="panelBottom"">
+    <div id="panelBottom">
 		<ul id="sortable2" class="connectedSortable">
 			<li><a href="#tab3">Scenes</a></li>
 			<li><a href="#tab4">Cameras</a></li>
@@ -298,8 +307,8 @@ li a:hover:not(.active):not(.current-tab) {
                 <script type="text/javascript" src="src/Engine/Core/Resources/Engine_AudioClips.js"></script>
                 <script type="text/javascript" src="src/Engine/Core/Resources/Engine_Textures.js"></script>
                 <script type="text/javascript" src="src/Engine/Core/Resources/Engine_Fonts.js"></script>
-        <script type="text/javascript" src="src/Engine/Scene.js"></script>
-        <script type="text/javascript" src="src/Engine/Material.js"></script>
+                <script type="text/javascript" src="src/Engine/Scene.js"></script>
+                <script type="text/javascript" src="src/Engine/Material.js"></script>
         <!--Lights -->
             <script type="text/javascript" src="src/Engine/Lights/Light.js"></script>
             <script type="text/javascript" src="src/Engine/Lights/LightSet.js"></script>

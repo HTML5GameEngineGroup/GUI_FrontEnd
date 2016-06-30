@@ -418,10 +418,12 @@ $(document).bind("contextmenu", function(event) {
     event.preventDefault();
 });
 
+// this is run on right click of menu?
 $(document).on('contextmenu', 'li', function(event) {
     // Checks out the id of the HTML element (also same as mID) and will provide the appropriate right-click menu
     // (since another function blocks the default one)
     var id = this.id;
+    console.log("right clicked the li object i think?");
     if (id.startsWith("objectListItem")) {
         $('#objectsMenu').finish().toggle().css({top: event.pageY + 'px', left: event.pageX + 'px'}).css('z-index', gZIndex + 1);
         gRightClickedItem = $(this).attr('id');
@@ -437,11 +439,15 @@ $(document).on('contextmenu', 'li', function(event) {
     }
 });
 
+// this is run when you click a menu option!
 $('.right-click-menu li').click(function(){
+    console.log("INSIDE RIGHT CLICK MENU");
     // When a right-click menu option is clicked
     switch($(this).attr("name")) {
         case "objectsMenuDetails":
             $('#panelLeftObjectsBody li').each(function(index) {
+                console.log("objectsMenuDetails");
+                console.log(index);
                 if ($(this).attr('id') === gRightClickedItem) {
                     // Basically just selects the item; gGameCore will refresh and set up the details panel anew
                     gGameCore.select(index - 1);
@@ -450,6 +456,7 @@ $('.right-click-menu li').click(function(){
             break;
         case "objectsMenuEditCode":
             $('#panelLeftObjectsBody li').each(function(index) {
+                console.log(index);
                 if ($(this).attr('id') === gRightClickedItem) {
                     // Selects the item; gGameCore will refresh and set up the details panel anew
                     var selected = gGameCore.select(index - 1);
@@ -530,6 +537,7 @@ $('.right-click-menu li').click(function(){
             break;
         case "instancesMenuDetails":
             $('#panelBottomBody .panel-list-item').each(function(index) {
+                console.log(index);
                 if ($(this).attr('id') === gRightClickedItem) {
                     // Basically just selects the item; gGameCore will refresh and set up the details panel anew
                     gGameCore.selectInstance(index);
@@ -1095,7 +1103,10 @@ var createPanelLeftObjects = function() {
     
     $('#panelLeftAddGameObject').click(function() {
         gGameCore.createDefaultObject(gNextObjectID, 1);
-        panelLeftBody.append('<li class="panel-list-item" id="objectListItem' + gNextObjectID + '">GameObj' + gNextObjectID + '</li><p id="objectListItem' + gNextObjectID + 'p"><br id="objectListItem' + gNextObjectID + 'br">');
+        panelLeftBody.append(
+            '<li class="panel-list-item" id="objectListItem' + gNextObjectID + '">GameObj' + gNextObjectID + '</li>' +
+            '<p id="objectListItem' + gNextObjectID + 'p">' +
+            '<br id="objectListItem' + gNextObjectID + 'br">');
         if (!gRunning) {
             changeCurrentListItem('objectListItem' + gNextObjectID);
         }

@@ -38,5 +38,4 @@ $( document ).ready(function() {
 	gGuiBase.Core.addPanel(bottomPanel);
 	gGuiBase.Core.addPanel(leftPanel);
 	gGuiBase.Core.addPanel(rightPanel);
-
 });
