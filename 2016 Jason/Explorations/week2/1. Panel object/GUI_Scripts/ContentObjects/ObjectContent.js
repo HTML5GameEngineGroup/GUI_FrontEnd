@@ -3,6 +3,7 @@ function ObjectContent(tabContentID) {
 	this.objectAddButton = null;
 	this.objectSelectList = null;
 	this.textField = null;
+	this.testSlider = null;
 	GuiTabContent.call(this, tabContentID);
 }
 
@@ -19,12 +20,16 @@ ObjectContent.prototype.initialize = function () {
 	this.textField = new TextField("textField1");
 	this.widgetList.push(this.textField);
 	
+	this.testSlider = new Slider("TestSlider1");
+	this.widgetList.push(this.testSlider);
+	
 };
 
 ObjectContent.prototype.initializeEventHandling = function () {
 	this.objectAddButton.setOnClick(this.buttonOnClick);
 	this.objectSelectList.setOnSelect(onListSelect);
 	this.textField.setOnFocusOut(onTextFieldFocusOut);
+	this.testSlider.setOnSliderChange(onSliderChange);
 
 };
 
@@ -40,6 +45,10 @@ var onListSelect = function(selectedElement) {
 
 var onTextFieldFocusOut = function() {
 	alert("focus out");
+};
+
+var onSliderChange = function(sliderValue) {
+	console.log("slider value: " + sliderValue);
 };
 
 
