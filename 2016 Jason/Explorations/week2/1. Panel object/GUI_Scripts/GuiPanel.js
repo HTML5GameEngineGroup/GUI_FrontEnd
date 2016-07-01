@@ -83,7 +83,7 @@ GuiPanel.prototype.moveTabToThisPanel = function ( tabID ){
 	var guiPanelTab = gGuiBase.Core.getTab( tabID );	// find the tab_header
 	var $header = guiPanelTab.getHeader().detach();			// remove it
 	$(this.PanelID + ' ul').append($header);				// attach to this panel
-	
+
 	// remove tab_content from any panel, append to back of this one
 	var $content = guiPanelTab.getContentContainer().detach();
 	$(this.PanelID).append($content);
