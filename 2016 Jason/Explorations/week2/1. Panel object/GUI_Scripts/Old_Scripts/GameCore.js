@@ -16,7 +16,7 @@ function GameCore() {
     
     // Objects and textures are shared among all scenes
     
-    this.mObjectList = [];  // Each entry is: [object representing a class, code as a string, 0/1/2/3 for class/GO/Class inst/GO inst]
+    this.mObjectMap = {};   // Objects are stored as key value pairs, where the key = objectName, value = [go, code]
     this.mTextureList = [];
     this.mSceneList = [];   // Each scene has its own instance list AND camera list
     
@@ -29,7 +29,11 @@ function GameCore() {
 }
 
 GameCore.prototype.getObjectList = function() {
-    return this.mObjectList;
+    var objList = [];
+    for (var objName in this.mObjectMap) {
+        objList.push(objName);
+    }
+    return objList;
 };
 
 GameCore.prototype.getTextureList = function() {
@@ -52,73 +56,79 @@ GameCore.prototype.setSelected = function(obj) {
     this.mSelected = obj;
 };
 
-GameCore.prototype.createDefaultObject = function(number, type) {    
+// creates a default object returns objects name as string
+GameCore.prototype.createDefaultObject = function() {
     var obj;
-    var name = "GameObj" + number;
     
+    // create new default name, this should be its own function
+    var name = "GameObj" + gNextObjectID;
     while (this.checkForNameConflict(name)) {
         gNextObjectID++; // This has not been incremented yet so do it here.  After this method is over, + Object will increment it to a unique value.
         name = "GameObj" + gNextObjectID;
     }
+    // end of creating default name
     
-    if (type === 1) {
-        console.log("made it into type===1");
-        window[name] = function(renderableObj) {
-            GameObject.call(this, renderableObj);
-        };
-            
-        gEngine.Core.inheritPrototype(window[name], window["GameObject"]);
-        
-        var code = getDefaultCodeGO(name);
-        
-        // Add code to system
-        eval(code);
-        eval('obj = new ' + name + '(new Renderable());');
-        console.log("made it past eval()");
-        // Make a default xform
-        var xf = obj.getXform();
-        xf.setXPos(20);
-        xf.setYPos(60);
-        xf.setWidth(5);
-        xf.setHeight(5);
-        console.log("made it past xform settings");
-        obj.mName = name;
-        obj.mID = "objectListItem" + number;
-        
-        var entry = [obj, code, type]; // type = 1
-        this.mObjectList[this.mObjectList.length] = entry;
-        this.mSelected = entry;
-        // cleanUpPanelRightBody();
-        if (!gRunning) {
-            // Updated current list item in View after this is called
-            // createDetailsObjects(type);
-        }
-        
-    } else {
-        // Reset class
-        window[name] = function() {
-            
-        };
-        
-        var code = getDefaultCodeClass(name, "objectListItem" + number);
-        
-        // Instantiate with eval to allow using a string name when creating a new class
-        eval('obj = new ' + name + '();');
-        
-        this.mObjectList[this.mObjectList.length] = [obj, code, type]; // type = 0
-        this.mSelected = this.mObjectList[this.mObjectList.length];
-        // cleanUpPanelRightBody();
-        if (!gRunning) {
-            // Updated current list item in View after this is called
-            // createDetailsObjects(type); // THIS SHOULD BE DONE IN VIEW!!!!
-        }
+    window[name] = function(renderableObj) {
+        GameObject.call(this, renderableObj);
+    };
+
+    gEngine.Core.inheritPrototype(window[name], window["GameObject"]);
+
+    var code = getDefaultCodeGO(name);
+
+    // Add code to system
+    eval(code);
+    eval('obj = new ' + name + '(new Renderable());');
+    console.log("made it past eval()");
+    // Make a default xform
+    var xf = obj.getXform();
+    xf.setXPos(20);
+    xf.setYPos(60);
+    xf.setWidth(5);
+    xf.setHeight(5);
+    console.log("made it past xform settings");
+    obj.mID = name;
+    
+    var entry = [obj, code]; // OLD CODE [obj, code, type = 1] type = 1
+    this.mObjectList[this.mObjectList.length] = entry;
+    this.mObjectMap[name] = entry;
+    this.mSelected = entry;
+    // cleanUpPanelRightBody();
+    if (!gRunning) {
+        // Updated current list item in View after this is called
+        // createDetailsObjects(type);
     }
+    // todo find out if this is referenced anywhere type = 2 reset class of referenced object
+    // } else {
+    //     // this seems to be a seperate function designed to reset an object....
+    //     // Reset class
+    //     window[name] = function() {
+    //
+    //     };
+    //
+    //     var code = getDefaultCodeClass(name, "objectListItem" + number);
+    //
+    //     // Instantiate with eval to allow using a string name when creating a new class
+    //     eval('obj = new ' + name + '();');
+    //
+    //     var newObj = [obj, code, type] // this is still type 2? what does that mean
+    //     this.mObjectList[this.mObjectList.length] = newObj; // type = 0
+    //     this.mObjectMap[name] = newObj;
+    //     this.mSelected = newObj;
+    //     // cleanUpPanelRightBody();
+    //     if (!gRunning) {
+    //         // Updated current list item in View after this is called
+    //         // createDetailsObjects(type); // THIS SHOULD BE DONE IN VIEW!!!!
+    //     }
+    // }
+    console.log("completed create");
+    // return the name for view so that it can be used to reference object
+    return name;
     // ALSO SHOULD BE DONE IN VIEW
     // Now update the drop down to default to this option
     // if ($('#panelBottomInstances').hasClass('current-tab')) {
     //     createPanelBottomInstancesSelect(this.mObjectList[this.mObjectList.length - 1][0].mName);
     // }
-    console.log("completed create");
 };
 
 GameCore.prototype.deleteObjectAt = function(index) {
@@ -153,9 +163,10 @@ GameCore.prototype.deleteObjectAt = function(index) {
     }
 };
 
-GameCore.prototype.getObjectAt = function(index) {
+// get object by its ID
+GameCore.prototype.getObject = function(objID) {
     // Returns the object at an index WITHOUT SELECTING IT
-    return this.mObjectList[index];
+    return this.mObjectMap[objID][0];
 };
 
 GameCore.prototype.select = function(index) {
@@ -237,15 +248,8 @@ GameCore.prototype.getCameraList = function() {
 
 GameCore.prototype.checkForNameConflict = function(name) {
     // Returns true if the name appears more than once
-    var result = false;
-    var i;
-    for (i = 0; i < this.mObjectList.length; i++) {
-        if (this.mObjectList[i][0].mName === name) {
-            result = true;
-            i = this.mObjectList.length; // Break
-        }
-    }
-    return result;
+    var obj = this.mObjectMap[name];
+    return (obj !== undefined) 
 };
 
 GameCore.prototype.checkForNameConflictScene = function(name) {

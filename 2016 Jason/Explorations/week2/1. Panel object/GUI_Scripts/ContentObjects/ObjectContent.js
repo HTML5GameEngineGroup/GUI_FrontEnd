@@ -36,17 +36,24 @@ ObjectContent.prototype.initializeEventHandling = function () {
 
 ObjectContent.prototype.buttonOnClick = function() {
 	var list = gGuiBase.Core.findWidgetByID("#objectSelectList1");
-	gGameCore.createDefaultObject(1, 1);
-	var obj = gGameCore.getObjectAt(0)[0];
+	var newObjID = gGameCore.createDefaultObject();
+	var newObj = gGameCore.getObject(newObjID);
+	console.log("get object by id: " + newObj);
 	var objList = gGameCore.getObjectList(); // list is just the 1 object, [[OBJ, CODE, TYPE], ...] why type?
+	var i;
+	for (i = 0; i < objList.length; i++) {
+		var curObj = objList[0];
+		
+	}
 	console.log("Object List:" + objList);
-	console.log(obj.mName + ' ' + obj.mID);
-	list.addElement("list item added");
+	list.addElement(newObjID);
 	gGuiBase.Core.refreshAllTabContent();
 };
 
 var onListSelect = function(selectedElement) {
 	alert(selectedElement);
+	alert(selectedElement.id);
+	//todo: use this function to populate the details panel
 };
 
 var onTextFieldFocusOut = function() {

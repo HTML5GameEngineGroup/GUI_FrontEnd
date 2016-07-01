@@ -14,7 +14,7 @@ SelectList.prototype.setHTML = function() {
 	this.htmlSnippet = '<ul id="' + this.widgetID + '" style="list-style-type: none">';
 	
 	for (var i = 0; i < this.list.length; i++) {
-		this.htmlSnippet += '<li>' + this.list[i] + '</li>';
+		this.htmlSnippet += '<li id="' + this.list[i] + '">' + this.list[i] + '</li>';
 	}
 	
 	this.htmlSnippet += '</ul>';
