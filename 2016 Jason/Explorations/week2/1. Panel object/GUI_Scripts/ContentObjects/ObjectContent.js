@@ -32,12 +32,15 @@ ObjectContent.prototype.initializeEventHandling = function () {
 	this.objectSelectList.setOnSelect(onListSelect);
 	// this.textField.setOnFocusOut(onTextFieldFocusOut);
 	// this.testSlider.setOnSliderChange(onSliderChange);
-
 };
 
 ObjectContent.prototype.buttonOnClick = function() {
 	var list = gGuiBase.Core.findWidgetByID("#objectSelectList1");
 	gGameCore.createDefaultObject(1, 1);
+	var obj = gGameCore.getObjectAt(0)[0];
+	var objList = gGameCore.getObjectList(); // list is just the 1 object, [[OBJ, CODE, TYPE], ...] why type?
+	console.log("Object List:" + objList);
+	console.log(obj.mName + ' ' + obj.mID);
 	list.addElement("list item added");
 	gGuiBase.Core.refreshAllTabContent();
 };

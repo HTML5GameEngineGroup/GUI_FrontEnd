@@ -110,13 +110,15 @@ GameCore.prototype.createDefaultObject = function(number, type) {
         // cleanUpPanelRightBody();
         if (!gRunning) {
             // Updated current list item in View after this is called
-            // createDetailsObjects(type);
+            // createDetailsObjects(type); // THIS SHOULD BE DONE IN VIEW!!!!
         }
     }
+    // ALSO SHOULD BE DONE IN VIEW
     // Now update the drop down to default to this option
-    if ($('#panelBottomInstances').hasClass('current-tab')) {
-        createPanelBottomInstancesSelect(this.mObjectList[this.mObjectList.length - 1][0].mName);
-    }
+    // if ($('#panelBottomInstances').hasClass('current-tab')) {
+    //     createPanelBottomInstancesSelect(this.mObjectList[this.mObjectList.length - 1][0].mName);
+    // }
+    console.log("completed create");
 };
 
 GameCore.prototype.deleteObjectAt = function(index) {
