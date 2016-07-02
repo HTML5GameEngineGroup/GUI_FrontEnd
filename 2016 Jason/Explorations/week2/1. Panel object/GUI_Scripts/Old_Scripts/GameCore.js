@@ -90,7 +90,6 @@ GameCore.prototype.createDefaultObject = function() {
     obj.mID = name;
     
     var entry = [obj, code]; // OLD CODE [obj, code, type = 1] type = 1
-    this.mObjectList[this.mObjectList.length] = entry;
     this.mObjectMap[name] = entry;
     this.mSelected = entry;
     // cleanUpPanelRightBody();

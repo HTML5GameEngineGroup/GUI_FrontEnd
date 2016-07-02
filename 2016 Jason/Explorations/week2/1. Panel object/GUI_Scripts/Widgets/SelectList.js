@@ -29,7 +29,7 @@ SelectList.prototype.setOnSelect = function (onSelectFunction) {
 	$(this.getID()).selectable({
 		selected: function(event, ui) {
 			//Get the selected item
-			onSelectFunction(ui.selected);
+			onSelectFunction(event, ui, this);
 		}
 	});
 };

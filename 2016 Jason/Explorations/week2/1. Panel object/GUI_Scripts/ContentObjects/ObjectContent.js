@@ -5,6 +5,7 @@ function ObjectContent(tabContentID) {
 	this.textField = null;
 	this.testSlider = null;
 	this.widgetList = null;
+	this.selectListID = "objectSelectList1";
 	GuiTabContent.call(this, tabContentID);
 }
 
@@ -15,7 +16,7 @@ ObjectContent.prototype.initialize = function () {
 	this.widgetList.push(this.objectAddButton);
 	
 	var testArray = ["list1", "list2", "list3"];
-	this.objectSelectList = new SelectList("objectSelectList1", testArray);
+	this.objectSelectList = new SelectList(this.selectListID, testArray);
 	// this.objectSelectList = new SelectList("objectSelectList1", []);
 	this.widgetList.push(this.objectSelectList);
 
@@ -50,9 +51,21 @@ ObjectContent.prototype.buttonOnClick = function() {
 	gGuiBase.Core.refreshAllTabContent();
 };
 
-var onListSelect = function(selectedElement) {
-	alert(selectedElement);
-	alert(selectedElement.id);
+var onListSelect = function(event, ui, theThis) {
+	//todo: Clean this code up, move over needed functions from GameCore to Game.Core
+	// DEBUG CODE TO FIGURE OUT WHAT THESE OBJECTS ARE
+	// console.log("event, ui, thethis, this");
+	// console.log(event, ui, theThis, this);
+
+	// get objectName/objectID
+	console.log(ui["selected"]["id"]);
+	var selectedObjectName = ui["selected"]["id"];
+
+	// send this info to Details panel have it update with it...
+	var selectedObject = gGameCore.getObject(selectedObjectName);
+	console.log(selectedObject.getXform());
+
+
 	//todo: use this function to populate the details panel
 };
 
