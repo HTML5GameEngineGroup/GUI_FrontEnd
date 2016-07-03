@@ -20,6 +20,7 @@ var GuiPanel = function (PanelID, panelType, Height) {
     if (Height !== undefined) this.guiTab.height(Height);
 	
 	var tabs = $(PanelID).tabs();
+	
     $(PanelID + "Sortable").sortable({ 
         opacity: 0.5, //Opacity while "sorting"
 		
@@ -58,7 +59,13 @@ var GuiPanel = function (PanelID, panelType, Height) {
             return true;
         }
     });
+	
+	
     return this;
+};
+
+GuiPanel.prototype.setFirstTabActive = function() {
+	$(this.PanelID).tabs("option", "active", 0);
 };
 
 // adds an empty tab to this panel
