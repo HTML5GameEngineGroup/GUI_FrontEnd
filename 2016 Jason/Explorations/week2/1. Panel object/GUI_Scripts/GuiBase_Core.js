@@ -19,7 +19,7 @@ gGuiBase.Core = (function() {
 	
 	//Constants
 	var MIN_PANEL_PADDING = 5;
-	var PANEL_PADDING = 12;
+	var PANEL_PADDING = 1;
 	var TAB_HEIGHT = 60;
 
 	//For polling mouse position
