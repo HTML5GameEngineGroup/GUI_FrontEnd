@@ -35,7 +35,12 @@ $( document ).ready(function() {
     panelID = "#panelRight";
     var rightPanel = new GuiPanel(panelID, GuiPanelType.RIGHT);
 	var detailsTab = new GuiPanelTab("Details");
+	
+	var detailsTransform = new TransformContent("TransformContent");
+	var detailsColorTexture = new ColorTextureContent("ColorTextureContent");
 	rightPanel.addTab(detailsTab);
+	detailsTab.addContent(detailsTransform);
+	detailsTab.addContent(detailsColorTexture);
 	
 	gGuiBase.Core.addPanel(bottomPanel);
 	gGuiBase.Core.addPanel(leftPanel);

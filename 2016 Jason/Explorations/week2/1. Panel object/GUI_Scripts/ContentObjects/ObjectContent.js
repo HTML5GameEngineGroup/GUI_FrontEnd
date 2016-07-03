@@ -4,7 +4,7 @@ function ObjectContent(tabContentID) {
 	this.objectSelectList = null;
 	this.textField = null;
 	this.testSlider = null;
-	this.widgetList = null;
+	
 	this.selectListID = "objectSelectList1";
 	GuiTabContent.call(this, tabContentID);
 }

@@ -1,4 +1,10 @@
-function TextField(fieldID) {
+function TextField(fieldID, defaultText, optionalFrontText) {
+	this.defaultText = defaultText;
+	this.optionalFrontText = optionalFrontText;
+	
+	if (this.defaultText == undefined) this.defaultText = "";
+	if (this.optionalFrontText == undefined) this.optionalFrontText = "";
+	
 	GuiContentWidget.call(this, fieldID);
 }
 
@@ -9,7 +15,7 @@ TextField.prototype.initializeWidget = function () {
 };
 
 TextField.prototype.setHTML = function() {
-	this.htmlSnippet = '<input id="' + this.widgetID + '" type="text">';
+	this.htmlSnippet = this.optionalFrontText + '<input id="' + this.widgetID + '" type="text" value="' + this.defaultText + '">';
 };
 
 TextField.prototype.setOnFocusOut = function (onFocusOutFunction) {
