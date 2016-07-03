@@ -4,7 +4,7 @@
 	
 	<style>
 		#panelRight {
-			margin-top: 50px;
+			
 			float: right;
 			width: 234px;
 		}
@@ -17,7 +17,7 @@
 		}
 
 		#panelLeft {
-			margin-top: 50px;
+			
 			float: left;
 			width: 234px;
 		}
@@ -32,6 +32,59 @@
 			float:left;
 			padding: 0px;
 		}
+		
+		.disable-scroll {
+			overflow: hidden;
+		}
+
+		.nav-menu {
+			/* A screenwide brown line for header bars */
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			background-color: #FFFFFF;
+			height: 48px;
+			border-bottom: 2px solid #AAAAAA;
+			float: top;
+		}
+		
+		.nav-menu li:not(.menu-item):not(.panel-list-item) {
+			/* Any text in the nav bar that's also not a dropdown item */
+			float: left;
+			background-color: #FFFFFF;
+			border-bottom: 2px solid #AAAAAA;
+		}
+
+		.nav-menu li a {
+			/* Any text in the nav bar */
+			display: block;
+			color: black;
+			padding: 12px;
+			text-decoration: none;
+			font-size: 110%
+		}
+
+		.nav-menu li a:hover:not(.active):not(.current-tab) {
+			/* What happens when you hover over items in the nav bar */
+			background-color: #E4E4E4;
+			text-decoration: none;
+			color: black;
+		}
+	
+		.menu-item {
+			/* Nothing but a flag -- can be used assigned to dropdown items or right-click menu items */
+		}
+
+		.header-text-only {
+			/* A class given to any li (not li a) to give it the proper appearance in a nav menu,
+			but without any interaction; i.e. for headers */
+			display: block;
+			color: black;
+			padding: 12px;
+			text-decoration: none;
+			border-bottom: 2px solid #8d807d;
+		}
+		
 	</style>
 
 	<link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
@@ -40,6 +93,23 @@
 </head>
 
 <body>
+
+	<ul class="nav-menu">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">File<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li class="menu-item"><a href="#" id="menuFileNew"><span class="glyphicon glyphicon-plus"></span>&nbsp New</a></li>
+                <!--<li role="separator" class="divider"></li>-->
+                <li class="menu-item"><a href="#" id="menuFileOpen"><span class="glyphicon glyphicon-folder-open"></span>&nbsp Open</a><input type="file" id="menuFileOpenInput" name="files[]" onchange="fileOpen()"></li>
+                <!--<li role="separator" class="divider"></li>-->
+                <li class="menu-item"><a href="#" id="menuFileSave"><span class="glyphicon glyphicon-floppy-disk"></span>&nbsp Save</a></li>
+            </ul>
+        </li>
+        <li><a href="#" id="menuRun">Run</a></li>
+        <!--<li><input type="file" id="uploadCodeObject" name="files[]" onchange="uploadJS()"/></li> (Use me to show File to String)-->
+    </ul>
+
+
     <div id="panelLeft">
 		<ul id="panelLeftSortable" class="connectedSortable">
 		</ul>

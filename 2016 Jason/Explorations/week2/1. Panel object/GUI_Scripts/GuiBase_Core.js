@@ -193,18 +193,22 @@ gGuiBase.Core = (function() {
 			margin = margin.substring(0, margin.length-2);
 			var marginInt = parseInt(margin);
 			
-			$(leftPanels[i].PanelID).css("height", $(window).height() - bottomPanelsHeight - PANEL_PADDING - marginInt);
+			var topDistance = leftPanels[i].getTopDistance();
+			
+			$(leftPanels[i].PanelID).css("height", $(window).height() - bottomPanelsHeight - PANEL_PADDING - marginInt - topDistance);
 			
 			resizeLeftRightTabContentPane(leftPanels[i]);
 			
 		}
 		//Same process for right panels
 		for (var i = 0; i < rightPanels.length; i++) {
-			var margin = $(leftPanels[i].PanelID).css("margin-top");
+			var margin = $(rightPanels[i].PanelID).css("margin-top");
 			margin = margin.substring(0, margin.length-2);
 			var marginInt = parseInt(margin);
+			
+			var topDistance = rightPanels[i].getTopDistance();
 			//Adjust height according to bottom panel
-			$(rightPanels[i].PanelID).css("height", $(window).height() - bottomPanelsHeight - PANEL_PADDING - marginInt);
+			$(rightPanels[i].PanelID).css("height", $(window).height() - bottomPanelsHeight - PANEL_PADDING - marginInt - topDistance);
 			resizeLeftRightTabContentPane(rightPanels[i]);
 		}
 	};
@@ -224,7 +228,10 @@ gGuiBase.Core = (function() {
 				var margin = $(panel.PanelID).css("margin-top");
 				margin = margin.substring(0, margin.length-2);
 				var marginInt = parseInt(margin);
-				$(href).css("height", $(window).height() - heightSum - TAB_HEIGHT - marginInt);
+				
+				var topDistance = panel.getTopDistance();
+				
+				$(href).css("height", $(window).height() - heightSum - TAB_HEIGHT - marginInt - topDistance);
 			}
 	};
 

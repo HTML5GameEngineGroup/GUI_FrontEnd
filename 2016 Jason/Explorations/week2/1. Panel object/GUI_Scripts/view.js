@@ -2,7 +2,7 @@
  * Created by MetaBlue on 6/26/16.
  */
 $( document ).ready(function() {
-	console.log(GuiContentWidget.NO_STYLE);
+
 	//Create bottom panel and tabs
 	var panelID = "#panelBottom";
     var bottomPanel = new GuiPanel(panelID, GuiPanelType.BOTTOM);
@@ -44,16 +44,19 @@ $( document ).ready(function() {
 	detailsTab.addContent(detailsTransform);
 	detailsTab.addContent(detailsColorTexture);
 	
+	leftPanel.setTopDistance(48);
+	rightPanel.setTopDistance(48);
+	
 	gGuiBase.Core.addPanel(bottomPanel);
 	gGuiBase.Core.addPanel(leftPanel);
 	gGuiBase.Core.addPanel(rightPanel);
+	
 	
 	bottomPanel.setFirstTabActive();
 	leftPanel.setFirstTabActive();
 	rightPanel.setFirstTabActive();
 	
-	console.log($('#panelLeft').outerHeight());
-	
+
 	//Silly canvas resize in center
 	/*$( window ).resize(function() {
 		var initWidth = 640.0;

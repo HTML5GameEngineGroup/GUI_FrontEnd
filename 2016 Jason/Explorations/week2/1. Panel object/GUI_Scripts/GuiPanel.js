@@ -17,6 +17,8 @@ var GuiPanel = function (PanelID, panelType, Height) {
     this.guiTab = $(PanelID).tabs(); //Create the tabs
 	this.panelType = panelType;
 	
+	this.panelTopDistance = 0;
+	
     if (Height !== undefined) this.guiTab.height(Height);
 	
 	var tabs = $(PanelID).tabs();
@@ -97,3 +99,10 @@ GuiPanel.prototype.moveTabToThisPanel = function ( tabID ){
 	this.guiTab.tabs("refresh");
 };
 
+GuiPanel.prototype.setTopDistance = function(distance) {
+	this.panelTopDistance = distance;
+};
+
+GuiPanel.prototype.getTopDistance = function() {
+	return this.panelTopDistance;
+};
