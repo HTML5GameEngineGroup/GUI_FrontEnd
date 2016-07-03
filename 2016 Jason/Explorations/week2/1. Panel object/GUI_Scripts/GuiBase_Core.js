@@ -39,6 +39,7 @@ gGuiBase.Core = (function() {
 		} else {
 			panelList.push(guiPanel);
 		}
+		
 		setResizeFunction(guiPanel); //Resize based on panel type
 		addTabStyle(guiPanel); //Make panels scrollable
 		
@@ -70,13 +71,13 @@ gGuiBase.Core = (function() {
 		
 		var bottomPanels = getPanelsOfType(GuiPanelType.BOTTOM);
 		if (bottomPanels.length > 0 && (guiPanel.panelType == GuiPanelType.RIGHT || guiPanel.panelType == GuiPanelType.LEFT)) {
-			$(guiPanel.PanelID).height($(window).height() - getBottomPanelsHeight() - 20);
+			$(guiPanel.PanelID).outerHeight($(window).height() - getBottomPanelsHeight() - 20);
 		} 
 		
 		//If the bottom panel is added last, need to update the positions of any left/right panels
-		if (guiPanel.panelType == GuiPanelType.BOTTOM) {
+		//if (guiPanel.panelType == GuiPanelType.BOTTOM) {
 			resizeLeftRightHelper();
-		}
+		//}
 	
 	};
 
@@ -158,7 +159,7 @@ gGuiBase.Core = (function() {
 		
 		//Also resize on window resize
 		$( window ).resize(function() {
-			$(panelID).css("top", $(window).height() - $(panelID).height());
+			$(panelID).css("top", $(window).height() - $(panelID).outerHeight(true));
 			resizeLeftRightHelper();
 		});
 	};
@@ -175,7 +176,7 @@ gGuiBase.Core = (function() {
 				
 				var linkHTML = tabs[i].innerHTML;
 				var href = linkHTML.match(/href="([^"]*)/)[1];
-				$(href).css("height", $(panelID).height() - TAB_HEIGHT);
+				$(href).css("height", $(panelID).outerHeight(true) - TAB_HEIGHT);
 			}
 		}
 	};
@@ -188,15 +189,22 @@ gGuiBase.Core = (function() {
 		var bottomPanelsHeight = getBottomPanelsHeight();
 		for (var i = 0; i < leftPanels.length; i++) {
 			//Adjust height of actual panel based on bottom panel
-			$(leftPanels[i].PanelID).css("height", $(window).height() - bottomPanelsHeight - PANEL_PADDING);
+			var margin = $(leftPanels[i].PanelID).css("margin-top");
+			margin = margin.substring(0, margin.length-2);
+			var marginInt = parseInt(margin);
+			
+			$(leftPanels[i].PanelID).css("height", $(window).height() - bottomPanelsHeight - PANEL_PADDING - marginInt);
 			
 			resizeLeftRightTabContentPane(leftPanels[i]);
 			
 		}
 		//Same process for right panels
 		for (var i = 0; i < rightPanels.length; i++) {
+			var margin = $(leftPanels[i].PanelID).css("margin-top");
+			margin = margin.substring(0, margin.length-2);
+			var marginInt = parseInt(margin);
 			//Adjust height according to bottom panel
-			$(rightPanels[i].PanelID).css("height", $(window).height() - bottomPanelsHeight - PANEL_PADDING);
+			$(rightPanels[i].PanelID).css("height", $(window).height() - bottomPanelsHeight - PANEL_PADDING - marginInt);
 			resizeLeftRightTabContentPane(rightPanels[i]);
 		}
 	};
@@ -213,8 +221,10 @@ gGuiBase.Core = (function() {
 				var href = linkHTML.match(/href="([^"]*)/)[1];
 				
 				var heightSum = getBottomPanelsHeight();
-				
-				$(href).css("height", $(window).height() - heightSum - TAB_HEIGHT);
+				var margin = $(panel.PanelID).css("margin-top");
+				margin = margin.substring(0, margin.length-2);
+				var marginInt = parseInt(margin);
+				$(href).css("height", $(window).height() - heightSum - TAB_HEIGHT - marginInt);
 			}
 	};
 
@@ -235,10 +245,7 @@ gGuiBase.Core = (function() {
 		 }); //Just resize to the right
 		 $(panelID).css("height", $(window).height() - parseInt($(panelID).css("height")) - MIN_PANEL_PADDING);
 		 
-		 $( window ).resize(function() {
-			var heightSum = getBottomPanelsHeight();
-			$(panelID).css("height", $(window).height() - heightSum - MIN_PANEL_PADDING);
-		});
+		 
 	};
 
 	//Resize for right type panels
@@ -254,11 +261,6 @@ gGuiBase.Core = (function() {
 		});
 		$(panelID).css("height", $(window).height() - parseInt($(panelID).css("height")));
 		
-		
-		$( window ).resize(function() {
-			var heightSum = getBottomPanelsHeight();
-			$(panelID).css("height", $(window).height() - heightSum - MIN_PANEL_PADDING);
-		});
 	};
 
 	//Get the combined height of all bottom panels, for use in resizing
@@ -266,7 +268,7 @@ gGuiBase.Core = (function() {
 		var bottomPanels = getPanelsOfType(GuiPanelType.BOTTOM);
 		var heightSum = 0; //Sum up the heights of all the bottom panels
 		for (var i = 0; i < bottomPanels.length; i++) {
-			heightSum += $(bottomPanels[i].PanelID).height();
+			heightSum += $(bottomPanels[i].PanelID).outerHeight(true);
 		}
 		return heightSum;
 	};
@@ -289,7 +291,7 @@ gGuiBase.Core = (function() {
 					var href = linkHTML.match(/href="([^"]*)/)[1];
 					//var divID = href.substring(1); //Remove the # since we won't be referring to it as a link
 
-					$(href).css("height", $(panelID).height() - TAB_HEIGHT);
+					$(href).css("height", $(panelID).outerHeight(true) - TAB_HEIGHT);
 					//console.log($(panelID).height());
 				}
 			}
@@ -300,7 +302,7 @@ gGuiBase.Core = (function() {
 		for (var i = 0; i < tabs.length; i++) {
 			var linkHTML = tabs[i].innerHTML;
 			var href = linkHTML.match(/href="([^"]*)/)[1];
-			$(href).css("height", $(panelID).height() - TAB_HEIGHT);
+			$(href).css("height", $(panelID).outerHeight(true) - TAB_HEIGHT);
 		}
 	};
 
@@ -337,7 +339,7 @@ gGuiBase.Core = (function() {
 			var linkHTML = tabs[i].innerHTML;
 			var href = linkHTML.match(/href="([^"]*)/)[1];
 			
-			$(href).css("height", $(panelID).height() - TAB_HEIGHT);
+			$(href).css("height", $(panelID).outerHeight(true) - TAB_HEIGHT);
 		}
 		
 		//Make the floating panel draggable only by the top bar
@@ -461,7 +463,7 @@ gGuiBase.Core = (function() {
 		
 		//If mouseX, mouseY is within the bounds of the element
 		if (mouseX > position.left && mouseX < position.left + element.width() &&
-			mouseY > position.top && mouseY < position.top + element.height()) {
+			mouseY > position.top && mouseY < position.top + element.outerHeight(true)) {
 			return true;
 		} 
 		return false;
