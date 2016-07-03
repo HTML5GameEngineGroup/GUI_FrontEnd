@@ -22,8 +22,10 @@ $( document ).ready(function() {
     panelID = "#panelLeft";
     var leftPanel = new GuiPanel(panelID, GuiPanelType.LEFT);
 	
+	var contentStyle = 'border: 2px solid #d3d3d3; border-radius: 1px; padding: 0px; margin-bottom: 20px';
+	
 	var objectsTab = new GuiPanelTab("Objects");
-	var objectsTabContent = new ObjectContent("ObjectsContent", 'border: 2px solid #d3d3d3; border-radius: 1px; padding: 5px');
+	var objectsTabContent = new ObjectContent("ObjectsContent", contentStyle);
 	leftPanel.addTab(objectsTab);
 	objectsTab.addContent(objectsTabContent);
 	
@@ -38,8 +40,8 @@ $( document ).ready(function() {
     var rightPanel = new GuiPanel(panelID, GuiPanelType.RIGHT);
 	var detailsTab = new GuiPanelTab("Details");
 	
-	var detailsTransform = new TransformContent("TransformContent");
-	var detailsColorTexture = new ColorTextureContent("ColorTextureContent");
+	var detailsTransform = new TransformContent("TransformContent", contentStyle);
+	var detailsColorTexture = new ColorTextureContent("ColorTextureContent", contentStyle);
 	rightPanel.addTab(detailsTab);
 	detailsTab.addContent(detailsTransform);
 	detailsTab.addContent(detailsColorTexture);
