@@ -350,6 +350,8 @@ gGuiBase.Core = (function() {
 		$(panelID).css("top", mouseY);
 		$(panelID).css("left", mouseX);
 		
+		floatingPanel.setFirstTabActive();
+		
 		numFloatingPanels++;
 		numFloatingPanelsCreated++;
 	};
