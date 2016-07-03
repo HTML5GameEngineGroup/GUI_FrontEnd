@@ -1,11 +1,11 @@
-function TextField(fieldID, defaultText, optionalFrontText) {
+function TextField(fieldID, style, defaultText, optionalFrontText) {
 	this.defaultText = defaultText;
 	this.optionalFrontText = optionalFrontText;
 	
 	if (this.defaultText == undefined) this.defaultText = "";
 	if (this.optionalFrontText == undefined) this.optionalFrontText = "";
 	
-	GuiContentWidget.call(this, fieldID);
+	GuiContentWidget.call(this, fieldID, style);
 }
 
 gGuiBase.Core.inheritPrototype(TextField, GuiContentWidget);
@@ -15,7 +15,11 @@ TextField.prototype.initializeWidget = function () {
 };
 
 TextField.prototype.setHTML = function() {
-	this.htmlSnippet = this.optionalFrontText + '<input id="' + this.widgetID + '" type="text" value="' + this.defaultText + '">';
+	if (this.style !== GuiContentWidget.NO_STYLE) {
+		this.htmlSnippet = this.optionalFrontText + '<input id="' + this.widgetID + '" type="text" value="' + this.defaultText + '" ' + this.style + '>';
+	} else {
+		this.htmlSnippet = this.optionalFrontText + '<input id="' + this.widgetID + '" type="text" value="' + this.defaultText + '">';
+	}
 };
 
 TextField.prototype.setOnFocusOut = function (onFocusOutFunction) {

@@ -1,6 +1,6 @@
-function DropdownList(listID, list) {
+function DropdownList(listID, style, list) {
 	this.list = list;
-	GuiContentWidget.call(this, listID);
+	GuiContentWidget.call(this, listID, style);
 }
 
 gGuiBase.Core.inheritPrototype(DropdownList, GuiContentWidget);
@@ -10,7 +10,11 @@ DropdownList.prototype.initializeWidget = function () {
 };
 
 DropdownList.prototype.setHTML = function() {
-	this.htmlSnippet = '<select id="' + this.widgetID + '">';
+	if (this.style !== GuiContentWidget.NO_STYLE) {
+		this.htmlSnippet = '<select id="' + this.widgetID + '" ' + this.style + '>';
+	} else {
+		this.htmlSnippet = '<select id="' + this.widgetID + '">';
+	}
 	
 	for (var i = 0; i < this.list.length; i++) {
 		this.htmlSnippet += '<option id="' + this.list[i] + '">' + this.list[i] + '</option>';

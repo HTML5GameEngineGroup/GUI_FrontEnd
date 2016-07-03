@@ -2,7 +2,7 @@
  * Created by MetaBlue on 6/26/16.
  */
 $( document ).ready(function() {
-
+	console.log(GuiContentWidget.NO_STYLE);
 	//Create bottom panel and tabs
 	var panelID = "#panelBottom";
     var bottomPanel = new GuiPanel(panelID, GuiPanelType.BOTTOM);
@@ -26,8 +26,8 @@ $( document ).ready(function() {
 	objectsTab.addContent(objectsTabContent);
 	
 	var texturesTab = new GuiPanelTab("Textures");
-	var texturesTabContent = new GuiTabContent("TexturesContent");
-	texturesTab.addContent(texturesTabContent);
+	//var texturesTabContent = new GuiTabContent("TexturesContent");
+	//texturesTab.addContent(texturesTabContent);
 	leftPanel.addTab(texturesTab);
 
 	

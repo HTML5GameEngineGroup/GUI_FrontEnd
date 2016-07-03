@@ -1,5 +1,5 @@
-function Slider(sliderID) {
-	GuiContentWidget.call(this, sliderID);
+function Slider(sliderID, style) {
+	GuiContentWidget.call(this, sliderID, style);
 }
 
 gGuiBase.Core.inheritPrototype(Slider, GuiContentWidget);
@@ -9,7 +9,11 @@ Slider.prototype.initializeWidget = function () {
 };
 
 Slider.prototype.setHTML = function() {
-	this.htmlSnippet = '<div id="' + this.widgetID + '"></div>';
+	if (this.style !== GuiContentWidget.NO_STYLE) {
+		this.htmlSnippet = '<div id="' + this.widgetID + '" ' + this.style + '></div>';
+	} else {
+		this.htmlSnippet = '<div id="' + this.widgetID + '"></div>';
+	}
 };
 
 Slider.prototype.setOnSliderChange = function (onSliderChangeFunction) {

@@ -1,7 +1,8 @@
 
-function SelectList(listID, list) {
+function SelectList(listID, style, list) {
 	this.list = list;
-	GuiContentWidget.call(this, listID);
+	
+	GuiContentWidget.call(this, listID, style);
 }
 
 gGuiBase.Core.inheritPrototype(SelectList, GuiContentWidget);
@@ -11,8 +12,12 @@ SelectList.prototype.initializeWidget = function () {
 };
 
 SelectList.prototype.setHTML = function() {
-	this.htmlSnippet = '<ul id="' + this.widgetID + '" style="list-style-type: none; margin: 0; padding: 0">';
-	
+	if (this.style !== GuiContentWidget.NO_STYLE) {
+		this.htmlSnippet = '<ul id="' + this.widgetID + '" ' + this.style + '>';
+	} else {
+		this.htmlSnippet = '<ul id="' + this.widgetID + '">'
+	}
+
 	for (var i = 0; i < this.list.length; i++) {
 		this.htmlSnippet += '<li id="' + this.list[i] + '">' + this.list[i] + '</li>';
 	}

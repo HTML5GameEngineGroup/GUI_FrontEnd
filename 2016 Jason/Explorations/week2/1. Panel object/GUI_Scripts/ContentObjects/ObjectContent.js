@@ -12,11 +12,11 @@ function ObjectContent(tabContentID) {
 gGuiBase.Core.inheritPrototype(ObjectContent, GuiTabContent);
 
 ObjectContent.prototype.initialize = function () {
-	this.objectAddButton = new Button("objectAddButton", "+Object");
+	this.objectAddButton = new Button("objectAddButton", GuiTabContent.NO_STYLE, "+Object");
 	this.widgetList.push(this.objectAddButton);
 	
 	var testArray = ["list1", "list2", "list3"];
-	this.objectSelectList = new SelectList(this.selectListID, testArray);
+	this.objectSelectList = new SelectList(this.selectListID, 'list-style-type: none; margin: 0; padding: 0', testArray);
 	// this.objectSelectList = new SelectList("objectSelectList1", []);
 	this.widgetList.push(this.objectSelectList);
 

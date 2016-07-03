@@ -11,12 +11,12 @@ function ColorTextureContent(tabContentID) {
 gGuiBase.Core.inheritPrototype(ColorTextureContent, GuiTabContent);
 
 ColorTextureContent.prototype.initialize = function () {
-	this.colorText = new Text("colorText", "Color");
-	this.colorField = new TextField("colorTextField", "...");
-	this.textureText = new Text("textureText", "Texture");
+	this.colorText = new Text("colorText", GuiContentWidget.NO_STYLE, "Color");
+	this.colorField = new TextField("colorTextField", GuiContentWidget.NO_STYLE, "...");
+	this.textureText = new Text("textureText", GuiContentWidget.NO_STYLE, "Texture");
 	
 	var textureArray = ["1", "2", "3"];
-	this.textureDropDown = new DropdownList("textureDropDown", textureArray);
+	this.textureDropDown = new DropdownList("textureDropDown", GuiContentWidget.NO_STYLE, textureArray);
 	
 	this.widgetList.push(this.colorText);
 	this.widgetList.push(this.colorField);

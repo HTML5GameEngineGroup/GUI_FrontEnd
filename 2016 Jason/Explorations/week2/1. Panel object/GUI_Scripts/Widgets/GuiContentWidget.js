@@ -1,11 +1,15 @@
 
-function GuiContentWidget (widgetID) {
+function GuiContentWidget (widgetID, style) {
     if (widgetID === undefined || typeof widgetID !==  'string') {
         throw "widgetID must be a string";
     }
     
     this.widgetID = widgetID;
 	this.htmlSnippet = "";
+	
+	if (style !== undefined) 
+		this.style = 'style="' + style + '"';
+	else this.style = "";
 	
 	this.initializeWidget();
 }
@@ -22,3 +26,5 @@ GuiContentWidget.prototype.getWidgetHTML = function () {
 GuiContentWidget.prototype.getID = function () {
     return '#' + this.widgetID;
 };
+
+GuiContentWidget.NO_STYLE = "";

@@ -19,19 +19,19 @@ function TransformContent(tabContentID) {
 gGuiBase.Core.inheritPrototype(TransformContent, GuiTabContent);
 
 TransformContent.prototype.initialize = function () {
-	this.objectNameText = new Text("gameObjectNameText", "Name");
-	this.objectName = new TextField("gameObjectNameField", "GameObj0");
-	this.objectXY = new Text("gameObjectXYText", "X / Y");
-	this.objectX = new TextField("gameObjectXField", "20");
-	this.objectY = new TextField("gameObjectYField", "60");
+	this.objectNameText = new Text("gameObjectNameText", GuiTabContent.NO_STYLE, "Name");
+	this.objectName = new TextField("gameObjectNameField", GuiTabContent.NO_STYLE, "GameObj0");
+	this.objectXY = new Text("gameObjectXYText", GuiTabContent.NO_STYLE, "X / Y");
+	this.objectX = new TextField("gameObjectXField", GuiTabContent.NO_STYLE, "20");
+	this.objectY = new TextField("gameObjectYField", GuiTabContent.NO_STYLE, "60");
 	
-	this.objectWH = new Text("gameObjectWHText", "W / H");
-	this.objectW = new TextField("gameObjectWField", "5");
-	this.objectH = new TextField("gameObjectHField", "5");
+	this.objectWH = new Text("gameObjectWHText", GuiTabContent.NO_STYLE, "W / H");
+	this.objectW = new TextField("gameObjectWField", GuiTabContent.NO_STYLE, "5");
+	this.objectH = new TextField("gameObjectHField", GuiTabContent.NO_STYLE, "5");
 	
-	this.rotationText = new Text("gameObjectRotationText", "Rotation");
-	this.rotationField = new TextField("gameObjectRotationField", "0");
-	this.rotationSlider = new Slider("gameObjectRotationSlider");
+	this.rotationText = new Text("gameObjectRotationText", GuiTabContent.NO_STYLE, "Rotation");
+	this.rotationField = new TextField("gameObjectRotationField", GuiTabContent.NO_STYLE, "0");
+	this.rotationSlider = new Slider("gameObjectRotationSlider", GuiTabContent.NO_STYLE);
 	
 	this.widgetList.push(this.objectNameText);
 	this.widgetList.push(this.objectName);
