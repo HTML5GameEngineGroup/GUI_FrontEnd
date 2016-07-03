@@ -24,7 +24,7 @@ GuiPanelTab.prototype.createHeader = function () {
 
 // returns a new jquery tab_content
 GuiPanelTab.prototype.createContentContainer = function () {
-    return $('<div id="' + this.tabID + '">' + this.tabID + " content" + '</div>');
+    return $('<div id="' + this.tabID + '"></div>');
 };
 
 // returns the current jquery header_information

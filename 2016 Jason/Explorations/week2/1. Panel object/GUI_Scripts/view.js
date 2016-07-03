@@ -9,6 +9,8 @@ $( document ).ready(function() {
 
 	var scenesTab = new GuiPanelTab("Scenes");
 	bottomPanel.addTab(scenesTab);
+	var sceneContent = new ScenesContent("ScenesContent");
+	scenesTab.addContent(sceneContent);
 	
 	var camerasTab = new GuiPanelTab("Cameras");
 	bottomPanel.addTab(camerasTab);
@@ -21,7 +23,7 @@ $( document ).ready(function() {
     var leftPanel = new GuiPanel(panelID, GuiPanelType.LEFT);
 	
 	var objectsTab = new GuiPanelTab("Objects");
-	var objectsTabContent = new ObjectContent("ObjectsContent");
+	var objectsTabContent = new ObjectContent("ObjectsContent", 'border: 2px solid #d3d3d3; border-radius: 1px; padding: 5px');
 	leftPanel.addTab(objectsTab);
 	objectsTab.addContent(objectsTabContent);
 	

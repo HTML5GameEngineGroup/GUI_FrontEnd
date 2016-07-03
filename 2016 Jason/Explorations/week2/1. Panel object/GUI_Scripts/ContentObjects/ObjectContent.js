@@ -1,12 +1,12 @@
 
-function ObjectContent(tabContentID) {
+function ObjectContent(tabContentID, style) {
 	this.objectAddButton = null;
 	this.objectSelectList = null;
 	this.textField = null;
 	this.testSlider = null;
 	
 	this.selectListID = "objectSelectList1";
-	GuiTabContent.call(this, tabContentID);
+	GuiTabContent.call(this, tabContentID, style);
 }
 
 gGuiBase.Core.inheritPrototype(ObjectContent, GuiTabContent);

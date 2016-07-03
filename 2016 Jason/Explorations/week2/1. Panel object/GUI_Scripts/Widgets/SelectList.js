@@ -1,6 +1,12 @@
 
-function SelectList(listID, style, list) {
+function SelectList(listID, style, list, listStyle) {
 	this.list = list;
+	
+	if (listStyle !== undefined) {
+		this.listStyle = 'style="' + listStyle + '"';
+	} else {
+		this.listStyle = "";
+	}
 	
 	GuiContentWidget.call(this, listID, style);
 }
@@ -19,7 +25,12 @@ SelectList.prototype.setHTML = function() {
 	}
 
 	for (var i = 0; i < this.list.length; i++) {
-		this.htmlSnippet += '<li id="' + this.list[i] + '">' + this.list[i] + '</li>';
+		
+		if (this.listStyle !== GuiContentWidget.NO_STYLE) {
+			this.htmlSnippet += '<li id="' + this.list[i] + '" ' + this.listStyle + '>' + this.list[i] + '</li>';
+		} else {
+			this.htmlSnippet += '<li id="' + this.list[i] + '">' + this.list[i] + '</li>';
+		}
 	}
 	
 	this.htmlSnippet += '</ul>';

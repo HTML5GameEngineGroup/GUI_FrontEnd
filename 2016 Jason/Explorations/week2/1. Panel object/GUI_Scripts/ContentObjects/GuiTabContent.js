@@ -1,11 +1,17 @@
 
-function GuiTabContent (tabContentID) {
+function GuiTabContent (tabContentID, style) {
     if (tabContentID === undefined || typeof tabContentID !==  'string') {
         throw "tabContentID must be a string";
     }
     
     this.tabContentID = tabContentID; 
     this.widgetList = [];
+	
+	if (style !== undefined) {
+		this.style = 'style="' + style + '"';
+	} else {
+		this.style = "";
+	}
 	
 	this.initialize();
 }
@@ -19,7 +25,7 @@ GuiTabContent.prototype.initializeEventHandling = function() {
 };
 
 GuiTabContent.prototype.getHTMLContent = function () {
-	var htmlString = '<div id="' + this.tabContentID + '">';
+	var htmlString = '<div id="' + this.tabContentID + '" ' + this.style + '>';
 	for (var i = 0; i < this.widgetList.length; i++) {
 		htmlString += this.widgetList[i].getWidgetHTML();
 	}
@@ -40,3 +46,5 @@ GuiTabContent.prototype.findWidgetByID = function(id) {
 GuiTabContent.prototype.getID = function () {
     return '#' + this.tabContentID;
 };
+
+GuiTabContent.NO_STYLE = "";
