@@ -1,4 +1,7 @@
-
+/*-----------------------------------------------------------------------------
+//	Button widget extending GuiContentWidget
+//	Author: Jason Herold/Thoof
+-----------------------------------------------------------------------------*/
 function Button(buttonID, style, buttonName) {
 	this.buttonName = buttonName;
 
@@ -16,6 +19,7 @@ Button.prototype.initializeWidget = function () {
 
 };
 
+//Set jquery ui button click function
 Button.prototype.setOnClick = function (onClickFunction) {
 
 	$(this.getID()).button().click(function() {

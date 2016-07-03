@@ -1,4 +1,9 @@
-
+/*-----------------------------------------------------------------------------
+//	Scene content
+//	Extension of GuiTabContent
+//
+//	Author: Jason Herold/Thoof
+-----------------------------------------------------------------------------*/
 function ScenesContent(tabContentID, style) {
 	this.sceneAddButton = null;
 	this.sceneSelectList = null;

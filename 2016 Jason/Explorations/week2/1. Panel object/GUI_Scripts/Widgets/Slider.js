@@ -1,3 +1,7 @@
+/*-----------------------------------------------------------------------------
+//	Slider widget extending GuiContentWidget
+//	Author: Jason Herold/Thoof
+-----------------------------------------------------------------------------*/
 function Slider(sliderID, style) {
 	GuiContentWidget.call(this, sliderID, style);
 }
@@ -16,9 +20,10 @@ Slider.prototype.setHTML = function() {
 	}
 };
 
+//Set up jquery ui slider
 Slider.prototype.setOnSliderChange = function (onSliderChangeFunction) {
 	$(this.getID()).slider({
-		orientation: "horizontal",
+		orientation: "horizontal", //Horizontal slider only, may need to change
 		slide: function(event, ui) {
 			onSliderChangeFunction(ui.value);
 		},

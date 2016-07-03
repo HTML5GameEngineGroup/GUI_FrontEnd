@@ -1,4 +1,8 @@
-
+/*-----------------------------------------------------------------------------
+//	Selectable list widget extending GuiContentWidget
+//  Uses JQueryUI selectable
+//	Author: Jason Herold/Thoof
+-----------------------------------------------------------------------------*/
 function SelectList(listID, style, list, listStyle) {
 	this.list = list;
 	
@@ -18,12 +22,13 @@ SelectList.prototype.initializeWidget = function () {
 };
 
 SelectList.prototype.setHTML = function() {
-	if (this.style !== GuiContentWidget.NO_STYLE) {
+	if (this.style !== GuiContentWidget.NO_STYLE) { 
 		this.htmlSnippet = '<ul id="' + this.widgetID + '" ' + this.style + '>';
-	} else {
+	} else { //No style specified
 		this.htmlSnippet = '<ul id="' + this.widgetID + '">'
 	}
 
+	//Add each list element as a <li> tag
 	for (var i = 0; i < this.list.length; i++) {
 		
 		if (this.listStyle !== GuiContentWidget.NO_STYLE) {
@@ -41,6 +46,7 @@ SelectList.prototype.addElement = function(listElement) {
 	this.setHTML();
 };
 
+//Set jquery ui selectable
 SelectList.prototype.setOnSelect = function (onSelectFunction) {
 	$(this.getID()).selectable({
 		

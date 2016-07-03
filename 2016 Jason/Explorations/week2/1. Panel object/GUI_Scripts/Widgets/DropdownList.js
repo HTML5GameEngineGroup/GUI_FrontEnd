@@ -1,3 +1,7 @@
+/*-----------------------------------------------------------------------------
+//	Dropdown list widget extending GuiContentWidget
+//	Author: Jason Herold/Thoof
+-----------------------------------------------------------------------------*/
 function DropdownList(listID, style, list) {
 	this.list = list;
 	GuiContentWidget.call(this, listID, style);
@@ -16,6 +20,7 @@ DropdownList.prototype.setHTML = function() {
 		this.htmlSnippet = '<select id="' + this.widgetID + '">';
 	}
 	
+	//Add each list element as an <option> tag
 	for (var i = 0; i < this.list.length; i++) {
 		this.htmlSnippet += '<option id="' + this.list[i] + '">' + this.list[i] + '</option>';
 	}
@@ -28,6 +33,7 @@ DropdownList.prototype.addElement = function(listElement) {
 	this.setHTML();
 };
 
+//On dropdown change
 DropdownList.prototype.setOnSelect = function (onSelectFunction) {
 	$(this.getID()).change(function() {
 		onSelectFunction($(this).val());

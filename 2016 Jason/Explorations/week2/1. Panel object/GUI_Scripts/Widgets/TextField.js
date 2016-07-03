@@ -1,3 +1,7 @@
+/*-----------------------------------------------------------------------------
+//	Textfield widget extending GuiContentWidget
+//	Author: Jason Herold/Thoof
+-----------------------------------------------------------------------------*/
 function TextField(fieldID, style, defaultText, optionalFrontText) {
 	this.defaultText = defaultText;
 	this.optionalFrontText = optionalFrontText;

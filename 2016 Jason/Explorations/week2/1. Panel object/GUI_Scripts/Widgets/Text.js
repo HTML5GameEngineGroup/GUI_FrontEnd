@@ -1,3 +1,7 @@
+/*-----------------------------------------------------------------------------
+//	Basic text widget extending GuiContentWidget
+//	Author: Jason Herold/Thoof
+-----------------------------------------------------------------------------*/
 function Text(fieldID, style, defaultText) {
 	this.defaultText = defaultText;
 

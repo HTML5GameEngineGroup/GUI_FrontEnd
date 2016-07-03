@@ -1,4 +1,9 @@
-
+/*-----------------------------------------------------------------------------
+//	GUI Tab Content
+//	Superclass for all tab content extensions. Handles returning the overall
+//	html content from all the widgets
+//	Author: Jason Herold/Thoof
+-----------------------------------------------------------------------------*/
 function GuiTabContent (tabContentID, style) {
     if (tabContentID === undefined || typeof tabContentID !==  'string') {
         throw "tabContentID must be a string";
@@ -7,6 +12,7 @@ function GuiTabContent (tabContentID, style) {
     this.tabContentID = tabContentID; 
     this.widgetList = [];
 	
+	//If the user specified, define the overall style for this content
 	if (style !== undefined) {
 		this.style = 'style="' + style + '"';
 	} else {

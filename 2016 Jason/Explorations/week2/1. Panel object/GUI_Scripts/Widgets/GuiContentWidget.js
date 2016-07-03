@@ -1,4 +1,9 @@
-
+/*-----------------------------------------------------------------------------
+//	GUI Content Widget
+//	Superclass for all widgets. 
+//
+//	Author: Jason Herold/Thoof
+-----------------------------------------------------------------------------*/
 function GuiContentWidget (widgetID, style) {
     if (widgetID === undefined || typeof widgetID !==  'string') {
         throw "widgetID must be a string";
