@@ -69,7 +69,7 @@ var onWindowResize = function() {
 	var initHeight = 480.0;
 	
 	var leftPanelEdge = (($("#panelLeft").offset().left + $("#panelLeft").outerWidth()));
-	var rightPanelEdge = $("#panelRight").position().left;
+	var rightPanelEdge = $(window).width() - ($("#panelRight").outerWidth());
 	
 	var dropdownEdge = 48;
 	var bottomPanelEdge = $("#panelBottom").position().top;
@@ -94,12 +94,12 @@ var onWindowResize = function() {
 	
 	//console.log (rightPanelEdge - leftPanelEdge);
 	var centerX = ((rightPanelEdge - leftPanelEdge) / 2) + leftPanelEdge - (width / 2);
-	console.log(rightPanelEdge);
-	
+	var centerY = ((bottomPanelEdge - dropdownEdge) / 2) + dropdownEdge - (height / 2);
+
 	
 	// Keep it centered (note: 219 and 229 are the w/h of the left/bottom panels including their white space)
 	$('#GLCanvasDiv').css('position', 'absolute');
-	$('#GLCanvasDiv').css("top", dropdownEdge + "px");
+	$('#GLCanvasDiv').css("top", centerY + "px");
 	$('#GLCanvasDiv').css("left", centerX + "px");
 };
 
