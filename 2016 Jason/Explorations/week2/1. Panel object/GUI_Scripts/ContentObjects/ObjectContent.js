@@ -1,11 +1,11 @@
 
-function ObjectContent(tabContentID) {
+function ObjectContent(tabContentID, style) {
 	this.objectAddButton = null;
 	this.objectSelectList = null;
 	this.widgetList = null;
 
 	this.selectListID = "objectSelectList1";
-	GuiTabContent.call(this, tabContentID);
+	GuiTabContent.call(this, tabContentID, style);
 }
 
 gGuiBase.View.inheritPrototype(ObjectContent, GuiTabContent);
@@ -14,22 +14,16 @@ ObjectContent.prototype.initialize = function () {
 	this.objectAddButton = new Button("objectAddButton", GuiTabContent.NO_STYLE, "+Object");
 	this.widgetList.push(this.objectAddButton);
 	
-	// var testArray = ["list1", "list2", "list3"];
-	// this.objectSelectList = new SelectList(this.selectListID, 'list-style-type: none; margin: 0; padding: 0', testArray);
-	//todo: get function that gets list of already created objects
-	// var objects = 
 	this.objectSelectList = new SelectList(this.selectListID, 'list-style-type: none; margin: 0; padding: 0', []);
 
 	this.objectSelectList.setOnSelect(this.selectObject);
-	// this.objectSelectList = new SelectList("objectSelectList1", []);
+
 	this.widgetList.push(this.objectSelectList);
 };
 
 ObjectContent.prototype.initializeEventHandling = function () {
 	this.objectAddButton.setOnClick(this.buttonOnClick);
 	this.objectSelectList.setOnSelect(this.selectObject);
-	// this.textField.setOnFocusOut(onTextFieldFocusOut);
-	// this.testSlider.setOnSliderChange(onSliderChange);
 };
 
 ObjectContent.prototype.buttonOnClick = function() {
