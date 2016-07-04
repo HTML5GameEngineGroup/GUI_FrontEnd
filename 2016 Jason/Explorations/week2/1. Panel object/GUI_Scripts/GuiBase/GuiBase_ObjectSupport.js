@@ -9,14 +9,13 @@ gGuiBase.ObjectSupport = (function() {
     
     // returns true if name is already in use
     var checkForNameConflict = function(name) {
-        console.log(mGO.hasOwnProperty(name));
         return (mGO[name] !== undefined);
     };
 
     // creates a defaultObject and returns its name
     var createDefaultObject = function() {
+        // todo: figure out why dexter didn't create a class and use it instead
         var newObj;
-
         // create new default name, this should be its own function
         var name = "GameObj" + mNextObjID;
         while (this.checkForNameConflict(name)) {

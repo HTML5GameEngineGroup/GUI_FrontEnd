@@ -13,36 +13,28 @@ gGuiBase.View.inheritPrototype(ObjectContent, GuiTabContent);
 ObjectContent.prototype.initialize = function () {
 	this.objectAddButton = new Button("objectAddButton", GuiTabContent.NO_STYLE, "+Object");
 	this.widgetList.push(this.objectAddButton);
-	
 	this.objectSelectList = new SelectList(this.selectListID, 'list-style-type: none; margin: 0; padding: 0', []);
-
-	this.objectSelectList.setOnSelect(this.selectObject);
-
 	this.widgetList.push(this.objectSelectList);
+	this.initializeEventHandling();
 };
 
+// connects the eventHandlers to their specific methods
 ObjectContent.prototype.initializeEventHandling = function () {
 	this.objectAddButton.setOnClick(this.buttonOnClick);
 	this.objectSelectList.setOnSelect(this.selectObject);
 };
 
+// adds a new object when addObject button is left-clicked
 ObjectContent.prototype.buttonOnClick = function() {
-	// var newObjID = gGameCore.createDefaultObject();
-	// var newObj = gGameCore.getObject(newObjID); // controller should do this
-	// console.log("get object by id: " + newObj);
-	// // we could regenerate the object select list every time
-	// // var objList = gGameCore.getObjectList(); // list is just the 1 object, [[OBJ, CODE, TYPE], ...] why type?
-	//
-	// console.log("Object List:" + objList);
-	// this.objectSelectList.addElement(newObjID);
 	gGuiBase.Core.addDefaultObject();
 };
 
+// this function handles the left click event on an object in the object tab
+// populates the details tab with the object information
 ObjectContent.prototype.selectObject = function( ui ) {
 	// get objectName/objectID
 	var selectedObjectName = ui["selected"]["id"];
 	gGuiBase.Core.selectDetailsObject( selectedObjectName );
-	console.log(selectedObjectName);
 };
 
 // these are global
