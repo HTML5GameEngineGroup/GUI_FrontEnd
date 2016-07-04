@@ -2,18 +2,18 @@
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.Core = (function() {
-
-    // this should actually be in core
+    // Adds a default gameObject to the Object Tab and updates detail tab with this object
     var addDefaultObject = function () {
-        var newObjID = gGuiBase.ObjectSupport.createDefaultObject();                // create new gameObj
+        var newObjID = gGuiBase.ObjectSupport.createDefaultObject();                    // create new gameObj
         //todo: abstract this to a content function call
-        gGuiBase.View.findWidgetByID("#objectSelectList1").addElement(newObjID);    // add to obj panel
-        //todo: ADD TO DETAIL PANEL UPDATE CALL HERE
-        gGuiBase.View.refreshAllTabContent();                                       // refresh panel
+        gGuiBase.View.findWidgetByID("#objectSelectList1").addElement( newObjID );      // add to obj panel
+        this.selectDetailsObject( newObjID );                                           // select this object in details
+        gGuiBase.View.refreshAllTabContent();                                           // refresh panel
     };
-    
-    var selectObject = function ( objName ) {
-        //todo: ADD TO DETAIL PANEL UPDATE CALL HERE
+
+    // updates the details tab with the object whose name is passed as parameter
+    var selectDetailsObject = function ( objName ) {
+        //todo : write function in transform widget to do update it self with this object
     };
 
     var inheritPrototype = function (subClass, superClass) {
@@ -24,7 +24,7 @@ gGuiBase.Core = (function() {
 
     var mPublic = {
         addDefaultObject: addDefaultObject,
-        selectObject: selectObject,
+        selectDetailsObject: selectDetailsObject,
 
         inheritPrototype: inheritPrototype
     };

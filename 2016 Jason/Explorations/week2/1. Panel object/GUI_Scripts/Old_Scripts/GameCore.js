@@ -57,71 +57,71 @@ GameCore.prototype.setSelected = function(obj) {
 };
 
 // creates a default object returns objects name as string
-GameCore.prototype.createDefaultObject = function() {
-    var obj;
-    
-    // create new default name, this should be its own function
-    var name = "GameObj" + gNextObjectID;
-    while (this.checkForNameConflict(name)) {
-        gNextObjectID++; // This has not been incremented yet so do it here.  After this method is over, + Object will increment it to a unique value.
-        name = "GameObj" + gNextObjectID;
-    }
-    // end of creating default name
-    
-    window[name] = function(renderableObj) {
-        GameObject.call(this, renderableObj);
-    };
-
-    gEngine.View.inheritPrototype(window[name], window["GameObject"]);
-
-    var code = getDefaultCodeGO(name);
-
-    // Add code to system
-    eval(code);
-    eval('obj = new ' + name + '(new Renderable());');
-    // Make a default xform
-    var xf = obj.getXform();
-    xf.setXPos(20);
-    xf.setYPos(60);
-    xf.setWidth(5);
-    xf.setHeight(5);
-
-    obj.mID = name;
-    
-    var entry = [obj, code]; // OLD CODE [obj, code, type = 1] type = 1
-    this.mGO[name] = entry;
-    this.mSelected = entry;
-    // cleanUpPanelRightBody();
-    if (!gRunning) {
-        // Updated current list item in View after this is called
-        // createDetailsObjects(type);
-    }
-    // todo find out if this is referenced anywhere type = 2 reset class of referenced object
-    // } else {
-    //     // this seems to be a seperate function designed to reset an object....
-    //     // Reset class
-    //     window[name] = function() {
-    //
-    //     };
-    //
-    //     var code = getDefaultCodeClass(name, "objectListItem" + number);
-    //
-    //     // Instantiate with eval to allow using a string name when creating a new class
-    //     eval('obj = new ' + name + '();');
-    //
-    //     var newObj = [obj, code, type] // this is still type 2? what does that mean
-    //     this.mObjectList[this.mObjectList.length] = newObj; // type = 0
-    //     this.mGO[name] = newObj;
-    //     this.mSelected = newObj;
-    //     // cleanUpPanelRightBody();
-    //     if (!gRunning) {
-    //         // Updated current list item in View after this is called
-    //         // createDetailsObjects(type); // THIS SHOULD BE DONE IN VIEW!!!!
-    //     }
-    // }
-    // return the name for view so that it can be used to reference object
-    return obj;
-};
+// GameCore.prototype.createDefaultObject = function() {
+//     var obj;
+//
+//     // create new default name, this should be its own function
+//     var name = "GameObj" + gNextObjectID;
+//     while (this.checkForNameConflict(name)) {
+//         gNextObjectID++; // This has not been incremented yet so do it here.  After this method is over, + Object will increment it to a unique value.
+//         name = "GameObj" + gNextObjectID;
+//     }
+//     // end of creating default name
+//
+//     window[name] = function(renderableObj) {
+//         GameObject.call(this, renderableObj);
+//     };
+//
+//     gEngine.View.inheritPrototype(window[name], window["GameObject"]);
+//
+//     var code = getDefaultCodeGO(name);
+//
+//     // Add code to system
+//     eval(code);
+//     eval('obj = new ' + name + '(new Renderable());');
+//     // Make a default xform
+//     var xf = obj.getXform();
+//     xf.setXPos(20);
+//     xf.setYPos(60);
+//     xf.setWidth(5);
+//     xf.setHeight(5);
+//
+//     obj.mID = name;
+//
+//     var entry = [obj, code]; // OLD CODE [obj, code, type = 1] type = 1
+//     this.mGO[name] = entry;
+//     this.mSelected = entry;
+//     // cleanUpPanelRightBody();
+//     if (!gRunning) {
+//         // Updated current list item in View after this is called
+//         // createDetailsObjects(type);
+//     }
+//     // todo find out if this is referenced anywhere type = 2 reset class of referenced object
+//     // } else {
+//     //     // this seems to be a seperate function designed to reset an object....
+//     //     // Reset class
+//     //     window[name] = function() {
+//     //
+//     //     };
+//     //
+//     //     var code = getDefaultCodeClass(name, "objectListItem" + number);
+//     //
+//     //     // Instantiate with eval to allow using a string name when creating a new class
+//     //     eval('obj = new ' + name + '();');
+//     //
+//     //     var newObj = [obj, code, type] // this is still type 2? what does that mean
+//     //     this.mObjectList[this.mObjectList.length] = newObj; // type = 0
+//     //     this.mGO[name] = newObj;
+//     //     this.mSelected = newObj;
+//     //     // cleanUpPanelRightBody();
+//     //     if (!gRunning) {
+//     //         // Updated current list item in View after this is called
+//     //         // createDetailsObjects(type); // THIS SHOULD BE DONE IN VIEW!!!!
+//     //     }
+//     // }
+//     // return the name for view so that it can be used to reference object
+//     return obj;
+// };
 
 GameCore.prototype.deleteObjectAt = function(index) {
     // Remove the object at an index

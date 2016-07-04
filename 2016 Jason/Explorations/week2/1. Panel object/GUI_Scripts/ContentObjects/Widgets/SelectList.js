@@ -58,7 +58,7 @@ SelectList.prototype.setOnSelect = function (onSelectFunction) {
 		
 		selected: function(event, ui) {
 			//Get the selected item
-			onSelectFunction(event, ui, this);
+			onSelectFunction( ui );
 		}
 	});
 };

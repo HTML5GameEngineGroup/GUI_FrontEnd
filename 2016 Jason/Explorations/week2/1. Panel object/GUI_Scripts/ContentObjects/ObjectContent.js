@@ -38,20 +38,11 @@ ObjectContent.prototype.buttonOnClick = function() {
 	gGuiBase.Core.addDefaultObject();
 };
 
-ObjectContent.prototype.selectObject = function(event, ui, theThis) {
-	//todo: Clean this code up, move over needed functions from GameCore to core_object_support
-	// DEBUG CODE TO FIGURE OUT WHAT THESE OBJECTS ARE
-	// console.log("event, ui, thethis, this");
-	// console.log(event, ui, theThis, this);
-	console.log("on list select is run()");
-
+ObjectContent.prototype.selectObject = function( ui ) {
 	// get objectName/objectID
 	var selectedObjectName = ui["selected"]["id"];
-	
+	gGuiBase.Core.selectDetailsObject( selectedObjectName );
 	console.log(selectedObjectName);
-	//todo: create detailsContent
-	// send this info to Details panel have it update with it...
-	//todo: use this function to populate the details panel
 };
 
 // these are global

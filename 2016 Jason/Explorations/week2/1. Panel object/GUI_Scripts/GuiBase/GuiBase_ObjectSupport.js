@@ -13,7 +13,7 @@ gGuiBase.ObjectSupport = (function() {
         return (mGO[name] !== undefined);
     };
 
-    // creates a defaultObject and returns it
+    // creates a defaultObject and returns its name
     var createDefaultObject = function() {
         var newObj;
 
@@ -27,7 +27,6 @@ gGuiBase.ObjectSupport = (function() {
         window[name] = function(renderableObj) {
             GameObject.call(this, renderableObj);
         };
-
         gEngine.View.inheritPrototype(window[name], window["GameObject"]);
 
         var code = this.getDefaultCodeGO(name);
@@ -36,15 +35,15 @@ gGuiBase.ObjectSupport = (function() {
         eval(code);
         eval('newObj = new ' + name + '(new Renderable());');
         // Make a default xform
-        var xf = newObj.getXform(); // set default transform
+        var xf = newObj.getXform();                                             // set default transform
         xf.setXPos(20);
         xf.setYPos(60);
         xf.setWidth(5);
         xf.setHeight(5);
 
-        newObj.mID = name;          // set name
-        mGO[newObj.mID] = newObj;                                              // add to map
-        mGOCode[newObj.mID] = this.getDefaultCodeGO(newObj.mID);                      // add code to code map
+        newObj.mID = name;                                                      // set name
+        mGO[newObj.mID] = newObj;                                               // add to map
+        mGOCode[newObj.mID] = this.getDefaultCodeGO(newObj.mID);                // add code to code map
         return newObj.mID;
     };
 
