@@ -4,13 +4,14 @@
 //	html content from all the widgets
 //	Author: Jason Herold/Thoof
 -----------------------------------------------------------------------------*/
-function GuiTabContent (tabContentID, style) {
+function GuiTabContent (tabContentID, style, title) {
     if (tabContentID === undefined || typeof tabContentID !==  'string') {
         throw "tabContentID must be a string";
     }
     
     this.tabContentID = tabContentID; 
     this.widgetList = [];
+	this.title = title;
 	
 	//If the user specified, define the overall style for this content
 	if (style !== undefined) {

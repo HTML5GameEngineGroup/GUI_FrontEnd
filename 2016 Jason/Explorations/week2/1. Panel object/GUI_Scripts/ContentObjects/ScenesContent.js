@@ -4,12 +4,12 @@
 //
 //	Author: Jason Herold/Thoof
 -----------------------------------------------------------------------------*/
-function ScenesContent(tabContentID, style) {
+function ScenesContent(tabContentID, style, title) {
 	this.sceneAddButton = null;
 	this.sceneSelectList = null;
 	
 	this.selectListID = "sceneSelectList1";
-	GuiTabContent.call(this, tabContentID, style);
+	GuiTabContent.call(this, tabContentID, style, title);
 }
 
 gGuiBase.View.inheritPrototype(ScenesContent, GuiTabContent);

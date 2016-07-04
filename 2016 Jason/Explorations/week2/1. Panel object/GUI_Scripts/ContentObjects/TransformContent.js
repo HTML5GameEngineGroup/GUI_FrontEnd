@@ -1,5 +1,5 @@
 
-function TransformContent(tabContentID, style) {
+function TransformContent(tabContentID, style, title) {
 	this.isGameObjectCheck = null;
 	this.objectNameText = null;
 	this.objectName = null;
@@ -13,7 +13,7 @@ function TransformContent(tabContentID, style) {
 	this.rotationField = null;
 	this.rotationSlider = null;
 	
-	GuiTabContent.call(this, tabContentID, style);
+	GuiTabContent.call(this, tabContentID, style, title);
 }
 
 gGuiBase.View.inheritPrototype(TransformContent, GuiTabContent);

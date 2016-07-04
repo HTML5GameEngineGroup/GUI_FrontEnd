@@ -83,9 +83,12 @@ GuiPanel.prototype.addNewTab = function ( tabID ){
 GuiPanel.prototype.addTab = function ( tab ){						//create new tab
 	gGuiBase.View.addTab(tab.tabID, tab);
     $(this.PanelID + "Sortable").append(tab.createHeader());		//create tab_header add to panel
-    $(this.PanelID).append(tab.createContentContainer());	//create empty tab_content add to panel
+    $(this.PanelID).append(tab.createContentContainer());
+	
+	//create empty tab_content add to panel
     this.guiTab.tabs("refresh");
 	this.tabObjects.push(tab);
+
 };
 
 // moves tab object to the current panel, tab must be in the DOM already

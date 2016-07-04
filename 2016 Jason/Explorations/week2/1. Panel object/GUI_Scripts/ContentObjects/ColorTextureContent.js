@@ -1,11 +1,11 @@
 
-function ColorTextureContent(tabContentID, style) {
+function ColorTextureContent(tabContentID, style, title) {
 	this.colorText = null;
 	this.colorField = null;
 	this.textureText = null;
 	this.textureDropDown = null;
 	
-	GuiTabContent.call(this, tabContentID, style);
+	GuiTabContent.call(this, tabContentID, style, title);
 }
 
 gGuiBase.View.inheritPrototype(ColorTextureContent, GuiTabContent);

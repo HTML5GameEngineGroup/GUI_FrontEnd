@@ -22,7 +22,7 @@ $( document ).ready(function() {
     panelID = "#panelLeft";
     var leftPanel = new GuiPanel(panelID, GuiPanelType.LEFT);
 	
-	var contentStyle = 'border: 2px solid #d3d3d3; border-radius: 1px; padding: 0px; margin-bottom: 20px';
+	var contentStyle = 'border: 2px solid #d3d3d3; border-radius: 1px; padding: 0px; margin-bottom: 20px;';
 	
 	var objectsTab = new GuiPanelTab("Objects");
 	var objectsTabContent = new ObjectContent("ObjectsContent", contentStyle);
@@ -40,11 +40,15 @@ $( document ).ready(function() {
     var rightPanel = new GuiPanel(panelID, GuiPanelType.RIGHT);
 	var detailsTab = new GuiPanelTab("Details");
 	
-	var detailsTransform = new TransformContent("TransformContent", contentStyle);
-	var detailsColorTexture = new ColorTextureContent("ColorTextureContent", contentStyle);
+	var detailsTransform = new TransformContent("TransformContent", contentStyle, "Transform");
+	var detailsColorTexture = new ColorTextureContent("ColorTextureContent", contentStyle, "Texture");
 	rightPanel.addTab(detailsTab);
 	detailsTab.addContent(detailsTransform);
 	detailsTab.addContent(detailsColorTexture);
+	
+	//Would have to do this for each tab we want to have collapsible elements
+	//tabContentAccordion(detailsTab.getID());
+	detailsTab.tabContentAccordion(detailsTab.getID());
 	
 	leftPanel.setTopDistance(48);
 	rightPanel.setTopDistance(48);
@@ -104,4 +108,6 @@ var onWindowResize = function() {
 	$('#GLCanvasDiv').css("top", centerY + "px");
 	$('#GLCanvasDiv').css("left", centerX + "px");
 };
+
+
 
