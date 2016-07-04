@@ -66,6 +66,7 @@ $( document ).ready(function() {
 	
 	$( window ).resize(function() {
 		onWindowResize();
+		
 	});
 	
 });
@@ -74,8 +75,14 @@ var onWindowResize = function() {
 	var initWidth = 640.0;
 	var initHeight = 480.0;
 	
-	var leftPanelEdge = (($("#panelLeft").offset().left + $("#panelLeft").outerWidth()));
-	var rightPanelEdge = $(window).width() - ($("#panelRight").outerWidth());
+	//var tabWidth = gGuiBase.View.getTabsWidth("#panelLeft");
+	//var leftPanelEdge = Math.max($("#panelLeft").outerWidth(true), tabWidth);
+	var leftPanelEdge = $("#panelLeft").outerWidth(true);
+	
+	//var tabWidth = gGuiBase.View.getTabsWidth("#panelRight");
+	//var rightEdge = Math.max($("#panelRight").outerWidth(true), tabWidth);
+	//var rightPanelEdge = $(window).width() - rightEdge;
+	var rightPanelEdge = $(window).width() - $("#panelRight").outerWidth(true);
 	
 	var dropdownEdge = 48;
 	var bottomPanelEdge = $("#panelBottom").position().top;
