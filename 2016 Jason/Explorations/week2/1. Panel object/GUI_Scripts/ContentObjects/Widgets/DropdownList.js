@@ -7,7 +7,7 @@ function DropdownList(listID, style, list) {
 	GuiContentWidget.call(this, listID, style);
 }
 
-gGuiBase.Core.inheritPrototype(DropdownList, GuiContentWidget);
+gGuiBase.View.inheritPrototype(DropdownList, GuiContentWidget);
 
 DropdownList.prototype.initializeWidget = function () {
 	this.setHTML();

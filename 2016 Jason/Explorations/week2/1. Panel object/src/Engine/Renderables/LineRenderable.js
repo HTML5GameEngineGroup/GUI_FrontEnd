@@ -38,7 +38,7 @@ function LineRenderable(x1, y1, x2, y2) {
         this.setVertices(x1, y1, x2, y2);
     }
 }
-gEngine.Core.inheritPrototype(LineRenderable, Renderable);
+gEngine.View.inheritPrototype(LineRenderable, Renderable);
 
 //<editor-fold desc="Public Methods">
 //**-----------------------------------------
@@ -53,7 +53,7 @@ gEngine.Core.inheritPrototype(LineRenderable, Renderable);
 LineRenderable.prototype.draw = function (aCamera) {
     this.mShader.setPointSize(this.mPointSize);
     // Draw line instead of triangle!
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     this.mShader.activateShader(this.mColor, aCamera);  // always activate the shader first!
 
     var sx = this.mP1[0] - this.mP2[0];

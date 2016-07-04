@@ -36,7 +36,7 @@ function LightShader(vertexShaderPath, fragmentShaderPath) {
         this.mShaderLights.push(ls);
     }
 }
-gEngine.Core.inheritPrototype(LightShader, SpriteShader);
+gEngine.View.inheritPrototype(LightShader, SpriteShader);
 //</editor-fold>
 
 // <editor-fold desc="Public Methods">

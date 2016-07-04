@@ -8,7 +8,7 @@ function ColorTextureContent(tabContentID, style) {
 	GuiTabContent.call(this, tabContentID, style);
 }
 
-gGuiBase.Core.inheritPrototype(ColorTextureContent, GuiTabContent);
+gGuiBase.View.inheritPrototype(ColorTextureContent, GuiTabContent);
 
 ColorTextureContent.prototype.initialize = function () {
 	this.colorText = new Text("colorText", GuiContentWidget.NO_STYLE, "Color");
@@ -22,14 +22,13 @@ ColorTextureContent.prototype.initialize = function () {
 	this.widgetList.push(this.colorField);
 	this.widgetList.push(this.textureText);
 	this.widgetList.push(this.textureDropDown);
-	
 };
 
 ColorTextureContent.prototype.initializeEventHandling = function () {
-	this.textureDropDown.setOnSelect(onListSelect);
+	this.textureDropDown.setOnSelect(this.onListSelect);
 };
 
-var onListSelect = function(value) {
+ColorTextureContent.prototype.onListSelect = function(value) {
 	console.log("Value is" + value);
 };
 

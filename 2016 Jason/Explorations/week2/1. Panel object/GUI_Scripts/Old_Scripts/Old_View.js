@@ -14,7 +14,7 @@ var gGameCore = null;
 
 var gLastSetName = "";          // For reverting names
 var gRightClickedItem = null;   // For tracking which item was clicked from the menu
-var gNextObjectID = 0;          // For making unique IDs
+// var gNextObjectID = 0;          // For making unique IDs
 var gNextInstanceID = 0;        // ""
 var gNextSceneID = 1;           // Since one scene is provided at the start
 var gRunning = false;           // If true, the update function will be called each game loop
@@ -275,7 +275,7 @@ var toggleGO = function(box, type) {
             GameObject.call(this, renderableObj);
         };
             
-        gEngine.Core.inheritPrototype(window[oldName], window["GameObject"]);
+        gEngine.View.inheritPrototype(window[oldName], window["GameObject"]);
         
         var code = getDefaultCodeGO(oldName);
         
@@ -455,7 +455,7 @@ var switchScene = function(name) {
         if (list[i].mName === name) {
             gEngine.GameLoop.stop();
             gCurrentScene = list[i];
-            gEngine.Core.startScene(gCurrentScene);
+            gEngine.View.startScene(gCurrentScene);
             if (!gRunning) {
                 changeCurrentListItem(gCurrentScene.mID);
                 cleanUpPanelRightBody();

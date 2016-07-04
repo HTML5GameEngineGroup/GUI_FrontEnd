@@ -33,7 +33,7 @@ function SpriteShader(vertexShaderPath, fragmentShaderPath) {
         0.0, 0.0
     ];
 
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     this.mTexCoordBuffer = gl.createBuffer();
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.mTexCoordBuffer);
@@ -42,7 +42,7 @@ function SpriteShader(vertexShaderPath, fragmentShaderPath) {
 }
 
 // get all the prototype functions from SimpleShader
-gEngine.Core.inheritPrototype(SpriteShader, TextureShader);
+gEngine.View.inheritPrototype(SpriteShader, TextureShader);
 
 //</editor-fold>
 
@@ -61,7 +61,7 @@ SpriteShader.prototype.activateShader = function (pixelColor, aCamera) {
     SimpleShader.prototype.activateShader.call(this, pixelColor, aCamera);
 
     // now binds the proper texture coordinate buffer
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.mTexCoordBuffer);
     gl.vertexAttribPointer(this.mShaderTextureCoordAttribute,
             2,
@@ -79,7 +79,7 @@ SpriteShader.prototype.activateShader = function (pixelColor, aCamera) {
  * @memberOf SpriteShader
  */
 SpriteShader.prototype.setTextureCoordinate = function (texCoord) {
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.mTexCoordBuffer);
     gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(texCoord));
 };
@@ -90,7 +90,7 @@ SpriteShader.prototype.setTextureCoordinate = function (texCoord) {
  * @memberOf SpriteShader
  */
 SpriteShader.prototype.cleanUp = function () {
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     gl.deleteBuffer(this.mTexCoordBuffer);
     // now call super class's clean up ...
     SimpleShader.prototype.cleanUp.call(this);

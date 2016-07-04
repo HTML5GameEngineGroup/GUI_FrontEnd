@@ -23,7 +23,7 @@ function RigidRectangle(xform, w, h) {
     this.mWidth = w;
     this.mHeight = h;
 }
-gEngine.Core.inheritPrototype(RigidRectangle, RigidShape);
+gEngine.View.inheritPrototype(RigidRectangle, RigidShape);
 
 /**
  * Return the type of Rigidshape

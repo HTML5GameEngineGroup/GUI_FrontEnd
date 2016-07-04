@@ -12,7 +12,7 @@ function TextField(fieldID, style, defaultText, optionalFrontText) {
 	GuiContentWidget.call(this, fieldID, style);
 }
 
-gGuiBase.Core.inheritPrototype(TextField, GuiContentWidget);
+gGuiBase.View.inheritPrototype(TextField, GuiContentWidget);
 
 TextField.prototype.initializeWidget = function () {
 	this.setHTML();

@@ -31,7 +31,7 @@ function ShaderLightAtIndex(shader, index) {
  * @memberOf ShaderLightAtIndex
  */
 ShaderLightAtIndex.prototype.loadToShader = function (aCamera, aLight) {
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     gl.uniform1i(this.mIsOnRef, aLight.isLightOn());
     if (aLight.isLightOn()) {
         var p = aCamera.wcPosToPixel(aLight.getPosition());
@@ -69,7 +69,7 @@ ShaderLightAtIndex.prototype.loadToShader = function (aCamera, aLight) {
  * @memberOf ShaderLightAtIndex
  */
 ShaderLightAtIndex.prototype.switchOffLight = function () {
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     gl.uniform1i(this.mIsOnRef, false);
 };
 //</editor-fold>
@@ -83,7 +83,7 @@ ShaderLightAtIndex.prototype.switchOffLight = function () {
  * @memberOf ShaderLightAtIndex
  */
 ShaderLightAtIndex.prototype._setShaderReferences = function (aLightShader, index) {
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     this.mColorRef = gl.getUniformLocation(aLightShader,     "uLights[" + index + "].Color");
     this.mPosRef = gl.getUniformLocation(aLightShader,       "uLights[" + index + "].Position");
     this.mDirRef = gl.getUniformLocation(aLightShader,       "uLights[" + index + "].Direction");

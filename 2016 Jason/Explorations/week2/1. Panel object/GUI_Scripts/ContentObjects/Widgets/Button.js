@@ -8,7 +8,7 @@ function Button(buttonID, style, buttonName) {
 	GuiContentWidget.call(this, buttonID, style);
 }
 
-gGuiBase.Core.inheritPrototype(Button, GuiContentWidget);
+gGuiBase.View.inheritPrototype(Button, GuiContentWidget);
 
 Button.prototype.initializeWidget = function () {
 	if (this.style !== GuiContentWidget.NO_STYLE) {

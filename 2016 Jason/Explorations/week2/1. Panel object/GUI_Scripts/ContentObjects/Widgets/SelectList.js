@@ -15,7 +15,7 @@ function SelectList(listID, style, list, listStyle) {
 	GuiContentWidget.call(this, listID, style);
 }
 
-gGuiBase.Core.inheritPrototype(SelectList, GuiContentWidget);
+gGuiBase.View.inheritPrototype(SelectList, GuiContentWidget);
 
 SelectList.prototype.initializeWidget = function () {
 	this.setHTML();

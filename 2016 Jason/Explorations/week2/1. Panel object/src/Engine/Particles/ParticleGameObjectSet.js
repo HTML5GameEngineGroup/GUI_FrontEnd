@@ -22,7 +22,7 @@ function ParticleGameObjectSet() {
     this.mLayer=2;
     gEngine.LayerManager.addToLayer(gEngine.eLayer.eActors, this);
 }
-gEngine.Core.inheritPrototype(ParticleGameObjectSet, GameObjectSet);
+gEngine.View.inheritPrototype(ParticleGameObjectSet, GameObjectSet);
 
 /**
  * the function to call to generate particles
@@ -44,7 +44,7 @@ ParticleGameObjectSet.prototype.addEmitterAt = function (p, n, func) {
  * @memberOf ParticleGameObjectSet
  */
 ParticleGameObjectSet.prototype.draw = function (aCamera) {
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     gl.blendFunc(gl.ONE, gl.ONE);  // for additive blending!
     GameObjectSet.prototype.draw.call(this, aCamera);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // restore alpha blending

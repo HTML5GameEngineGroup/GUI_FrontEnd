@@ -48,7 +48,7 @@ gEngine.Textures = (function () {
      * @returns {void}
      */
     var _processLoadedImage = function (textureName, image) {
-        var gl = gEngine.Core.getGL();
+        var gl = gEngine.View.getGL();
 
         // Generate a texture reference to the webGL context
         var textureID = gl.createTexture();
@@ -110,7 +110,7 @@ gEngine.Textures = (function () {
      * @returns {void}
      */
     var unloadTexture = function (textureName) {
-        var gl = gEngine.Core.getGL();
+        var gl = gEngine.View.getGL();
         var texInfo = gEngine.ResourceMap.retrieveAsset(textureName);
         gl.deleteTexture(texInfo.mGLTexID);
         gEngine.ResourceMap.unloadAsset(textureName);
@@ -123,7 +123,7 @@ gEngine.Textures = (function () {
      * @returns {void}
      */
     var activateTexture = function (textureName) {
-        var gl = gEngine.Core.getGL();
+        var gl = gEngine.View.getGL();
         var texInfo = gEngine.ResourceMap.retrieveAsset(textureName);
 
         // Binds our texture reference to the current webGL texture functionality
@@ -151,7 +151,7 @@ gEngine.Textures = (function () {
      * @returns {void}
      */
     var activateNormalMap = function (textureName) {
-        var gl = gEngine.Core.getGL();
+        var gl = gEngine.View.getGL();
         var texInfo = gEngine.ResourceMap.retrieveAsset(textureName);
 
         // Binds our texture reference to the current webGL texture functionality
@@ -173,7 +173,7 @@ gEngine.Textures = (function () {
      * @returns {void}
      */
     var deactivateTexture = function () {
-        var gl = gEngine.Core.getGL();
+        var gl = gEngine.View.getGL();
         gl.bindTexture(gl.TEXTURE_2D, null);
     };
 
@@ -198,7 +198,7 @@ gEngine.Textures = (function () {
         if (texInfo.mColorArray === null) {
             // create a framebuffer bind it to the texture, and read the color content
             // Hint from: http://stackoverflow.com/questions/13626606/read-pixels-from-a-webgl-texture 
-            var gl = gEngine.Core.getGL();
+            var gl = gEngine.View.getGL();
             var fb = gl.createFramebuffer();
             gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texInfo.mGLTexID, 0);

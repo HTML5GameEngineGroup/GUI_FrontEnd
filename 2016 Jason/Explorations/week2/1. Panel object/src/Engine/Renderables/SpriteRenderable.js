@@ -27,7 +27,7 @@ function SpriteRenderable(myTexture) {
     // 
     this._setTexInfo();
 }
-gEngine.Core.inheritPrototype(SpriteRenderable, TextureRenderable);
+gEngine.View.inheritPrototype(SpriteRenderable, TextureRenderable);
 
 //<editor-fold desc="Public Methods">
 

@@ -65,7 +65,7 @@ gEngine.VertexBuffer = (function () {
      * @returns {undefined}
      */
     var initialize = function () {
-        var gl = gEngine.Core.getGL();
+        var gl = gEngine.View.getGL();
 
         // <editor-fold desc="Step A: Allocate and store vertex positions into the webGL context">
         // Create a buffer on the gGL context for our vertex positions
@@ -128,7 +128,7 @@ gEngine.VertexBuffer = (function () {
      * @returns {void}
      */
     var cleanUp = function () {
-        var gl = gEngine.Core.getGL();
+        var gl = gEngine.View.getGL();
         gl.deleteBuffer(mSquareVertexBuffer);
         gl.deleteBuffer(mTextureCoordBuffer);
         gl.deleteBuffer(mLineVertexBuffer);

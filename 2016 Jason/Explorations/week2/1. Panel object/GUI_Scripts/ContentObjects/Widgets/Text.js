@@ -8,7 +8,7 @@ function Text(fieldID, style, defaultText) {
 	GuiContentWidget.call(this, fieldID, style);
 }
 
-gGuiBase.Core.inheritPrototype(Text, GuiContentWidget);
+gGuiBase.View.inheritPrototype(Text, GuiContentWidget);
 
 Text.prototype.initializeWidget = function () {
 	this.setHTML();

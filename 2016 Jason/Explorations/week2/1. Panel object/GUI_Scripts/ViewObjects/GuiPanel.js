@@ -29,13 +29,13 @@ var GuiPanel = function (PanelID, panelType, Height) {
         stop: function(event, ui) { //Refresh the tabs after a sort
 
 			if ($(PanelID + 'Sortable li').length > 1) { //Behavior that we don't want for a floating tab window
-				if (!gGuiBase.Core.mouseInPanelList()) {
+				if (!gGuiBase.View.mouseInPanelList()) {
 
 					var linkHTML = (ui.item[0].innerHTML); //Get the moved elements <a> information
 					//Get the href, which contains the tab name that we need to move
 					var href = linkHTML.match(/href="([^"]*)/)[1];
 					
-					gGuiBase.Core.createFloatingPanel(ui.item, href);
+					gGuiBase.View.createFloatingPanel(ui.item, href);
 				}
 			}
         },
@@ -49,15 +49,15 @@ var GuiPanel = function (PanelID, panelType, Height) {
 			
             $(href).detach().appendTo(PanelID); //Actually detach and move the tab
 			
-			gGuiBase.Core.removeEmptyFloatingPanels();
+			gGuiBase.View.removeEmptyFloatingPanels();
 			
 			if ((panelType == GuiPanelType.LEFT || panelType == GuiPanelType.RIGHT)) {
-				gGuiBase.Core.resizeLeftRightHelper();
+				gGuiBase.View.resizeLeftRightHelper();
 			} else if (panelType == GuiPanelType.BOTTOM) {
-				gGuiBase.Core.resizeBottomHelper();
+				gGuiBase.View.resizeBottomHelper();
 			}
 			
-            gGuiBase.Core.refreshAll();
+            gGuiBase.View.refreshAll();
             return true;
         }
     });
@@ -73,14 +73,14 @@ GuiPanel.prototype.setFirstTabActive = function() {
 // adds an empty tab to this panel
 GuiPanel.prototype.addNewTab = function ( tabID ){
     var newTab = new GuiPanelTab(tabID);						//create new tab
-	gGuiBase.Core.addTab(tabID, newTab);
+	gGuiBase.View.addTab(tabID, newTab);
     $(this.PanelID + "Sortable").append(newTab.createHeader());		//create tab_header add to panel
     $(this.PanelID).append(newTab.createContentContainer());	//create empty tab_content add to panel
     this.guiTab.tabs("refresh");
 };
 
 GuiPanel.prototype.addTab = function ( tab ){						//create new tab
-	gGuiBase.Core.addTab(tab.tabID, tab);
+	gGuiBase.View.addTab(tab.tabID, tab);
     $(this.PanelID + "Sortable").append(tab.createHeader());		//create tab_header add to panel
     $(this.PanelID).append(tab.createContentContainer());	//create empty tab_content add to panel
     this.guiTab.tabs("refresh");
@@ -89,7 +89,7 @@ GuiPanel.prototype.addTab = function ( tab ){						//create new tab
 // moves tab object to the current panel, tab must be in the DOM already
 GuiPanel.prototype.moveTabToThisPanel = function ( tabID ){
 	// remove tab_header from any panel, append to back of this one
-	var guiPanelTab = gGuiBase.Core.getTab( tabID );	// find the tab_header
+	var guiPanelTab = gGuiBase.View.getTab( tabID );	// find the tab_header
 	var $header = guiPanelTab.getHeader().detach();			// remove it
 	$(this.PanelID + ' ul').append($header);				// attach to this panel
 

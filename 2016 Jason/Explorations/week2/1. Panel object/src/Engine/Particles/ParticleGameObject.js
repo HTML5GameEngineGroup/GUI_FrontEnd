@@ -34,7 +34,7 @@ function ParticleGameObject(texture, atX, atY, cyclesToLive) {
     this.mSizeDelta = 0;
     this.mCyclesToLive = cyclesToLive;
 }
-gEngine.Core.inheritPrototype(ParticleGameObject, GameObject);
+gEngine.View.inheritPrototype(ParticleGameObject, GameObject);
 
 /**
  * Set final color for the particle to change to during its life

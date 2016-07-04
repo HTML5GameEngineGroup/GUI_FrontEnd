@@ -36,7 +36,7 @@ function ParallaxGameObject(renderableObj, scale, aCamera) {
     this.setParallaxScale(scale);
     TiledGameObject.call(this, renderableObj);
 }
-gEngine.Core.inheritPrototype(ParallaxGameObject, TiledGameObject);
+gEngine.View.inheritPrototype(ParallaxGameObject, TiledGameObject);
 
 /**
  * renderableObj xfrom is accessible, it is in WC space!!<p>

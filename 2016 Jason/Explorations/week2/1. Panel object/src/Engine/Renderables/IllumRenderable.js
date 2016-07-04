@@ -32,7 +32,7 @@ function IllumRenderable(myTexture, myNormalMap) {
     // Material for this Renderable
     this.mMaterial = new Material();
 }
-gEngine.Core.inheritPrototype(IllumRenderable, LightRenderable);
+gEngine.View.inheritPrototype(IllumRenderable, LightRenderable);
 
 //<editor-fold desc="Public Methods">
 //**-----------------------------------------

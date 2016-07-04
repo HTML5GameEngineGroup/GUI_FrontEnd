@@ -22,7 +22,7 @@ var gEngine = gEngine || { };
  * @class gEngine.Core
  * @type gEngine.Core
  */
-gEngine.Core = (function () {
+gEngine.View = (function () {
     // instance variables
     // The graphical context to draw to
     var mGL = null;

@@ -30,7 +30,7 @@ function ShadowCasterShader(vertexShaderPath, fragmentShaderPath) {
     // **** The GLSL Shader must define uLights[1] <-- as the only light source!!
     this.mShaderLight = new ShaderLightAtIndex(this.mCompiledShader, 0);
 }
-gEngine.Core.inheritPrototype(ShadowCasterShader, SpriteShader);
+gEngine.View.inheritPrototype(ShadowCasterShader, SpriteShader);
 //</editor-fold>
 
 // <editor-fold desc="Public Methods">

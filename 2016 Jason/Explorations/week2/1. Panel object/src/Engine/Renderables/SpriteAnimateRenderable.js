@@ -38,7 +38,7 @@ function SpriteAnimateRenderable(myTexture) {
     this.mCurrentElm = 0;
     this._initAnimation();
 }
-gEngine.Core.inheritPrototype(SpriteAnimateRenderable, SpriteRenderable);
+gEngine.View.inheritPrototype(SpriteAnimateRenderable, SpriteRenderable);
 
 SpriteAnimateRenderable.prototype._initAnimation = function () {
     // Currently running animation

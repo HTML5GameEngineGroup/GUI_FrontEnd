@@ -7,7 +7,7 @@
 -----------------------------------------------------------------------------*/
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
-gGuiBase.Core = (function() {
+gGuiBase.View = (function() {
 	var panelList = []; //List for static panels
 	var floatingPanelList = []; //List for floating panels
 	var tabMap = {};
@@ -369,7 +369,7 @@ gGuiBase.Core = (function() {
 		for (var i = 0; i < floatingPanelList.length; i++) {
 			var panelID = floatingPanelList[i].PanelID;
 			if ($(panelID + 'Sortable li').length == 0) {
-				gGuiBase.Core.removePanel(panelID);
+				gGuiBase.View.removePanel(panelID);
 				$(panelID).remove(); //Delete the panel
 				numFloatingPanels--; 
 			}

@@ -25,7 +25,7 @@ function LightRenderable(myTexture) {
     // here is the light source
     this.mLights = [];
 }
-gEngine.Core.inheritPrototype(LightRenderable, SpriteAnimateRenderable);
+gEngine.View.inheritPrototype(LightRenderable, SpriteAnimateRenderable);
 
 //<editor-fold desc="Public Methods">
 //**-----------------------------------------

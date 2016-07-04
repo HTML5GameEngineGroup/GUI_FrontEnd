@@ -19,7 +19,7 @@ function TiledGameObject(renderableObj) {
     this.mShouldTile = true;  // can switch this off if desired
     GameObject.call(this, renderableObj);
 }
-gEngine.Core.inheritPrototype(TiledGameObject, GameObject);
+gEngine.View.inheritPrototype(TiledGameObject, GameObject);
 
 /**
  * Set the tiling state

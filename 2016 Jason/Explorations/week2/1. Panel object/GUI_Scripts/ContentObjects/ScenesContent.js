@@ -12,7 +12,7 @@ function ScenesContent(tabContentID, style) {
 	GuiTabContent.call(this, tabContentID, style);
 }
 
-gGuiBase.Core.inheritPrototype(ScenesContent, GuiTabContent);
+gGuiBase.View.inheritPrototype(ScenesContent, GuiTabContent);
 
 ScenesContent.prototype.initialize = function () {
 	this.sceneAddButton = new Button("sceneAddButton", GuiTabContent.NO_STYLE, "+Scene");
@@ -28,12 +28,12 @@ ScenesContent.prototype.initialize = function () {
 
 ScenesContent.prototype.initializeEventHandling = function () {
 	this.sceneAddButton.setOnClick(this.buttonOnClick);
-	this.sceneSelectList.setOnSelect(onListSelect);
+	this.sceneSelectList.setOnSelect(this.onListSelect);
 
 };
 
 ScenesContent.prototype.buttonOnClick = function() {
-	var list = gGuiBase.Core.findWidgetByID("#sceneSelectList1");
+	var list = gGuiBase.View.findWidgetByID("#sceneSelectList1");
 	/*var newObjID = gGameCore.createDefaultObject();
 	var newObj = gGameCore.getObject(newObjID);
 	console.log("get object by id: " + newObj);
@@ -45,11 +45,11 @@ ScenesContent.prototype.buttonOnClick = function() {
 	}
 	console.log("Scene List:" + objList);
 	list.addElement(newObjID);*/
-	gGuiBase.Core.refreshAllTabContent();
+	gGuiBase.View.refreshAllTabContent();
 };
 
-var onListSelect = function(event, ui, theThis) {
-	//todo: Clean this code up, move over needed functions from GameCore to Game.Core
+ScenesContent.prototype.onListSelect = function(event, ui, theThis) {
+	//todo: Clean this code up, move over needed functions from GameCore to Game.View
 	// DEBUG CODE TO FIGURE OUT WHAT THESE OBJECTS ARE
 	// console.log("event, ui, thethis, this");
 	// console.log(event, ui, theThis, this);

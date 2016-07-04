@@ -21,7 +21,7 @@ function RigidCircle(xform, r) {
     this.mSides = new LineRenderable();
     this.mRadius = r;
 }
-gEngine.Core.inheritPrototype(RigidCircle, RigidShape);
+gEngine.View.inheritPrototype(RigidCircle, RigidShape);
 
 /**
  * Return the type of Rigidshape

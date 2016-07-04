@@ -16,13 +16,13 @@ function GameCore() {
     
     // Objects and textures are shared among all scenes
     
-    this.mObjectMap = {};   // Objects are stored as key value pairs, where the key = objectName, value = [go, code]
+    this.mGO = {};   // Objects are stored as key value pairs, where the key = objectName, value = [go, code]
     this.mTextureList = [];
     this.mSceneList = [];   // Each scene has its own instance list AND camera list
     
     // Add one scene for starters (and run it)
     this.mSceneList.push(gCurrentScene);
-    gEngine.Core.initializeEngineCore('GLCanvas', gCurrentScene);
+    gEngine.View.initializeEngineCore('GLCanvas', gCurrentScene);
 
     this.mSelectedCamera = null;    // Cam
     this.mSelected = null;          // GO, Class, or instance of GO or Class
@@ -30,7 +30,7 @@ function GameCore() {
 
 GameCore.prototype.getObjectList = function() {
     var objList = [];
-    for (var objName in this.mObjectMap) {
+    for (var objName in this.mGO) {
         objList.push(objName);
     }
     return objList;
@@ -72,25 +72,24 @@ GameCore.prototype.createDefaultObject = function() {
         GameObject.call(this, renderableObj);
     };
 
-    gEngine.Core.inheritPrototype(window[name], window["GameObject"]);
+    gEngine.View.inheritPrototype(window[name], window["GameObject"]);
 
     var code = getDefaultCodeGO(name);
 
     // Add code to system
     eval(code);
     eval('obj = new ' + name + '(new Renderable());');
-    console.log("made it past eval()");
     // Make a default xform
     var xf = obj.getXform();
     xf.setXPos(20);
     xf.setYPos(60);
     xf.setWidth(5);
     xf.setHeight(5);
-    console.log("made it past xform settings");
+
     obj.mID = name;
     
     var entry = [obj, code]; // OLD CODE [obj, code, type = 1] type = 1
-    this.mObjectMap[name] = entry;
+    this.mGO[name] = entry;
     this.mSelected = entry;
     // cleanUpPanelRightBody();
     if (!gRunning) {
@@ -112,7 +111,7 @@ GameCore.prototype.createDefaultObject = function() {
     //
     //     var newObj = [obj, code, type] // this is still type 2? what does that mean
     //     this.mObjectList[this.mObjectList.length] = newObj; // type = 0
-    //     this.mObjectMap[name] = newObj;
+    //     this.mGO[name] = newObj;
     //     this.mSelected = newObj;
     //     // cleanUpPanelRightBody();
     //     if (!gRunning) {
@@ -120,14 +119,8 @@ GameCore.prototype.createDefaultObject = function() {
     //         // createDetailsObjects(type); // THIS SHOULD BE DONE IN VIEW!!!!
     //     }
     // }
-    console.log("completed create");
     // return the name for view so that it can be used to reference object
-    return name;
-    // ALSO SHOULD BE DONE IN VIEW
-    // Now update the drop down to default to this option
-    // if ($('#panelBottomInstances').hasClass('current-tab')) {
-    //     createPanelBottomInstancesSelect(this.mObjectList[this.mObjectList.length - 1][0].mName);
-    // }
+    return obj;
 };
 
 GameCore.prototype.deleteObjectAt = function(index) {
@@ -165,7 +158,7 @@ GameCore.prototype.deleteObjectAt = function(index) {
 // get object by its ID
 GameCore.prototype.getObject = function(objID) {
     // Returns the object at an index WITHOUT SELECTING IT
-    return this.mObjectMap[objID][0];
+    return this.mGO[objID][0];
 };
 
 GameCore.prototype.select = function(index) {
@@ -247,7 +240,7 @@ GameCore.prototype.getCameraList = function() {
 
 GameCore.prototype.checkForNameConflict = function(name) {
     // Returns true if the name appears more than once
-    var obj = this.mObjectMap[name];
+    var obj = this.mGO[name];
     return (obj !== undefined) 
 };
 
@@ -301,46 +294,47 @@ GameCore.prototype.selectScene = function(index) {
     gEngine.GameLoop.stop();
     if (index !== null) {
         gCurrentScene = this.mSceneList[index];
-        gEngine.Core.startScene(gCurrentScene);
+        gEngine.View.startScene(gCurrentScene);
     } else {
         this.runBlankScene();
     }
     return gCurrentScene;
 };
 
-var getDefaultCodeGO = function(name) {
-    return 'window["' + name + '"] = function(renderableObj) {\n\
-    GameObject.call(this, renderableObj);\n\
-    this.mCollidableFlag = false;\n\
-    this.mCollisionPixelFlag = false;\n\
-    this.mDestroy = false;\n\
-}\n\
-gEngine.Core.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
-\n\
-' + name + '.prototype.update = function() {\n\
-    GameObject.prototype.update.call(this);\n\
-};\n\
-\n\
-' + name + '.prototype.draw = function(aCamera) {\n\
-    GameObject.prototype.draw.call(this, aCamera);\n\
-};\n\
-\n\
-' + name + '.prototype.onCollisionStay = function(otherObj) {\n\
-    \n\
-};\n\
-\n\
-' + name + '.prototype.onCollisionEnter = function(otherObj) {\n\
-    \n\
-};\n\
-\n\
-' + name + '.prototype.onCollisionExit = function(otherObj) {\n\
-    \n\
-};';
-};
-
-var getDefaultCodeClass = function(name, id) {
-    return 'window["' + name + '"] = function() {\n\
-    this.mName = "' + name + '";\n\
-    this.mID = "' + id + '";\n\
-}';
-};
+//
+// var getDefaultCodeGO = function(name) {
+//     return 'window["' + name + '"] = function(renderableObj) {\n\
+//     GameObject.call(this, renderableObj);\n\
+//     this.mCollidableFlag = false;\n\
+//     this.mCollisionPixelFlag = false;\n\
+//     this.mDestroy = false;\n\
+// }\n\
+// gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
+// \n\
+// ' + name + '.prototype.update = function() {\n\
+//     GameObject.prototype.update.call(this);\n\
+// };\n\
+// \n\
+// ' + name + '.prototype.draw = function(aCamera) {\n\
+//     GameObject.prototype.draw.call(this, aCamera);\n\
+// };\n\
+// \n\
+// ' + name + '.prototype.onCollisionStay = function(otherObj) {\n\
+//     \n\
+// };\n\
+// \n\
+// ' + name + '.prototype.onCollisionEnter = function(otherObj) {\n\
+//     \n\
+// };\n\
+// \n\
+// ' + name + '.prototype.onCollisionExit = function(otherObj) {\n\
+//     \n\
+// };';
+// };
+//
+// var getDefaultCodeClass = function(name, id) {
+//     return 'window["' + name + '"] = function() {\n\
+//     this.mName = "' + name + '";\n\
+//     this.mID = "' + id + '";\n\
+// }';
+// };

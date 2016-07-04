@@ -49,9 +49,9 @@ $( document ).ready(function() {
 	leftPanel.setTopDistance(48);
 	rightPanel.setTopDistance(48);
 	
-	gGuiBase.Core.addPanel(bottomPanel);
-	gGuiBase.Core.addPanel(leftPanel);
-	gGuiBase.Core.addPanel(rightPanel);
+	gGuiBase.View.addPanel(bottomPanel);
+	gGuiBase.View.addPanel(leftPanel);
+	gGuiBase.View.addPanel(rightPanel);
 	
 	
 	bottomPanel.setFirstTabActive();

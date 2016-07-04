@@ -11552,7 +11552,7 @@ exports.mootools = {
   Class         : false,
   Color         : false,
   Cookie        : false,
-  Core          : false,
+  View          : false,
   Document      : false,
   DomReady      : false,
   DOMEvent      : false,

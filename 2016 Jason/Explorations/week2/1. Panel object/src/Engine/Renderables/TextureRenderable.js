@@ -34,7 +34,7 @@ function TextureRenderable(myTexture) {
 
     this.setTexture(myTexture);     // texture for this object, cannot be a "null"
 }
-gEngine.Core.inheritPrototype(TextureRenderable, Renderable);
+gEngine.View.inheritPrototype(TextureRenderable, Renderable);
 
 //<editor-fold desc="Public Methods">
 //**-----------------------------------------

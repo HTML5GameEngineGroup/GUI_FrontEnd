@@ -15,7 +15,7 @@
 	}
 }(function( $ ) {
 /*!
- * jQuery UI Core 1.11.4
+ * jQuery UI View 1.11.4
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors

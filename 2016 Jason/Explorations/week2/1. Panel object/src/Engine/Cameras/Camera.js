@@ -205,7 +205,7 @@ Camera.prototype.getVPMatrix = function () {
  * @returns {void}
  */
 Camera.prototype.setupViewProjection = function () {
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     //<editor-fold desc="Step A: Set up and clear the Viewport">
     // Step A1: Set up the viewport: area on canvas to be drawn
     gl.viewport(this.mViewport[0],  // x position of bottom-left corner of the area to be drawn

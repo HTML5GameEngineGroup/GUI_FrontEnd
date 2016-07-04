@@ -30,7 +30,7 @@ function SimpleShader(vertexShaderPath, fragmentShaderPath) {
     this.mGlobalAmbientColor = null; // refrence to the globalAmbientColor uniform in the fragment shader.
     this.mGlobalAmbientIntensity = null; // refrence to the globalAmbientIntensity uniform in the fragment shader.
 
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
 
     // start of constructor code
     // 
@@ -82,7 +82,7 @@ SimpleShader.prototype.getShader = function () { return this.mCompiledShader; };
  * @returns {void}
  */
 SimpleShader.prototype.activateShader = function (pixelColor, aCamera) {
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     gl.useProgram(this.mCompiledShader);
     gl.uniformMatrix4fv(this.mViewProjTransform, false, aCamera.getVPMatrix());
     gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getGLVertexRef());
@@ -105,7 +105,7 @@ SimpleShader.prototype.activateShader = function (pixelColor, aCamera) {
  * @returns {void}
  */
 SimpleShader.prototype.loadObjectTransform = function (modelTransform) {
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
         // loads the modelTransform matrix into webGL to be used by the vertex shader
     gl.uniformMatrix4fv(this.mModelTransform, false, modelTransform);
 };
@@ -116,7 +116,7 @@ SimpleShader.prototype.loadObjectTransform = function (modelTransform) {
  * @returns {void}
  */
 SimpleShader.prototype.cleanUp = function () {
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     gl.detachShader(this.mCompiledShader, this.mVertexShader);
     gl.detachShader(this.mCompiledShader, this.mFragmentShader);
     gl.deleteShader(this.mVertexShader);
@@ -140,7 +140,7 @@ SimpleShader.prototype.cleanUp = function () {
  * @returns {WebGLShader} Shader object of type fragment or vertex shader.
  */
 SimpleShader.prototype._compileShader = function (filePath, shaderType) {
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     var shaderSource = null, compiledShader = null;
 
     // Step A: Access the shader textfile

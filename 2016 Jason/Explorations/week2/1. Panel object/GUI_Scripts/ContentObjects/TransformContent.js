@@ -16,7 +16,7 @@ function TransformContent(tabContentID, style) {
 	GuiTabContent.call(this, tabContentID, style);
 }
 
-gGuiBase.Core.inheritPrototype(TransformContent, GuiTabContent);
+gGuiBase.View.inheritPrototype(TransformContent, GuiTabContent);
 
 TransformContent.prototype.initialize = function () {
 	var textStyle = 'margin-left: 10px; margin-top: 4px';
@@ -52,20 +52,20 @@ TransformContent.prototype.initialize = function () {
 };
 
 TransformContent.prototype.initializeEventHandling = function () {
-	this.objectName.setOnFocusOut(onTextFieldFocusOut);
-	this.objectX.setOnFocusOut(onTextFieldFocusOut);
-	this.objectY.setOnFocusOut(onTextFieldFocusOut);
-	this.objectW.setOnFocusOut(onTextFieldFocusOut);
-	this.objectH.setOnFocusOut(onTextFieldFocusOut);
+	this.objectName.setOnFocusOut(this.onTextFieldFocusOut);
+	this.objectX.setOnFocusOut(this.onTextFieldFocusOut);
+	this.objectY.setOnFocusOut(this.onTextFieldFocusOut);
+	this.objectW.setOnFocusOut(this.onTextFieldFocusOut);
+	this.objectH.setOnFocusOut(this.onTextFieldFocusOut);
 	
-	this.rotationSlider.setOnSliderChange(onSliderChange);
+	this.rotationSlider.setOnSliderChange(this.onSliderChange);
 };
 
-var onTextFieldFocusOut = function() {
+TransformContent.prototype.onTextFieldFocusOut = function() {
 	//Can do all the handling for changing game object here
 };
 
-var onSliderChange = function(sliderValue) {
+TransformContent.prototype.onSliderChange = function(sliderValue) {
 	
 };
 

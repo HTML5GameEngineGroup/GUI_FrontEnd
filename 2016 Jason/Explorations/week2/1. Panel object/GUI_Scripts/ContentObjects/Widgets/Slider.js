@@ -6,7 +6,7 @@ function Slider(sliderID, style) {
 	GuiContentWidget.call(this, sliderID, style);
 }
 
-gGuiBase.Core.inheritPrototype(Slider, GuiContentWidget);
+gGuiBase.View.inheritPrototype(Slider, GuiContentWidget);
 
 Slider.prototype.initializeWidget = function () {
 	this.setHTML();

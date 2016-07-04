@@ -22,14 +22,14 @@ function LineShader(vertexShaderPath, fragmentShaderPath) {
     SimpleShader.call(this, vertexShaderPath, fragmentShaderPath);  // call SimpleShader constructor
 
     this.mPointSizeRef = null;            // reference to the PointSize uniform
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
 
     // point size uniform
     this.mPointSizeRef = gl.getUniformLocation(this.mCompiledShader, "uPointSize");
 
     this.mPointSize = 1;
 }
-gEngine.Core.inheritPrototype(LineShader, SimpleShader);
+gEngine.View.inheritPrototype(LineShader, SimpleShader);
 //</editor-fold>
 
 // <editor-fold desc="Public Methods">
@@ -46,7 +46,7 @@ LineShader.prototype.activateShader = function (pixelColor, aCamera) {
     SimpleShader.prototype.activateShader.call(this, pixelColor, aCamera);
 
     // now our own functionality: enable texture coordinate array
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     gl.uniform1f(this.mPointSizeRef, this.mPointSize);
     gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getGLLineVertexRef());
     gl.vertexAttribPointer(this.mShaderVertexPositionAttribute,

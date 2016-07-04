@@ -29,13 +29,13 @@ function TextureShader(vertexShaderPath, fragmentShaderPath) {
                              // this is not necessary, with NormalMap, we must do this.
 
     // get the reference of uSampler and aTextureCoordinate within the shader
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     this.mSamplerRef = gl.getUniformLocation(this.mCompiledShader, "uSampler");
     this.mShaderTextureCoordAttribute = gl.getAttribLocation(this.mCompiledShader, "aTextureCoordinate");
 }
 
 // get all the prototype functions from SimpleShader
-gEngine.Core.inheritPrototype(TextureShader, SimpleShader);
+gEngine.View.inheritPrototype(TextureShader, SimpleShader);
 
 
 //</editor-fold>
@@ -54,7 +54,7 @@ TextureShader.prototype.activateShader = function (pixelColor, aCamera) {
     SimpleShader.prototype.activateShader.call(this, pixelColor, aCamera);
 
     // now our own functionality: enable texture coordinate array
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     gl.bindBuffer(gl.ARRAY_BUFFER, gEngine.VertexBuffer.getGLTexCoordRef());
     gl.enableVertexAttribArray(this.mShaderTextureCoordAttribute);
     gl.vertexAttribPointer(this.mShaderTextureCoordAttribute, 2, gl.FLOAT, false, 0, 0);

@@ -23,7 +23,7 @@ function ClientScene(number) {
     this.isInitialized = false;
 
 }
-gEngine.Core.inheritPrototype(ClientScene, Scene);
+gEngine.View.inheritPrototype(ClientScene, Scene);
 
 ClientScene.prototype.loadScene = function() {
    // loads the audios
@@ -50,7 +50,7 @@ ClientScene.prototype.unloadScene = function() {
     // Step B: starts the next level
     // starts the next level
     //var nextLevel = new BlueLevel();  // next level to be loaded
-    //gEngine.Core.startScene(nextLevel);
+    //gEngine.View.startScene(nextLevel);
 };
 
 ClientScene.prototype.initialize = function() {
@@ -77,7 +77,7 @@ ClientScene.prototype.initialize = function() {
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
 ClientScene.prototype.draw = function() {
-    gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
+    gEngine.View.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
     var i, j;
     for (i = 0; i < this.mAllCamera.length; i++) {
         var cam = this.mAllCamera[i];

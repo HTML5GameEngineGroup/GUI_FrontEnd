@@ -25,7 +25,7 @@ function IllumShader(vertexShaderPath, fragmentShaderPath) {
     this.mMaterial = null;
     this.mMaterialLoader = new ShaderMaterial(this.mCompiledShader);
 
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     // Reference to the camera position
     this.mCameraPos = null;  // points to a vec3
     this.mCameraPosRef = gl.getUniformLocation(this.mCompiledShader, "uCameraPosition");
@@ -33,7 +33,7 @@ function IllumShader(vertexShaderPath, fragmentShaderPath) {
     // reference to the normal map sampler
     this.mNormalSamplerRef = gl.getUniformLocation(this.mCompiledShader, "uNormalSampler");
 }
-gEngine.Core.inheritPrototype(IllumShader, LightShader);
+gEngine.View.inheritPrototype(IllumShader, LightShader);
 //</editor-fold>
 
 // <editor-fold desc="Public Methods">
@@ -49,7 +49,7 @@ gEngine.Core.inheritPrototype(IllumShader, LightShader);
 IllumShader.prototype.activateShader = function(pixelColor, aCamera) {
     // first call the super class's activate
     LightShader.prototype.activateShader.call(this, pixelColor, aCamera);
-    var gl = gEngine.Core.getGL();
+    var gl = gEngine.View.getGL();
     gl.uniform1i(this.mNormalSamplerRef, 1); // binds to texture unit 1
     // do not need to set up texture coordinate buffer
     // as we are going to use the ones from the sprite texture 
