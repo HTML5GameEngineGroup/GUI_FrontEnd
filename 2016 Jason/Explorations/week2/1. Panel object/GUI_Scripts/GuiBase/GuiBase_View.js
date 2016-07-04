@@ -255,7 +255,8 @@ gGuiBase.View = (function() {
 			resize: function(event, ui) {
 				var tabWidth = getTabsWidth(panelID);
 				//ui.size.width = Math.max(ui.size.width, tabWidth);
-				$(panelID).outerWidth(Math.max(ui.size.width, tabWidth), true);
+				//$(panelID).outerWidth(Math.max(ui.size.width, tabWidth), true);
+				$(panelID).resizable( "option", "minWidth", tabWidth );
 				
 			}
 		 }); //Just resize to the right
@@ -272,7 +273,8 @@ gGuiBase.View = (function() {
 			resize: function(event, ui) { //Fix for right panel repositioning on resize
 				ui.position.left = 0;
 				var tabWidth = getTabsWidth(panelID);
-				$(panelID).outerWidth(Math.max(ui.size.width, tabWidth), true);
+				//$(panelID).outerWidth(Math.max(ui.size.width, tabWidth), true);
+				$(panelID).resizable( "option", "minWidth", tabWidth );
 				
 			}
 		});
