@@ -19,9 +19,10 @@ function TransformContent(tabContentID, style) {
 gGuiBase.View.inheritPrototype(TransformContent, GuiTabContent);
 
 TransformContent.prototype.initialize = function () {
+	
 	var textStyle = 'margin-left: 10px; margin-top: 4px';
-	var textFieldStyle = 'width: 90px; margin-left: 10px';
-	var sliderStyle = 'width: 90px; margin-top: 10px; margin-bottom: 10px; margin-left: 10px';
+	var textFieldStyle = 'width: 90%; margin-left: 10px';
+	var sliderStyle = 'width: 90%; margin-top: 10px; margin-bottom: 10px; margin-left: 10px';
 	
 	this.objectNameText = new Text("gameObjectNameText", textStyle, "Name");
 	this.objectName = new TextField("gameObjectNameField", textFieldStyle, "GameObj0");
@@ -68,6 +69,7 @@ TransformContent.prototype.onTextFieldFocusOut = function() {
 TransformContent.prototype.onSliderChange = function(sliderValue) {
 	
 };
+
 
 
 

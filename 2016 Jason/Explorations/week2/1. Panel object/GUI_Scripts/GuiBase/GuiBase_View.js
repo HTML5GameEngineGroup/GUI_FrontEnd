@@ -76,9 +76,10 @@ gGuiBase.View = (function() {
 		
 		//If the bottom panel is added last, need to update the positions of any left/right panels
 		//if (guiPanel.panelType == GuiPanelType.BOTTOM) {
-			resizeLeftRightHelper();
+		resizeLeftRightHelper();
 		//}
-	
+		
+		
 	};
 
 	//Remove a panel from the list based on ID
@@ -157,12 +158,18 @@ gGuiBase.View = (function() {
 			}
 		});
 		
-		//Also resize on window resize
+		
 		$( window ).resize(function() {
 			$(panelID).css("top", $(window).height() - $(panelID).outerHeight(true));
 			resizeLeftRightHelper();
 		});
 	};
+	
+	$( window ).resize(function() {
+		resizeBottomHelper();
+		resizeLeftRightHelper();
+		
+	});
 	
 	//Handle bottom resize
 	var resizeBottomHelper = function() {
@@ -544,7 +551,7 @@ gGuiBase.View = (function() {
 			tabList[i].refreshContent();
 		}
 	};
-	
+
 	//Public functions and variables
 	var mPublic = {
         addPanel: addPanel,

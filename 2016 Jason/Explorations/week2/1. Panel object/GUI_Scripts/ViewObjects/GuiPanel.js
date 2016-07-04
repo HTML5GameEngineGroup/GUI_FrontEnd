@@ -16,6 +16,7 @@ var GuiPanel = function (PanelID, panelType, Height) {
     this.PanelID = PanelID;
     this.guiTab = $(PanelID).tabs(); //Create the tabs
 	this.panelType = panelType;
+	this.tabObjects = [];
 	
 	this.panelTopDistance = 0;
 	
@@ -84,6 +85,7 @@ GuiPanel.prototype.addTab = function ( tab ){						//create new tab
     $(this.PanelID + "Sortable").append(tab.createHeader());		//create tab_header add to panel
     $(this.PanelID).append(tab.createContentContainer());	//create empty tab_content add to panel
     this.guiTab.tabs("refresh");
+	this.tabObjects.push(tab);
 };
 
 // moves tab object to the current panel, tab must be in the DOM already
@@ -105,4 +107,13 @@ GuiPanel.prototype.setTopDistance = function(distance) {
 
 GuiPanel.prototype.getTopDistance = function() {
 	return this.panelTopDistance;
+};
+
+GuiPanel.prototype.getID = function() {
+	return this.PanelID;
+};
+
+GuiPanel.prototype.getWidth = function() {
+	
+	return $(this.PanelID).outerWidth();
 };
