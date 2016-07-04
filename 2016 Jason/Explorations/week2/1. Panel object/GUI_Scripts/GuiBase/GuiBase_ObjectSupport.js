@@ -45,8 +45,13 @@ gGuiBase.ObjectSupport = (function() {
         mGOCode[newObj.mID] = this.getDefaultCodeGO(newObj.mID);                // add code to code map
         return newObj.mID;
     };
+    
+    // names are id, names must be unique
+    var getGameObjectByID = function( name ) {
+        return mGO[ name ];
+    };
 
-    var getDefaultCodeGO = function(name) {
+    var getDefaultCodeGO = function( name ) {
         return 'window["' + name + '"] = function(renderableObj) {\n\
     GameObject.call(this, renderableObj);\n\
     this.mCollidableFlag = false;\n\
@@ -103,6 +108,7 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
         getObjectList: getObjectList,
         getDefaultCodeGO: getDefaultCodeGO,
         getDefaultCodeClass: getDefaultCodeClass,
+        getGameObjectByID: getGameObjectByID,
 
         inheritPrototype: inheritPrototype
     };

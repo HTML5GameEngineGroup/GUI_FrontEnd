@@ -31,3 +31,9 @@ TextField.prototype.setOnFocusOut = function (onFocusOutFunction) {
 		onFocusOutFunction();
 	})
 };
+
+
+TextField.prototype.setText = function( text ) {
+	this.defaultText = text;
+	this.setHTML();
+};

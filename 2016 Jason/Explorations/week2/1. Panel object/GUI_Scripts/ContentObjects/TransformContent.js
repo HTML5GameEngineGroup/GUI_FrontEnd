@@ -70,6 +70,28 @@ TransformContent.prototype.onSliderChange = function(sliderValue) {
 	
 };
 
+TransformContent.prototype.updateFields = function( gameObject ) {
+	//update these widgets...
+	// set name field
+	console.log( gameObject );
+	this.objectName.setText( gameObject.mID );
+	
+	// set x form
+	var xf = gameObject.getXform();
+	
+	console.log(xf);
+	this.objectX.setText( xf.x );
+	this.objectY.setText( xf.y );
+
+	// set width and height
+	this.objectW.setText( xf.width );
+	this.objectH.setText( xf.height );
+
+	// rotation is not implemented yet in the object
+	// this.rotationText = new Text("gameObjectRotationText", textStyle, "Rotation");
+	// this.rotationField = new TextField("gameObjectRotationField", textFieldStyle, "0");
+	// this.rotationSlider = new Slider("gameObjectRotationSlider", sliderStyle);
+};
 
 
 

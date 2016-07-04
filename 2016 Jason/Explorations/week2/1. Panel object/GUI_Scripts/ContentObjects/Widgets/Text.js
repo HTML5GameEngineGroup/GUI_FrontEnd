@@ -21,3 +21,4 @@ Text.prototype.setHTML = function() {
 		this.htmlSnippet = '<p>' + this.defaultText + '</p>';
 	}
 };
+

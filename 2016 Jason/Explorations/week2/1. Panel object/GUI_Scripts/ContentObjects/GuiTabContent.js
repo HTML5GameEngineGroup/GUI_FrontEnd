@@ -49,7 +49,6 @@ GuiTabContent.prototype.findWidgetByID = function(id) {
 	return null;
 };
 
-
 // returns the tab id
 GuiTabContent.prototype.getID = function () {
     return '#' + this.tabContentID;

@@ -391,7 +391,7 @@ gGuiBase.View = (function() {
 			}
 		}
 		return -1;
-	}
+	};
 
 	//Refresh all panels within the group
 	var refreshAll = function() {
@@ -532,7 +532,6 @@ gGuiBase.View = (function() {
 	};
 	
 	var findWidgetByID = function (id) {
-		
 		for (var i = 0; i < tabList.length; i++) {
 			var tabContents = tabList[i].getContent();
 			
