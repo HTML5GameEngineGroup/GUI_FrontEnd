@@ -28,8 +28,6 @@ gGuiBase.ObjectSupport = (function() {
         };
         gEngine.View.inheritPrototype(window[name], window["GameObject"]);
 
-        var code = this.getDefaultCodeGO(name);
-
         // Add code to system
         eval(code);
         eval('newObj = new ' + name + '(new Renderable());');
