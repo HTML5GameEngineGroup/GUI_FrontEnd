@@ -78,14 +78,17 @@ TransformContent.prototype.updateFields = function( gameObject ) {
 	
 	// set x form
 	var xf = gameObject.getXform();
+
 	
 	console.log(xf);
-	this.objectX.setText( xf.x );
-	this.objectY.setText( xf.y );
+	this.objectX.setText( xf.getXPos() );
+	this.objectY.setText( xf.getYPos() );
 
 	// set width and height
-	this.objectW.setText( xf.width );
-	this.objectH.setText( xf.height );
+	this.objectW.setText( xf.getWidth() );
+	this.objectH.setText( xf.getHeight() );
+	
+	this.rotationField.setText( xf.getRotationInDegree());
 
 	// rotation is not implemented yet in the object
 	// this.rotationText = new Text("gameObjectRotationText", textStyle, "Rotation");

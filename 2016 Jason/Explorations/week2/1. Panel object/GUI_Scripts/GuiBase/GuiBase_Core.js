@@ -14,8 +14,12 @@ gGuiBase.Core = (function() {
     // updates the details tab with the object whose name is passed as parameter
     var selectDetailsObject = function ( objName ) {
         //todo : write function in transform widget to do update it self with this object
-        console.log(detailXf);
-        var gameObject = gGuiBase.ObjectSupport.getGameObjectByID( objName );           // get gameObj
+		var gameObject = gGuiBase.ObjectSupport.getGameObjectByID( objName );           // get gameObj
+		var transformContent = gGuiBase.View.findTabContentByID("#TransformContent");
+		transformContent.updateFields(gameObject);
+		
+        //console.log(detailXf);
+        
         gGuiBase.View.refreshAllTabContent();                                           // refresh panel
     };
 

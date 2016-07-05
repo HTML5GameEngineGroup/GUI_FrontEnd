@@ -526,11 +526,11 @@ gGuiBase.View = (function() {
 			var tabContents = tabList[i].getContent();
 			
 			for (var j = 0; j < tabContents.length; j++) {
-				console.log(tabContents[j]);
-				console.log("tab.getID(): " + tabContents[j].getID() + " " + typeof(tabContents[j].getID()));
-				console.log("id : " + id + " " + typeof(id));
+
 				if (tabContents[j].getID() == id) {
-					return tabContents[i];
+					
+					return tabContents[j];
+					
 				}
 			}
 		}
