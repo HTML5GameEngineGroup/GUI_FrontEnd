@@ -16,6 +16,7 @@ gGuiBase.SceneSupport = (function() {
 		if (index !== null) {
 			gGuiBase.SceneSupport.gCurrentScene = mSceneList[index];
 			gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
+			gGuiBase.Core.reinitializeCameraTab();
 			
 		} else {
 			this.runBlankScene();
@@ -125,10 +126,7 @@ gGuiBase.SceneSupport = (function() {
 		
 		return gCurrentScene;
 	};
-	
-	
-	
-	
+
     var getSceneByName = function( name ) {
         var result = null;
 		var i;
