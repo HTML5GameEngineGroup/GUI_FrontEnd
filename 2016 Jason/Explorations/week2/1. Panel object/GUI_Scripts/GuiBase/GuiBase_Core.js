@@ -21,7 +21,7 @@ gGuiBase.Core = (function() {
 	
 	var addDefaultScene = function() {
 		var newScene = gGuiBase.SceneSupport.createDefaultScene();
-		//gGuiBase.View.findWidgetByID("#sceneSelectList1").addElement(newScene.mName);
+
 		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
 		this.selectDetailsScene(newScene.mName);
 		gGuiBase.View.refreshAllTabContent();
@@ -31,7 +31,6 @@ gGuiBase.Core = (function() {
 		
 		var newCamera = gGuiBase.CameraSupport.createDefaultCamera();
 		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
-		console.log("In adddefaultcamera: " + gGuiBase.SceneSupport.gCurrentScene.mName);
 		this.selectDetailsCamera(newCamera.mName);
 		gGuiBase.View.refreshAllTabContent();
 	};
@@ -61,15 +60,12 @@ gGuiBase.Core = (function() {
 		
 		var scene = gGuiBase.SceneSupport.getSceneByName(sceneName);
 		detailsTransform.updateFields(scene);
-		var scene = gGuiBase.SceneSupport.selectSceneByName(sceneName);
 		
-		console.log(gGuiBase.SceneSupport.gCurrentScene);
-		//console.log(scene);
+		gGuiBase.SceneSupport.selectSceneByName(sceneName);
 		
 		detailsTab.addContent(detailsTransform);
 		gGuiBase.View.refreshAllTabContent();
-		
-		//console.log(gGuiBase.SceneSupport.gCurrentScene);
+
 	};
 	
 	var selectDetailsCamera = function (cameraName) {

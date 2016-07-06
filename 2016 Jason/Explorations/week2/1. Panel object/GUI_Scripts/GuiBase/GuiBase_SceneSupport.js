@@ -2,7 +2,7 @@
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.SceneSupport = (function() {
-	gCurrentScene = new ClientScene(0);
+	var gCurrentScene = new ClientScene(0);
 	
     var mSceneList = [];
     var mNextSceneID = 0;
@@ -14,8 +14,9 @@ gGuiBase.SceneSupport = (function() {
 	var selectScene = function(index) {
 		gEngine.GameLoop.stop();
 		if (index !== null) {
-			gCurrentScene = mSceneList[index];
-			gEngine.View.startScene(gCurrentScene);
+			gGuiBase.SceneSupport.gCurrentScene = mSceneList[index];
+			gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
+			
 		} else {
 			this.runBlankScene();
 		}
@@ -38,12 +39,16 @@ gGuiBase.SceneSupport = (function() {
 	
     var createDefaultScene = function() {
 		// Create a default scene with a default name.  It becomes the selected scene.
-		var scene = new ClientScene(mNextSceneID);
-		while (checkForNameConflict(scene.mName)) {
+		var name = "Scene" + mNextSceneID;
+		while (checkForNameConflict(name)) {
 			mNextSceneID++; // This has not been incremented yet so do it here.  After this method is over, + Scene will increment it to a unique value.
-			scene.mName = "Scene" + mNextSceneID;
+			name = "Scene" + mNextSceneID;
 		}
+	
+		var scene = new ClientScene(mNextSceneID);
 		mSceneList.push(scene);
+		selectScene(mSceneList.length - 1);
+		
 		
 		return scene;
 	};
@@ -112,7 +117,8 @@ gGuiBase.SceneSupport = (function() {
 		if (name !== null) {
 			gGuiBase.SceneSupport.gCurrentScene = getSceneByName(name);
 			gGuiBase.Core.reinitializeCameraTab();
-			gEngine.View.startScene(gCurrentScene);
+			gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
+			
 		} else {
 			runBlankScene();
 		}

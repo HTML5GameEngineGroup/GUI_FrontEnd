@@ -30,7 +30,7 @@ SceneTransformContent.prototype.onTextFieldFocusOut = function() {
 };
 
 SceneTransformContent.prototype.updateFields = function(scene) {
-	console.log(scene);
+	//console.log(scene);
 	this.objectName.setText(scene.mName);
 
 };

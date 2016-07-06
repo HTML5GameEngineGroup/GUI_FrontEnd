@@ -56,6 +56,7 @@ ClientScene.prototype.unloadScene = function() {
 ClientScene.prototype.initialize = function() {
     // Do not under any circumstances initialize a scene more than once.  It deletes all the stuff in it.
     if (this.isInitialized) {
+		//console.log('Scene not initialized');
         return;
     }
     

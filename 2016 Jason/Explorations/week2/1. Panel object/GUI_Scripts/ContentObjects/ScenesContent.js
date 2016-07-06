@@ -38,7 +38,6 @@ ScenesContent.prototype.buttonOnClick = function() {
 ScenesContent.prototype.onListSelect = function(ui) {
 	
 	// get objectName/objectID
-	console.log(ui["selected"]["id"]);
 	var selectedSceneName = ui["selected"]["id"];
 	gGuiBase.Core.selectDetailsScene( selectedSceneName );
 

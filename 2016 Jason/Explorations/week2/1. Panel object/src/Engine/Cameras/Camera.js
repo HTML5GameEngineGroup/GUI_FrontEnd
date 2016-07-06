@@ -71,6 +71,7 @@ function Camera(wcCenter, wcWidth, viewportArray, bound) {
         // Client game should not access this!
 		
     gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(this);
+
 }
 
 /**
