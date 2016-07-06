@@ -5,6 +5,9 @@ gGuiBase.Core = (function() {
 	var initializeInitialScene = function() {
 		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
 		gGuiBase.SceneSupport.selectScene(0);
+		
+		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
+		gGuiBase.View.refreshAllTabContent();
 	};
 	
     // Adds a default gameObject to the Object Tab and updates detail tab with this object
@@ -24,6 +27,12 @@ gGuiBase.Core = (function() {
 		gGuiBase.View.refreshAllTabContent();
 	};
 
+	var addDefaultCamera = function() {
+		var newCamera = gGuiBase.CameraSupport.createDefaultCamera();
+		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
+		this.selectDetailsCamera(newCamera.mName);
+		gGuiBase.View.refreshAllTabContent();
+	};
 
     // updates the details tab with the object whose name is passed as parameter
     var selectDetailsObject = function ( objName ) {
@@ -56,9 +65,20 @@ gGuiBase.Core = (function() {
 		gGuiBase.View.refreshAllTabContent();
 	};
 	
-	var selectDetailsCamera = function (camera) {
+	var selectDetailsCamera = function (cameraName) {
+		var detailsTab = gGuiBase.View.findTabByID("#Details");
+		detailsTab.clearContent();
+		var detailsTransform = new CameraTransformContent("CameraTransformContent", gGuiBase.View.CONTENT_STYLE, "Camera Transform");
+		var detailsColorTexture = new ColorTextureContent("ColorTextureContent", gGuiBase.View.CONTENT_STYLE, "Camera Color");
 		
+		var camera = gGuiBase.CameraSupport.getCameraByName(cameraName);
+		detailsTransform.updateFields(camera);
+	
+		detailsTab.addContent(detailsTransform);
+		detailsTab.addContent(detailsColorTexture);
+		gGuiBase.View.refreshAllTabContent();
 	};
+	
 	
 	
 	var emptyDetailsTab = function () {
@@ -78,6 +98,8 @@ gGuiBase.Core = (function() {
 		addDefaultScene: addDefaultScene,
 		selectDetailsScene: selectDetailsScene,
 		initializeInitialScene: initializeInitialScene,
+		addDefaultCamera: addDefaultCamera,
+		selectDetailsCamera: selectDetailsCamera,
 
         inheritPrototype: inheritPrototype
     };

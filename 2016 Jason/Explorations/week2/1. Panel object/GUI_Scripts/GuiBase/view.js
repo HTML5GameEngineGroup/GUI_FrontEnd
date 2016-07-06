@@ -12,8 +12,12 @@ $( document ).ready(function() {
 	var sceneContent = new ScenesContent("ScenesContent");
 	scenesTab.addContent(sceneContent);
 	
+	
+	
 	var camerasTab = new GuiPanelTab("Cameras");
+	var cameraContent = new CamerasContent("CameraContent");
 	bottomPanel.addTab(camerasTab);
+	camerasTab.addContent(cameraContent);
 	
 	var instancesTab = new GuiPanelTab("Instances");
 	bottomPanel.addTab(instancesTab);

@@ -28,7 +28,7 @@ SelectList.prototype.setHTML = function() {
 		this.htmlSnippet = '<ul id="' + this.widgetID + '">'
 	}
 
-	console.log(this.list.length);
+
 	//Add each list element as a <li> tag
 	for (var i = 0; i < this.list.length; i++) {
 		if (this.listStyle !== GuiContentWidget.NO_STYLE) {

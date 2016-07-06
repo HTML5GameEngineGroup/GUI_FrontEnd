@@ -114,6 +114,8 @@ gGuiBase.SceneSupport = (function() {
 		} else {
 			runBlankScene();
 		}
+		
+		console.log(gCurrentScene);
 		return gCurrentScene;
 	};
 	
