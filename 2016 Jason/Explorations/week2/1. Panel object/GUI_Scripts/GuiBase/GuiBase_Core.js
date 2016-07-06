@@ -10,18 +10,43 @@ gGuiBase.Core = (function() {
         this.selectDetailsObject( newObjID );                                           // select this object in details
         gGuiBase.View.refreshAllTabContent();                                           // refresh panel
     };
+	
+	var addDefaultScene = function() {
+		
+	};
+
 
     // updates the details tab with the object whose name is passed as parameter
     var selectDetailsObject = function ( objName ) {
-        //todo : write function in transform widget to do update it self with this object
-		var gameObject = gGuiBase.ObjectSupport.getGameObjectByID( objName );           // get gameObj
-		var transformContent = gGuiBase.View.findTabContentByID("#TransformContent");
-		transformContent.updateFields(gameObject);
+        var detailsTab = gGuiBase.View.findTabByID("#Details");
+		detailsTab.clearContent();
+		var detailsTransform = new TransformContent("TransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
+		var detailsColorTexture = new ColorTextureContent("ColorTextureContent", gGuiBase.View.CONTENT_STYLE, "Texture");
 		
-        //console.log(detailXf);
-        
+		var gameObject = gGuiBase.ObjectSupport.getGameObjectByID( objName );           // get gameObj
+		detailsTransform.updateFields(gameObject);
+		
+		detailsTab.addContent(detailsTransform);
+		detailsTab.addContent(detailsColorTexture);
+		
+		//var transformContent = gGuiBase.View.findTabContentByID("#TransformContent");
+		//transformContent.updateFields(gameObject);
         gGuiBase.View.refreshAllTabContent();                                           // refresh panel
     };
+	
+	var selectDetailsScene = function (scene) {
+		
+	};
+	
+	var selectDetailsCamera = function (camera) {
+		
+	};
+	
+	
+	var emptyDetailsTab = function () {
+		var detailsTab = gGuiBase.View.findTabByID("#Details");
+		detailsTab.clearContent();
+	};
 
     var inheritPrototype = function (subClass, superClass) {
         var prototype = Object.create(superClass.prototype);

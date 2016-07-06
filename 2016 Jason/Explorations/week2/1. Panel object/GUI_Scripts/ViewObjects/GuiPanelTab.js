@@ -53,6 +53,11 @@ GuiPanelTab.prototype.addContent = function(contentobject) {
 	
 };
 
+GuiPanelTab.prototype.clearContent = function() {
+	$(this.getID()).empty();
+	this.content.splice(0, this.content.length);
+};
+
 GuiPanelTab.prototype.refreshContent = function() {
 
 	$(this.getID()).empty();

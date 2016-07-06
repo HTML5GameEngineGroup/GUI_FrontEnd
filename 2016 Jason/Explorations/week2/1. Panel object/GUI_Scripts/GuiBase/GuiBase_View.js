@@ -8,6 +8,8 @@
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.View = (function() {
+	var CONTENT_STYLE = 'border: 2px solid #d3d3d3; border-radius: 1px; padding: 0px; margin-bottom: 20px;';
+	
 	var panelList = []; //List for static panels
 	var floatingPanelList = []; //List for floating panels
 	var tabMap = {};
@@ -520,6 +522,12 @@ gGuiBase.View = (function() {
 		return null;
 	};
 	
+	var findTabByID = function (id) {
+		for (var i = 0; i < tabList.length; i++) {
+			if (tabList[i].getID() == id) return tabList[i];
+		}
+	};
+	
 	var findTabContentByID = function (id) {
 		
 		for (var i = 0; i < tabList.length; i++) {
@@ -571,10 +579,12 @@ gGuiBase.View = (function() {
 		getTab: getTab,
 		mouseInElement: mouseInElement,
 		mouseInPanelList: mouseInPanelList,
+		findTabByID: findTabByID,
 		findTabContentByID: findTabContentByID,
 		findWidgetByID: findWidgetByID,
 		refreshAllTabContent: refreshAllTabContent,
 		getTabsWidth: getTabsWidth,
+		CONTENT_STYLE: CONTENT_STYLE,
 
 		
 		inheritPrototype: inheritPrototype
