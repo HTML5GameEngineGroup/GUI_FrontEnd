@@ -30,7 +30,7 @@ function GameObject(renderableObj) {
     this.mCollisionPixelFlag = false;
     this.mCollisionSet = null;
     this.start();
-    gCurrentScene.mAllObject.push(this);
+    // gCurrentScene.mAllObject.push(this); i believe this is used to generate the drop down menu
     this.mLayer=2;
     gEngine.LayerManager.addToLayer(gEngine.eLayer.eActors, this);
 }

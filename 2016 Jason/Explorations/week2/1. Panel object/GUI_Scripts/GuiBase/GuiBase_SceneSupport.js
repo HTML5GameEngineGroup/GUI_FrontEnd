@@ -161,7 +161,7 @@ gGuiBase.SceneSupport = (function() {
         getSceneList: getSceneList,
         getSceneByName: getSceneByName,
 		getSceneListNames: getSceneListNames,
-		selectSceneByName, selectSceneByName,
+		selectSceneByName: selectSceneByName,
 		selectScene: selectScene,
 
     };
