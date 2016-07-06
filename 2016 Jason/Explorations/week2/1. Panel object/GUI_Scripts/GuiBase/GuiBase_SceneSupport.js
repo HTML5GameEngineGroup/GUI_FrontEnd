@@ -107,15 +107,16 @@ gGuiBase.SceneSupport = (function() {
 
 	var selectSceneByName = function(name) {
 		// Select the scene at the index and run it too
+		
 		gEngine.GameLoop.stop();
 		if (name !== null) {
-			gCurrentScene = getSceneByName(name);
+			gGuiBase.SceneSupport.gCurrentScene = getSceneByName(name);
+			gGuiBase.Core.reinitializeCameraTab();
 			gEngine.View.startScene(gCurrentScene);
 		} else {
 			runBlankScene();
 		}
 		
-		console.log(gCurrentScene);
 		return gCurrentScene;
 	};
 	
@@ -135,6 +136,7 @@ gGuiBase.SceneSupport = (function() {
     };
 
     var getSceneList = function() {
+		
         return mSceneList;
     };
 	

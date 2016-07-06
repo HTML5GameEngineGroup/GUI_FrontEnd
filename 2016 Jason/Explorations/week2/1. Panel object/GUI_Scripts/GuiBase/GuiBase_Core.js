@@ -28,8 +28,10 @@ gGuiBase.Core = (function() {
 	};
 
 	var addDefaultCamera = function() {
+		
 		var newCamera = gGuiBase.CameraSupport.createDefaultCamera();
 		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
+		console.log("In adddefaultcamera: " + gGuiBase.SceneSupport.gCurrentScene.mName);
 		this.selectDetailsCamera(newCamera.mName);
 		gGuiBase.View.refreshAllTabContent();
 	};
@@ -59,10 +61,15 @@ gGuiBase.Core = (function() {
 		
 		var scene = gGuiBase.SceneSupport.getSceneByName(sceneName);
 		detailsTransform.updateFields(scene);
-		gGuiBase.SceneSupport.selectSceneByName(sceneName);
+		var scene = gGuiBase.SceneSupport.selectSceneByName(sceneName);
+		
+		console.log(gGuiBase.SceneSupport.gCurrentScene);
+		//console.log(scene);
 		
 		detailsTab.addContent(detailsTransform);
 		gGuiBase.View.refreshAllTabContent();
+		
+		//console.log(gGuiBase.SceneSupport.gCurrentScene);
 	};
 	
 	var selectDetailsCamera = function (cameraName) {
@@ -79,7 +86,11 @@ gGuiBase.Core = (function() {
 		gGuiBase.View.refreshAllTabContent();
 	};
 	
-	
+	// To be called on scene change
+	var reinitializeCameraTab = function() {
+		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
+		gGuiBase.View.refreshAllTabContent();
+	};
 	
 	var emptyDetailsTab = function () {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
@@ -100,7 +111,8 @@ gGuiBase.Core = (function() {
 		initializeInitialScene: initializeInitialScene,
 		addDefaultCamera: addDefaultCamera,
 		selectDetailsCamera: selectDetailsCamera,
-
+		reinitializeCameraTab: reinitializeCameraTab,
+		
         inheritPrototype: inheritPrototype
     };
     return mPublic;

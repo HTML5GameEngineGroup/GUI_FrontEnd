@@ -22,6 +22,7 @@ gGuiBase.CameraSupport = (function() {
 		var cameraList = getCameraList();
 		var i;
 		for (i = 0; i < cameraList.length; i++) {
+			console.log(cameraList[i].mName + " " + name);
 			if (cameraList[i].mName === name) {
 				result = cameraList[i];
 				i = cameraList.length; // Break
@@ -31,6 +32,8 @@ gGuiBase.CameraSupport = (function() {
 	};
 	
 	var createDefaultCamera = function() {
+		
+		console.log("Scene name at start: " + gGuiBase.SceneSupport.gCurrentScene.mName);
 		var cam = new Camera(
 			vec2.fromValues(20,60), // position of the camera
 			50,                     // width of camera
@@ -46,6 +49,7 @@ gGuiBase.CameraSupport = (function() {
 		cam.mName = name;
 		cam.mID = "cameraListItem" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID;; // This is still unique despite the check (doesn't need to be updated to the next cam id)
 		gGuiBase.SceneSupport.gCurrentScene.mNextCameraID++;
+		console.log("Scene name at end: " + gGuiBase.SceneSupport.gCurrentScene.mName);
 		//gCurrentScene.addCamera(cam);  // The scene already adds it for us so we don't need to add it again
 		var list = gGuiBase.SceneSupport.gCurrentScene.getCameraList();
 		//this.selectCamera(list.length - 1); // Refreshes
@@ -79,7 +83,7 @@ gGuiBase.CameraSupport = (function() {
 		var cameraList = getCameraList();
 		var nameArray = [];
 		for (i = 0; i < cameraList.length; i++) {
-			console.log(cameraList[i].mName);
+			//console.log(cameraList[i].mName);
 			nameArray.push(cameraList[i].mName);
 		}
 		return nameArray;
