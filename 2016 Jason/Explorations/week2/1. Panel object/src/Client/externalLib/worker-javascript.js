@@ -1351,7 +1351,7 @@ ace.define("ace/worker/mirror",["require","exports","module","ace/range","ace/do
 
 var Range = require("../range").Range;
 var Document = require("../document").Document;
-var lang = require("./lang");
+var lang = require("../lib/lang");
     
 var Mirror = exports.Mirror = function(sender) {
     this.sender = sender;
@@ -11552,7 +11552,7 @@ exports.mootools = {
   Class         : false,
   Color         : false,
   Cookie        : false,
-  View          : false,
+  Core          : false,
   Document      : false,
   DomReady      : false,
   DOMEvent      : false,
@@ -11688,7 +11688,7 @@ exports.jasmine = {
 ace.define("ace/mode/javascript_worker",["require","exports","module","ace/lib/oop","ace/worker/mirror","ace/mode/javascript/jshint"], function(require, exports, module) {
 "use strict";
 
-var oop = require("./oop");
+var oop = require("../lib/oop");
 var Mirror = require("../worker/mirror").Mirror;
 var lint = require("./javascript/jshint").JSHINT;
 

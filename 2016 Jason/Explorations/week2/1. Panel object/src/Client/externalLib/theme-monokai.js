@@ -100,6 +100,6 @@ color: #75715E\
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWPQ0FD0ZXBzd/wPAAjVAoxeSgNeAAAAAElFTkSuQmCC) right repeat-y\
 }";
 
-var dom = require("./dom");
+var dom = require("../lib/dom");
 dom.importCssString(exports.cssText, exports.cssClass);
 });
