@@ -2,6 +2,11 @@
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.Core = (function() {
+	var initializeInitialScene = function() {
+		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
+		gGuiBase.SceneSupport.selectScene(0);
+	};
+	
     // Adds a default gameObject to the Object Tab and updates detail tab with this object
     var addDefaultObject = function () {
         var newObjID = gGuiBase.ObjectSupport.createDefaultObject();                    // create new gameObj
@@ -12,7 +17,11 @@ gGuiBase.Core = (function() {
     };
 	
 	var addDefaultScene = function() {
-		
+		var newScene = gGuiBase.SceneSupport.createDefaultScene();
+		//gGuiBase.View.findWidgetByID("#sceneSelectList1").addElement(newScene.mName);
+		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
+		this.selectDetailsScene(newScene.mName);
+		gGuiBase.View.refreshAllTabContent();
 	};
 
 
@@ -34,8 +43,17 @@ gGuiBase.Core = (function() {
         gGuiBase.View.refreshAllTabContent();                                           // refresh panel
     };
 	
-	var selectDetailsScene = function (scene) {
+	var selectDetailsScene = function (sceneName) {
+		var detailsTab = gGuiBase.View.findTabByID("#Details");
+		detailsTab.clearContent();
+		var detailsTransform = new SceneTransformContent("SceneTransformContent", gGuiBase.View.CONTENT_STYLE, "Scene");
 		
+		var scene = gGuiBase.SceneSupport.getSceneByName(sceneName);
+		detailsTransform.updateFields(scene);
+		gGuiBase.SceneSupport.selectSceneByName(sceneName);
+		
+		detailsTab.addContent(detailsTransform);
+		gGuiBase.View.refreshAllTabContent();
 	};
 	
 	var selectDetailsCamera = function (camera) {
@@ -57,6 +75,9 @@ gGuiBase.Core = (function() {
     var mPublic = {
         addDefaultObject: addDefaultObject,
         selectDetailsObject: selectDetailsObject,
+		addDefaultScene: addDefaultScene,
+		selectDetailsScene: selectDetailsScene,
+		initializeInitialScene: initializeInitialScene,
 
         inheritPrototype: inheritPrototype
     };

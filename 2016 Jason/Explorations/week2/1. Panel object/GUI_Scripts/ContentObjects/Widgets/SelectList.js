@@ -28,9 +28,9 @@ SelectList.prototype.setHTML = function() {
 		this.htmlSnippet = '<ul id="' + this.widgetID + '">'
 	}
 
+	console.log(this.list.length);
 	//Add each list element as a <li> tag
 	for (var i = 0; i < this.list.length; i++) {
-		
 		if (this.listStyle !== GuiContentWidget.NO_STYLE) {
 			this.htmlSnippet += '<li id="' + this.list[i] + '" ' + this.listStyle + '>' + this.list[i] + '</li>';
 		} else {
@@ -45,6 +45,11 @@ SelectList.prototype.addElement = function(listElement) {
 	this.list.push(listElement);
 	this.setHTML();
 };
+
+SelectList.prototype.rebuildWithArray = function(list) {
+	this.list = list;
+	this.setHTML();
+}
 
 //Set jquery ui selectable
 SelectList.prototype.setOnSelect = function (onSelectFunction) {

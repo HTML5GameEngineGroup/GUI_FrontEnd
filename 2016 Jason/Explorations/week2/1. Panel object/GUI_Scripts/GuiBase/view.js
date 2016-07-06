@@ -63,6 +63,7 @@ $( document ).ready(function() {
 	rightPanel.setFirstTabActive();
 	
 	onWindowResize();
+	gGuiBase.Core.initializeInitialScene();
 	
 	$( window ).resize(function() {
 		onWindowResize();

@@ -29,8 +29,8 @@ SceneTransformContent.prototype.onTextFieldFocusOut = function() {
 	//Can do all the handling for changing game object here
 };
 
-SceneTransformContent.prototype.updateFields = function(  scene ) {
-
+SceneTransformContent.prototype.updateFields = function(scene) {
+	console.log(scene);
 	this.objectName.setText(scene.mName);
 
 };

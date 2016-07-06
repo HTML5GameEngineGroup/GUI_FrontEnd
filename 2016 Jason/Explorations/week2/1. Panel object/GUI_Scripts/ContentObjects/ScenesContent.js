@@ -18,8 +18,7 @@ ScenesContent.prototype.initialize = function () {
 	this.sceneAddButton = new Button("sceneAddButton", GuiTabContent.NO_STYLE, "+Scene");
 	this.widgetList.push(this.sceneAddButton);
 	
-	var testArray = ["list1", "list2", "list3"];
-	this.sceneSelectList = new SelectList(this.selectListID, 'list-style-type: none; margin: 0; padding: 0', testArray, 'display: inline; margin: 5px');
+	this.sceneSelectList = new SelectList(this.selectListID, 'list-style-type: none; margin: 0; padding: 0', [], 'display: inline; margin: 5px');
 	
 	this.widgetList.push(this.sceneSelectList);
 
@@ -33,34 +32,15 @@ ScenesContent.prototype.initializeEventHandling = function () {
 };
 
 ScenesContent.prototype.buttonOnClick = function() {
-	var list = gGuiBase.View.findWidgetByID("#sceneSelectList1");
-	/*var newObjID = gGameCore.createDefaultObject();
-	var newObj = gGameCore.getObject(newObjID);
-	console.log("get object by id: " + newObj);
-	var objList = gGameCore.getSceneList(); // list is just the 1 object, [[OBJ, CODE, TYPE], ...] why type?
-	var i;
-	for (i = 0; i < objList.length; i++) {
-		var curObj = objList[0];
-		
-	}
-	console.log("Scene List:" + objList);
-	list.addElement(newObjID);*/
-	gGuiBase.View.refreshAllTabContent();
+	gGuiBase.Core.addDefaultScene();
 };
 
-ScenesContent.prototype.onListSelect = function(event, ui, theThis) {
-	//todo: Clean this code up, move over needed functions from GameCore to Game.View
-	// DEBUG CODE TO FIGURE OUT WHAT THESE OBJECTS ARE
-	// console.log("event, ui, thethis, this");
-	// console.log(event, ui, theThis, this);
-
+ScenesContent.prototype.onListSelect = function(ui) {
+	
 	// get objectName/objectID
 	console.log(ui["selected"]["id"]);
-	var selectedObjectName = ui["selected"]["id"];
-
-	// send this info to Details panel have it update with it...
-	var selectedObject = gGameCore.getObject(selectedObjectName);
-	console.log(selectedObject.getXform());
+	var selectedSceneName = ui["selected"]["id"];
+	gGuiBase.Core.selectDetailsScene( selectedSceneName );
 
 
 	//todo: use this function to populate the details panel

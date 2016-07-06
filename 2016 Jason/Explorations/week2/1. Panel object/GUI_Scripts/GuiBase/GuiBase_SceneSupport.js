@@ -8,7 +8,20 @@ gGuiBase.SceneSupport = (function() {
     var mNextSceneID = 0;
     
 	mSceneList.push(gCurrentScene);
-    //gEngine.Core.initializeEngineCore('GLCanvas', gCurrentScene);
+    gEngine.View.initializeEngineCore('GLCanvas', gCurrentScene);
+	
+	
+	var selectScene = function(index) {
+		gEngine.GameLoop.stop();
+		if (index !== null) {
+			gCurrentScene = mSceneList[index];
+			gEngine.View.startScene(gCurrentScene);
+		} else {
+			this.runBlankScene();
+		}
+		return gCurrentScene;
+	};
+	
 	
     // returns true if name is already in use
     var checkForNameConflict = function(name) {
@@ -26,7 +39,7 @@ gGuiBase.SceneSupport = (function() {
     var createDefaultScene = function() {
 		// Create a default scene with a default name.  It becomes the selected scene.
 		var scene = new ClientScene(mNextSceneID);
-		while (checkForNameConflictScene(scene.mName)) {
+		while (checkForNameConflict(scene.mName)) {
 			mNextSceneID++; // This has not been incremented yet so do it here.  After this method is over, + Scene will increment it to a unique value.
 			scene.mName = "Scene" + mNextSceneID;
 		}
@@ -78,13 +91,42 @@ gGuiBase.SceneSupport = (function() {
 		return gCurrentScene;
 	};*/
 	
+	var runBlankScene = function() {
+		var blank = new ClientScene(-1);
+		gCurrentScene = blank;
+		blank.mName = "";
+		blank.mID = "sceneListItemBlank";
+		gEngine.Core.startScene(blank);
+		blank.mAllCamera[1] = new Camera(
+			vec2.fromValues(20,60),   // position of the camera
+			50,                        // width of camera
+			[0,0,640,480]        // viewport (orgX, orgY, width, height)
+		);
+		blank.mAllCamera[1].setBackgroundColor([77.0/256, 73.0/256, 72.0/256, 1]); // That's #4d4948, the background color
+	};
+
+	var selectSceneByName = function(name) {
+		// Select the scene at the index and run it too
+		gEngine.GameLoop.stop();
+		if (name !== null) {
+			gCurrentScene = getSceneByName(name);
+			gEngine.View.startScene(gCurrentScene);
+		} else {
+			runBlankScene();
+		}
+		return gCurrentScene;
+	};
+	
+	
+	
+	
     var getSceneByName = function( name ) {
         var result = null;
 		var i;
-		for (i = 0; i < this.mSceneList.length; i++) {
-			if (this.mSceneList[i].mName === name) {
-				result = this.mSceneList[i];
-				i = this.mSceneList.length; // Break
+		for (i = 0; i < mSceneList.length; i++) {
+			if (mSceneList[i].mName === name) {
+				result = mSceneList[i];
+				i = mSceneList.length; // Break
 			}
 		}
 		return result;
@@ -93,12 +135,24 @@ gGuiBase.SceneSupport = (function() {
     var getSceneList = function() {
         return mSceneList;
     };
+	
+	var getSceneListNames = function() {
+		var nameArray = [];
+		for (i = 0; i < mSceneList.length; i++) {
+			nameArray.push(mSceneList[i].mName);
+		}
+		return nameArray;
+	}
 
     var mPublic = {
+		gCurrentScene: gCurrentScene,
         createDefaultScene: createDefaultScene,
         checkForNameConflict: checkForNameConflict,
         getSceneList: getSceneList,
         getSceneByName: getSceneByName,
+		getSceneListNames: getSceneListNames,
+		selectSceneByName, selectSceneByName,
+		selectScene: selectScene,
 
     };
     return mPublic;
