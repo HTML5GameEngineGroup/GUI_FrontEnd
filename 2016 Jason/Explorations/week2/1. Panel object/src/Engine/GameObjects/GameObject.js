@@ -30,7 +30,7 @@ function GameObject(renderableObj) {
     this.mCollisionPixelFlag = false;
     this.mCollisionSet = null;
     this.start();
-    gCurrentScene.mAllObject.push(this);
+    gGuiBase.SceneSupport.gCurrentScene.mAllObject.push(this);
     this.mLayer=2;
     gEngine.LayerManager.addToLayer(gEngine.eLayer.eActors, this);
 }

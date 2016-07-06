@@ -77,6 +77,8 @@ gGuiBase.Core = (function() {
 		var camera = gGuiBase.CameraSupport.getCameraByName(cameraName);
 		detailsTransform.updateFields(camera);
 	
+		console.log(gGuiBase.SceneSupport.getSceneList());
+		
 		detailsTab.addContent(detailsTransform);
 		detailsTab.addContent(detailsColorTexture);
 		gGuiBase.View.refreshAllTabContent();
