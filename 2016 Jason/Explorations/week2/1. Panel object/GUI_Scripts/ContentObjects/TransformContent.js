@@ -159,6 +159,8 @@ TransformContent.prototype.onTextFieldFocusOut = function(textField) {
 			break;
 		case "gameObjectRotationField":
 			xform.setRotationInDegree(value);
+			$("#gameObjectRotationSlider").slider( "value", value);
+			
 			break;
 		default:
 			break;
@@ -196,7 +198,7 @@ TransformContent.prototype.updateFields = function( gameObject ) {
 	this.objectH.setText( xf.getHeight() );
 	
 	this.rotationField.setText(xf.getRotationInDegree());
-	this.rotationSlider.setValue(xf.getRotationInDegree());
+	$("#gameObjectRotationSlider").slider("value", xf.getRotationInDegree());
 	
 
 	// rotation is not implemented yet in the object
