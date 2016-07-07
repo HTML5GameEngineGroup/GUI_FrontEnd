@@ -76,8 +76,58 @@ CameraTransformContent.prototype.initializeEventHandling = function () {
 
 };
 
-CameraTransformContent.prototype.onTextFieldFocusOut = function() {
+CameraTransformContent.prototype.onTextFieldFocusOut = function(textField) {
+	var value = textField.val();
+	var camera = gGuiBase.Core.selectedCamera;
+	var center = camera.getWCCenter();
+	var viewport = camera.getViewport();
 	
+	switch(textField.attr("id")) {
+		case "cameraNameField":
+			if (value == camera.mName) break;
+			
+			if (!gGuiBase.CameraSupport.checkForNameConflict(textField.val())) {
+				camera.mName = textField.val();
+				gGuiBase.Core.reinitializeCameraTab();
+				gGuiBase.Core.selectDetailsCamera(camera.mName);
+			} else {
+				$(this).val(gLastSetName);
+				alert("Names must be unique.");
+			}
+
+			break;
+		case "wcx":
+			camera.setWCCenter(value, center[1]);
+			break;
+		case "wcy":
+			camera.setWCCenter(center[0], value);
+			break;
+		case "wcw":
+			camera.setWCWidth(value);
+			break;
+		case "viewportX":
+			var vp2 = [value, viewport[1], viewport[2], viewport[3]];
+			camera.setViewport(vp2);
+			camera.mViewport = vp2;
+			break;
+		case "viewportY":
+			var vp2 = [viewport[0], value, viewport[2], viewport[3]];
+			camera.setViewport(vp2);
+			camera.mViewport = vp2;
+			break;
+		case "viewportW":
+			var vp2 = [viewport[0], viewport[1], value, viewport[3]];
+			camera.setViewport(vp2);
+			camera.mViewport = vp2;
+			break;
+		case "viewportH":
+			var vp2 = [viewport[0], viewport[1], viewport[2], value];
+			camera.setViewport(vp2);
+			camera.mViewport = vp2;
+			break;
+		default:
+			break;
+	};
 };
 
 CameraTransformContent.prototype.updateFields = function( camera ) {

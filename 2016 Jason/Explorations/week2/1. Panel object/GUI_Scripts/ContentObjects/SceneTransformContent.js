@@ -29,9 +29,12 @@ SceneTransformContent.prototype.onTextFieldFocusOut = function(textField) {
 	var gLastSetName = textField.val();
 	var scene = gGuiBase.SceneSupport.gCurrentScene;
 	
+	if (textField.val() == scene.mName) return;
+	
 	if (!gGuiBase.SceneSupport.checkForNameConflict(textField.val())) {
 		scene.mName = textField.val();
 		gGuiBase.Core.reinitializeSceneTab();
+		gGuiBase.Core.selectDetailsScene(scene.mName);
 	} else {
 		$(this).val(gLastSetName);
 		alert("Names must be unique.");
