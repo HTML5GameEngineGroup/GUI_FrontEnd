@@ -19,13 +19,13 @@ DropdownList.prototype.setHTML = function() {
 	} else {
 		this.htmlSnippet = '<select id="' + this.widgetID + '">';
 	}
-	
+
 	//Add each list element as an <option> tag
 	for (var i = 0; i < this.list.length; i++) {
 		this.htmlSnippet += '<option id="' + this.list[i] + '">' + this.list[i] + '</option>';
 	}
 	
-	this.htmlSnippet += '</ul>';
+	this.htmlSnippet += '</select>';
 };
 
 DropdownList.prototype.addElement = function(listElement) {
@@ -38,4 +38,8 @@ DropdownList.prototype.setOnSelect = function (onSelectFunction) {
 	$(this.getID()).change(function() {
 		onSelectFunction($(this).val());
 	});
+};
+
+DropdownList.prototype.getSelectedListItem = function () {
+	return $('#' + this.widgetID + ' option').filter(':selected').text();
 };

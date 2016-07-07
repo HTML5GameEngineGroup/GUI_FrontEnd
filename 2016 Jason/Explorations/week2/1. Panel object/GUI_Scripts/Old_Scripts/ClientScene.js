@@ -103,7 +103,7 @@ ClientScene.prototype.update = function() {
     if (gRunning) {
         for (i = 0; i < this.mInstanceList.length; i++) {
             if (this.mInstanceList[i] instanceof GameObject) {
-                if (this.mInstanceList[i].mDestroy) {
+                if (this.mInstanceList[i].mDestroy) { // uses this variable to destroy from external pointer
                     this.mInstanceList.splice(i, 1);
                     i--;
                 } else {
@@ -128,8 +128,22 @@ ClientScene.prototype.getCameraList = function() {
     return this.mAllCamera;
 };
 
+ClientScene.prototype.getInstance = function ( instID ) {
+    
+};
+
 ClientScene.prototype.getInstanceList = function() {
     return this.mInstanceList;
+};
+
+ClientScene.prototype.getInstanceNameList = function() {
+    var instanceNames = [];
+    for (var instance in this.mInstanceList) {
+        if (instance instanceof GameObject && !instance.mDestroy) { // i dont think this will be required
+            instanceNames.push(instance.mID);
+        }
+    }
+    return instanceNames;
 };
 
 ClientScene.prototype.collision = function() {

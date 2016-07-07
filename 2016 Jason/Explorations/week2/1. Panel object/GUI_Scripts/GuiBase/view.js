@@ -20,7 +20,10 @@ $( document ).ready(function() {
 	camerasTab.addContent(cameraContent);
 	
 	var instancesTab = new GuiPanelTab("Instances");
+	var instancesContent = new InstanceContent("InstancesContent");
+	instancesTab.addContent(instancesContent);
 	bottomPanel.addTab(instancesTab);
+	
 	
 	//Create left panel and tabs
     panelID = "#panelLeft";

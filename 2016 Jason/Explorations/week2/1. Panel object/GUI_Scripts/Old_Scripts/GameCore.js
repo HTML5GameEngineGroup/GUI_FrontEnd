@@ -157,8 +157,9 @@ GameCore.prototype.deleteObjectAt = function(index) {
 
 // get object by its ID
 GameCore.prototype.getObject = function(objID) {
-    // Returns the object at an index WITHOUT SELECTING IT
-    return this.mGO[objID][0];
+    var obj = this.mGO[objID][0]
+    if (obj === undefined) throw objID + " has not been created";
+    else return obj;
 };
 
 GameCore.prototype.select = function(index) {

@@ -2,15 +2,8 @@
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.Core = (function() {
-	var initializeInitialScene = function() {
-		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
-		gGuiBase.SceneSupport.selectScene(0);
-		
-		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
-		gGuiBase.View.refreshAllTabContent();
-	};
-	
-    // Adds a default gameObject to the Object Tab and updates detail tab with this object
+	// ************* OBJECT SUPPORT ****************
+	// Adds a default gameObject to the Object Tab and updates detail tab with this object
     var addDefaultObject = function () {
         var newObjID = gGuiBase.ObjectSupport.createDefaultObject();                    // create new gameObj
         //todo: abstract this to a content function call
@@ -18,6 +11,11 @@ gGuiBase.Core = (function() {
         this.selectDetailsObject( newObjID );                                           // select this object in details
         gGuiBase.View.refreshAllTabContent();                                           // refresh panel
     };
+	
+	// gets a list of names of all the objects
+	var getObjectList = function() {
+		return gGuiBase.ObjectSupport.getObjectList();
+	};
 	
 	var addDefaultScene = function() {
 		var newScene = gGuiBase.SceneSupport.createDefaultScene();
@@ -52,7 +50,16 @@ gGuiBase.Core = (function() {
 		//transformContent.updateFields(gameObject);
         gGuiBase.View.refreshAllTabContent();                                           // refresh panel
     };
-	
+
+	// ************* SCENE SUPPORT ****************
+	var initializeInitialScene = function() {
+		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
+		gGuiBase.SceneSupport.selectScene(0);
+
+		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
+		gGuiBase.View.refreshAllTabContent();
+	};
+
 	var selectDetailsScene = function (sceneName) {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		detailsTab.clearContent();
@@ -67,7 +74,8 @@ gGuiBase.Core = (function() {
 		gGuiBase.View.refreshAllTabContent();
 
 	};
-	
+
+	// ************* CAMERA SUPPORT ****************
 	var selectDetailsCamera = function (cameraName) {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		detailsTab.clearContent();
@@ -76,7 +84,7 @@ gGuiBase.Core = (function() {
 		
 		var camera = gGuiBase.CameraSupport.getCameraByName(cameraName);
 		detailsTransform.updateFields(camera);
-	
+
 		console.log(gGuiBase.SceneSupport.getSceneList());
 		
 		detailsTab.addContent(detailsTransform);
@@ -95,6 +103,21 @@ gGuiBase.Core = (function() {
 		detailsTab.clearContent();
 	};
 
+	// ************* INSTANCE SUPPORT ****************
+	var addInstance = function () {
+		// var instanceTab = gGuiBase.View.findTabByID("#Instances");
+		// gGuiBase.View.findTabContentByID("#TransformContent")
+		// instanceTab.clearContent();
+		// instanceTab.initialize();
+		var objName = gGuiBase.View.findTabContentByID("#InstancesContent").getDropdownObjectName();
+		var instName = gGuiBase.InstanceSupport.createInstanceOfObj( objName );
+		//todo: add instance to scene here
+		gGuiBase.View.findWidgetByID("#instanceSelectList")
+			.rebuildWithArray(gGuiBase.SceneSupport.gCurrentScene.getInstanceNameList());//redo this with instancesupport
+		gGuiBase.View.refreshAllTabContent();
+		console.log('add instances');
+	};
+	
     var inheritPrototype = function (subClass, superClass) {
         var prototype = Object.create(superClass.prototype);
         prototype.constructor = subClass;
@@ -104,12 +127,17 @@ gGuiBase.Core = (function() {
     var mPublic = {
         addDefaultObject: addDefaultObject,
         selectDetailsObject: selectDetailsObject,
+		getObjectList: getObjectList,
+
 		addDefaultScene: addDefaultScene,
 		selectDetailsScene: selectDetailsScene,
 		initializeInitialScene: initializeInitialScene,
+
 		addDefaultCamera: addDefaultCamera,
 		selectDetailsCamera: selectDetailsCamera,
 		reinitializeCameraTab: reinitializeCameraTab,
+		
+		addInstance: addInstance,
 		
         inheritPrototype: inheritPrototype
     };
