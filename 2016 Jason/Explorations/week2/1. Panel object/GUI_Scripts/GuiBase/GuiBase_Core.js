@@ -101,6 +101,12 @@ gGuiBase.Core = (function() {
 	var reinitializeCameraTab = function() {
 		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
 		gGuiBase.View.refreshAllTabContent();
+		
+	};
+	
+	var reinitializeSceneTab = function() {
+		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
+		gGuiBase.View.refreshAllTabContent();
 	};
 	
 	var emptyDetailsTab = function () {
@@ -141,6 +147,7 @@ gGuiBase.Core = (function() {
 		addDefaultCamera: addDefaultCamera,
 		selectDetailsCamera: selectDetailsCamera,
 		reinitializeCameraTab: reinitializeCameraTab,
+		reinitializeSceneTab: reinitializeSceneTab,
 		
 		addInstance: addInstance,
 		

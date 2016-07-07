@@ -25,8 +25,18 @@ SceneTransformContent.prototype.initializeEventHandling = function () {
 	this.objectName.setOnFocusOut(this.onTextFieldFocusOut);
 };
 
-SceneTransformContent.prototype.onTextFieldFocusOut = function() {
-	//Can do all the handling for changing game object here
+SceneTransformContent.prototype.onTextFieldFocusOut = function(textField) {
+	var gLastSetName = textField.val();
+	var scene = gGuiBase.SceneSupport.gCurrentScene;
+	
+	if (!gGuiBase.SceneSupport.checkForNameConflict(textField.val())) {
+		scene.mName = textField.val();
+		gGuiBase.Core.reinitializeSceneTab();
+	} else {
+		$(this).val(gLastSetName);
+		alert("Names must be unique.");
+		
+	}
 };
 
 SceneTransformContent.prototype.updateFields = function(scene) {
