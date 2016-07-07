@@ -36,7 +36,7 @@ TransformContent.prototype.initialize = function () {
 	
 	this.rotationText = new Text("gameObjectRotationText", textStyle, "Rotation");
 	this.rotationField = new TextField("gameObjectRotationField", textFieldStyle, "0");
-	this.rotationSlider = new Slider("gameObjectRotationSlider", sliderStyle);
+	this.rotationSlider = new Slider("gameObjectRotationSlider", sliderStyle, 360);
 	
 	this.widgetList.push(this.objectNameText);
 	this.widgetList.push(this.objectName);
@@ -168,13 +168,19 @@ TransformContent.prototype.onTextFieldFocusOut = function(textField) {
 };
 
 TransformContent.prototype.onSliderChange = function(sliderValue) {
+	var gameObject = gGuiBase.Core.selectedGameObject;
+	var xform = gameObject.getXform();
+	
+	xform.setRotationInDegree(sliderValue);
+	var rotationField = gGuiBase.View.findWidgetByID("#gameObjectRotationField");
+	rotationField.setText(sliderValue);
 	
 };
 
 TransformContent.prototype.updateFields = function( gameObject ) {
 	//update these widgets...
 	// set name field
-	console.log( gameObject );
+	//console.log( gameObject );
 	this.objectName.setText( gameObject.mID );
 	
 	// set x form
@@ -189,7 +195,9 @@ TransformContent.prototype.updateFields = function( gameObject ) {
 	this.objectW.setText( xf.getWidth() );
 	this.objectH.setText( xf.getHeight() );
 	
-	this.rotationField.setText( xf.getRotationInDegree());
+	this.rotationField.setText(xf.getRotationInDegree());
+	this.rotationSlider.setValue(xf.getRotationInDegree());
+	
 
 	// rotation is not implemented yet in the object
 	// this.rotationText = new Text("gameObjectRotationText", textStyle, "Rotation");

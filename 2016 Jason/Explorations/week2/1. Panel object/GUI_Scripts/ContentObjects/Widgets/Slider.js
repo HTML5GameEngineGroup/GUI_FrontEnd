@@ -2,7 +2,8 @@
 //	Slider widget extending GuiContentWidget
 //	Author: Jason Herold/Thoof
 -----------------------------------------------------------------------------*/
-function Slider(sliderID, style) {
+function Slider(sliderID, style, maxValue) {
+	this.maxValue = maxValue;
 	GuiContentWidget.call(this, sliderID, style);
 }
 
@@ -24,6 +25,7 @@ Slider.prototype.setHTML = function() {
 Slider.prototype.setOnSliderChange = function (onSliderChangeFunction) {
 	$(this.getID()).slider({
 		orientation: "horizontal", //Horizontal slider only, may need to change
+		max: this.maxValue,
 		slide: function(event, ui) {
 			onSliderChangeFunction(ui.value);
 		},
@@ -31,4 +33,8 @@ Slider.prototype.setOnSliderChange = function (onSliderChangeFunction) {
 			onSliderChangeFunction(ui.value);
 		}
 	});
+};
+
+Slider.prototype.setValue = function(value) {
+	$(this.sliderID).slider("value", value);
 };

@@ -47,11 +47,11 @@ $( document ).ready(function() {
     var rightPanel = new GuiPanel(panelID, GuiPanelType.RIGHT);
 	var detailsTab = new GuiPanelTab("Details");
 	
-	var detailsTransform = new TransformContent("TransformContent", contentStyle, "Transform");
-	var detailsColorTexture = new ColorTextureContent("ColorTextureContent", contentStyle, "Texture");
+	//var detailsTransform = new TransformContent("TransformContent", contentStyle, "Transform");
+	//var detailsColorTexture = new ColorTextureContent("ColorTextureContent", contentStyle, "Texture");
 	rightPanel.addTab(detailsTab);
-	detailsTab.addContent(detailsTransform);
-	detailsTab.addContent(detailsColorTexture);
+	//detailsTab.addContent(detailsTransform);
+	//detailsTab.addContent(detailsColorTexture);
 	
 	//Would have to do this for each tab we want to have collapsible elements
 	//tabContentAccordion(detailsTab.getID());
