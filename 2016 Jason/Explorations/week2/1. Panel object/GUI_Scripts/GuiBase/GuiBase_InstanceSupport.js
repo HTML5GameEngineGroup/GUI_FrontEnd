@@ -19,11 +19,25 @@ gGuiBase.InstanceSupport = (function() {
             mNextInstID++;
             instName = objName + "[" + mNextInstID + "]";
         }
-        mInst[ instName ] = jQuery.extend(true, {}, GO); // prolly have to use eval
-        
-        // GO.mCurrentFrontDir[0] = 20;
-        // console.log(GO.mCurrentFrontDir);
-        // console.log(mInst[ instName ].mCurrentFrontDir);
+
+        var inst;
+        eval("inst = new " + objName + "(new Renderable());");
+
+        // copy xform from gameObject
+        var instanceXf = inst.getXform();
+        var GOXf = GO.getXform();
+        instanceXf.setXPos(GOXf.getXPos());
+        instanceXf.setYPos(GOXf.getYPos());
+        instanceXf.setWidth(GOXf.getWidth());
+        instanceXf.setHeight(GOXf.getHeight());
+        instanceXf.setRotationInDegree(GOXf.getRotationInDegree());
+
+        var rend = inst.getRenderable();
+        rend.setColor(GO.getRenderable().getColor());
+        inst.mID = instName;
+        inst.mName = instName;
+
+        mInst[instName] = inst;
         return instName;
     };
 
