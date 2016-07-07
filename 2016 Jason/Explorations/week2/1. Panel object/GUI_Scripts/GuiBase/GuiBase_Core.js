@@ -12,6 +12,7 @@ gGuiBase.Core = (function() {
         //todo: abstract this to a content function call
         gGuiBase.View.findWidgetByID("#objectSelectList1").addElement( newObjID );      // add to obj panel
         this.selectDetailsObject( newObjID );                                           // select this object in details
+		gGuiBase.View.findWidgetByID("#instanceDropdown").addElement( newObjID );		// add object to instance drop
         gGuiBase.View.refreshAllTabContent();                                           // refresh panel
     };
 	
@@ -22,7 +23,6 @@ gGuiBase.Core = (function() {
 	
 	var addDefaultScene = function() {
 		var newScene = gGuiBase.SceneSupport.createDefaultScene();
-
 		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
 		this.selectDetailsScene(newScene.mName);
 		gGuiBase.View.refreshAllTabContent();
@@ -116,17 +116,13 @@ gGuiBase.Core = (function() {
 
 	// ************* INSTANCE SUPPORT ****************
 	var addInstance = function () {
-		// var instanceTab = gGuiBase.View.findTabByID("#Instances");
-		// gGuiBase.View.findTabContentByID("#TransformContent")
-		// instanceTab.clearContent();
-		// instanceTab.initialize();
-		var objName = gGuiBase.View.findTabContentByID("#InstancesContent").getDropdownObjectName();
-		var instName = gGuiBase.InstanceSupport.createInstanceOfObj( objName );
-		//todo: add instance to scene here
-		gGuiBase.View.findWidgetByID("#instanceSelectList")
-			.rebuildWithArray(gGuiBase.SceneSupport.gCurrentScene.getInstanceNameList());//redo this with instancesupport
+		var objName = gGuiBase.View.findTabContentByID("#InstancesContent").getDropdownObjectName();	// get object selected by dropdown
+		if (objName == "") return;																		// dont add if no object selected
+		var instName = gGuiBase.InstanceSupport.createInstanceOfObj( objName );							// create an instance of the object
+		gGuiBase.View.findWidgetByID("#instanceSelectList").addElement( instName );      				// add instance to instance content
+		var inst = gGuiBase.InstanceSupport.getInstanceByID( instName );								// add instance to current scene
+		gGuiBase.SceneSupport.gCurrentScene.addInstance( inst );
 		gGuiBase.View.refreshAllTabContent();
-		console.log('add instances');
 	};
 	
     var inheritPrototype = function (subClass, superClass) {

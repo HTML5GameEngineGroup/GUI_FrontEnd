@@ -15,12 +15,12 @@ function InstanceContent(tabContentID, style, title) {
     this.objDropdownSelectorID = "instanceDropdown";
     GuiTabContent.call(this, tabContentID, style, title);
 }
-
 gGuiBase.View.inheritPrototype(InstanceContent, GuiTabContent);
 
 InstanceContent.prototype.initialize = function () {
     this.dropdownList = gGuiBase.Core.getObjectList();
-    this.objInstanceSelecter = new DropdownList(this.objDropdownSelectorID, GuiTabContent.NO_STYLE, ['test1', 'test2', 'test3']);
+    console.log(this.dropdownList);
+    this.objInstanceSelecter = new DropdownList(this.objDropdownSelectorID, GuiTabContent.NO_STYLE, this.dropdownList);
     this.widgetList.push(this.objInstanceSelecter);
     console.log("after push select list");
     this.instanceAddButton = new Button("instanceAddButton", GuiTabContent.NO_STYLE, "+Instance");

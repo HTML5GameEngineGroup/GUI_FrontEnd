@@ -13,15 +13,17 @@ gGuiBase.InstanceSupport = (function() {
 
     // creates a defaultObject and returns its name
     var createInstanceOfObj = function( objName ) {
-        var obj = gGuiBase.ObjectSupport.getGameObjectByID( objName );
-        var instName = objName + mNextInstID;
+        var GO = gGuiBase.ObjectSupport.getGameObjectByID( objName );
+        var instName = objName + "[" + mNextInstID + "]";
         while (checkForNameConflict(instName)) {
             mNextInstID++;
-            instName = objName + mNextInstID;
+            instName = objName + "[" + mNextInstID + "]";
         }
-        mInst[ instName ] = new {JSON.parse(JSON.stringify(obj))}; // prolly have to use eval
-        console.log('instname: ' + instName);
-        console.log(mInst[ instName ]);
+        mInst[ instName ] = jQuery.extend(true, {}, GO); // prolly have to use eval
+        
+        // GO.mCurrentFrontDir[0] = 20;
+        // console.log(GO.mCurrentFrontDir);
+        // console.log(mInst[ instName ].mCurrentFrontDir);
         return instName;
     };
 
