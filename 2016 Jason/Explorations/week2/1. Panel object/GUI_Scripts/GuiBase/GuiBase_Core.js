@@ -2,6 +2,9 @@
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.Core = (function() {
+	var selectedGameObject = null;
+	var selectedCamera = null;
+	
 	// ************* OBJECT SUPPORT ****************
 	// Adds a default gameObject to the Object Tab and updates detail tab with this object
     var addDefaultObject = function () {
@@ -41,6 +44,7 @@ gGuiBase.Core = (function() {
 		var detailsColorTexture = new ColorTextureContent("ColorTextureContent", gGuiBase.View.CONTENT_STYLE, "Texture");
 		
 		var gameObject = gGuiBase.ObjectSupport.getGameObjectByID( objName );           // get gameObj
+		gGuiBase.Core.selectedGameObject = gameObject;
 		detailsTransform.updateFields(gameObject);
 		
 		detailsTab.addContent(detailsTransform);
@@ -84,6 +88,7 @@ gGuiBase.Core = (function() {
 		
 		var camera = gGuiBase.CameraSupport.getCameraByName(cameraName);
 		detailsTransform.updateFields(camera);
+		gGuiBase.Core.selectedCamera = camera;
 
 		console.log(gGuiBase.SceneSupport.getSceneList());
 		
@@ -139,7 +144,10 @@ gGuiBase.Core = (function() {
 		
 		addInstance: addInstance,
 		
-        inheritPrototype: inheritPrototype
+        inheritPrototype: inheritPrototype,
+		
+		selectedGameObject: selectedGameObject,
+		selectedCamera: selectedCamera
     };
     return mPublic;
 

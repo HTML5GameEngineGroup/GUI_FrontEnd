@@ -28,7 +28,7 @@ TextField.prototype.setHTML = function() {
 
 TextField.prototype.setOnFocusOut = function (onFocusOutFunction) {
 	$(this.getID()).focusout(function() {
-		onFocusOutFunction();
+		onFocusOutFunction($(this));
 	})
 };
 

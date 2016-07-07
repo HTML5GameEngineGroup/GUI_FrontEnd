@@ -58,12 +58,113 @@ TransformContent.prototype.initializeEventHandling = function () {
 	this.objectY.setOnFocusOut(this.onTextFieldFocusOut);
 	this.objectW.setOnFocusOut(this.onTextFieldFocusOut);
 	this.objectH.setOnFocusOut(this.onTextFieldFocusOut);
+	this.rotationField.setOnFocusOut(this.onTextFieldFocusOut);
 	
 	this.rotationSlider.setOnSliderChange(this.onSliderChange);
 };
 
-TransformContent.prototype.onTextFieldFocusOut = function() {
+TransformContent.prototype.onTextFieldFocusOut = function(textField) {
 	//Can do all the handling for changing game object here
+	
+	var gameObject = gGuiBase.Core.selectedGameObject;
+	var value = textField.val();
+	var xform = gameObject.getXform();
+	
+	switch(textField.attr("id")) {
+		case "gameObjectNameField":
+			/*var gLastSetName = textField.val();
+			
+			if (gLastSetName !== gameObject.mName) { // If the name is new
+                if (!gGameCore.checkForNameConflict(gLastSetName)) {
+                    // Create a new class with the new name
+                    
+					window[gLastSetName] = function(renderableObj) {
+						GameObject.call(this, renderableObj);
+					};
+                    gEngine.Core.inheritPrototype(window[gLastSetName], GameObject);
+                    
+                    // Re-eval any class code
+                    var i;
+                    var objs = gGuiBase.Core.getObjectList();
+                    for (i = 0; i < objs.length; i++) {
+                        if (objs[i][0].mName === selected[0].mName) {
+                            eval(objs[i][1]);
+                        }
+                    }
+                    
+                    // First update all instances with the new name and class
+                    var instances = gGameCore.getInstanceList();
+                    for (i = 0; i < instances.length; i++) {
+                        if (instances[i].mName === selected[0].mName) {
+                            // Each instance needs to be re-created exactly as the old one, but as a new class
+                            // They also need their name value modified
+                            var rend = instances[i].getRenderable();
+                            var xf = instances[i].getXform();
+                            var newInstance;
+                            eval("newInstance = new " + gLastSetName + "(rend);");
+                            newInstance.mID = instances[i].mID;
+                            var newXf = newInstance.getXform();
+                            newXf = xf;
+                            instances[i] = newInstance;
+                            instances[i].mName = $(this).val();
+                        }
+                    }
+                    if ($('#panelBottomInstances').hasClass('current-tab')) {
+                        createPanelBottomInstances(); // Refresh only if open currently
+                    }
+                    
+                    // Now update the class itself, where the instances came from
+                    selected[0].mName = $(this).val();
+                    
+                    // Don't do anything with the code!  It isn't even updated yet.
+                    // The user NEEDS to update his/her own code to match the new name, then save it.
+                    // That save will add it to the system.
+                    
+                    // Update the bottom
+                    if ($('#panelBottomInstances').hasClass('current-tab')) {
+                        createPanelBottomInstancesSelect(selected[0].mName);
+                    }
+                    
+                    // Update the left panel
+                    createPanelLeftObjects();
+                    changeCurrentListItem(selected[0].mID);
+                    
+                    alert("Remember to update all your code to match the new class name.");
+                } else {
+                    alert("Names must be unique.");
+                    // Revert the name
+                    cleanUpPanelRightBody();
+                    if (!gRunning) {
+                        // No need to update the current list item color
+                        createDetailsObjects(selected[2]);
+                    }
+                    gLastSetName = selected[0].mName;
+                }
+            }*/
+		
+		
+		
+			break;
+		case "gameObjectXField":
+			xform.setXPos(value);
+			break;
+		case "gameObjectYField":
+			xform.setYPos(value);
+			break;
+		case "gameObjectWField":
+			xform.setWidth(value);
+			break;
+		case "gameObjectHField":
+			xform.setHeight(value);
+			break;
+		case "gameObjectRotationField":
+			xform.setRotationInDegree(value);
+			break;
+		default:
+			break;
+	}
+	
+	
 };
 
 TransformContent.prototype.onSliderChange = function(sliderValue) {
