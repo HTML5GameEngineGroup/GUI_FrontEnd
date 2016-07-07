@@ -172,8 +172,8 @@ TransformContent.prototype.onSliderChange = function(sliderValue) {
 	var xform = gameObject.getXform();
 	
 	xform.setRotationInDegree(sliderValue);
-	var rotationField = gGuiBase.View.findWidgetByID("#gameObjectRotationField");
-	rotationField.setText(sliderValue);
+	//var rotationField = gGuiBase.View.findWidgetByID("#gameObjectRotationField");
+	$("#gameObjectRotationField").attr("value", sliderValue);
 	
 };
 

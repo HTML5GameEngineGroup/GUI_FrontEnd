@@ -36,5 +36,6 @@ Slider.prototype.setOnSliderChange = function (onSliderChangeFunction) {
 };
 
 Slider.prototype.setValue = function(value) {
-	$(this.sliderID).slider("value", value);
+
+	$(this.sliderID).slider('option', 'value', value);
 };
