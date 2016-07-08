@@ -13,37 +13,27 @@ gGuiBase.InstanceSupport = (function() {
 
     // creates a defaultObject and returns its name
     var createInstanceOfObj = function( objName ) {
+        // get object and clone it
         var GO = gGuiBase.ObjectSupport.getGameObjectByID( objName );
+        var inst = gGuiBase.ObjectSupport.cloneGO( GO );
+        inst.mID = this.getUniqueID( objName );
+        // track new instance by id
+        mInst[inst.mID] = inst;
+        return inst.mID;
+    };
+
+    var getUniqueID = function ( objName ) {
         var instName = objName + "[" + mNextInstID + "]";
         while (checkForNameConflict(instName)) {
             mNextInstID++;
             instName = objName + "[" + mNextInstID + "]";
         }
-
-        var inst;
-        eval("inst = new " + objName + "(new Renderable());");
-
-        // copy xform from gameObject
-        var instanceXf = inst.getXform();
-        var GOXf = GO.getXform();
-        instanceXf.setXPos(GOXf.getXPos());
-        instanceXf.setYPos(GOXf.getYPos());
-        instanceXf.setWidth(GOXf.getWidth());
-        instanceXf.setHeight(GOXf.getHeight());
-        instanceXf.setRotationInDegree(GOXf.getRotationInDegree());
-
-        var rend = inst.getRenderable();
-        rend.setColor(GO.getRenderable().getColor());
-        inst.mID = instName;
-        inst.mName = instName;
-
-        mInst[instName] = inst;
         return instName;
     };
 
-    // names are id, names must be unique
-    var getInstanceByID = function( name ) {
-        return mInst[ name ];
+    // returns the instance with the ID instanceID
+    var getInstanceByID = function( instanceID ) {
+        return mInst[ instanceID ];
     };
 
     var getInstanceNameList = function() {
@@ -65,6 +55,7 @@ gGuiBase.InstanceSupport = (function() {
         createInstanceOfObj: createInstanceOfObj,
         getInstanceByID: getInstanceByID,
         getInstanceNameList: getInstanceNameList,
+        getUniqueID: getUniqueID,
         
         inheritPrototype: inheritPrototype
     };

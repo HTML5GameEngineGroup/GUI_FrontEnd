@@ -43,9 +43,8 @@ InstanceContent.prototype.onListSelect = function(ui) {
     // get objectName/objectID
     console.log(ui["selected"]["id"]);
     var selectedInstanceName = ui["selected"]["id"];
-    gGuiBase.core.selectInstanceDetails( selectedInstanceName );
+    gGuiBase.Core.selectInstanceDetails( selectedInstanceName );
 
-    //todo: use this function to populate the details panel
 };
 
 InstanceContent.prototype.getDropdownObjectName = function() {

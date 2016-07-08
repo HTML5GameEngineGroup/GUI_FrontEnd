@@ -76,7 +76,6 @@ gGuiBase.Core = (function() {
 		
 		detailsTab.addContent(detailsTransform);
 		gGuiBase.View.refreshAllTabContent();
-
 	};
 
 	// ************* CAMERA SUPPORT ****************
@@ -124,6 +123,22 @@ gGuiBase.Core = (function() {
 		// gGuiBase.SceneSupport.gCurrentScene.addInstance( inst );
 		gGuiBase.View.refreshAllTabContent();
 	};
+
+	var selectInstanceDetails = function ( instanceID ) {
+		var detailsTab = gGuiBase.View.findTabByID("#Details");
+		detailsTab.clearContent();
+		var detailsTransform = new TransformContent("TransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
+		var detailsColorTexture = new ColorTextureContent("ColorTextureContent", gGuiBase.View.CONTENT_STYLE, "Texture");
+
+		var inst = gGuiBase.InstanceSupport.getInstanceByID( instanceID );				// get instance
+		gGuiBase.Core.selectedGameObject = inst;										// set to selected so it can update from panel
+		detailsTransform.updateFields( inst );											// give details instance data
+
+		detailsTab.addContent(detailsTransform);
+		detailsTab.addContent(detailsColorTexture);
+
+		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
+	};
 	
     var inheritPrototype = function (subClass, superClass) {
         var prototype = Object.create(superClass.prototype);
@@ -146,6 +161,7 @@ gGuiBase.Core = (function() {
 		reinitializeSceneTab: reinitializeSceneTab,
 		
 		addInstance: addInstance,
+		selectInstanceDetails: selectInstanceDetails,
 		
         inheritPrototype: inheritPrototype,
 		

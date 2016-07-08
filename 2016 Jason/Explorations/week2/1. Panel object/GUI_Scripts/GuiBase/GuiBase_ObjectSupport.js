@@ -14,35 +14,58 @@ gGuiBase.ObjectSupport = (function() {
 
     // creates a defaultObject and returns its name
     var createDefaultObject = function() {
-        // todo: figure out why dexter didn't create a class and use it instead
-        var newObj;
-        // create new default name, this should be its own function
+        // create new default name
         var name = "GameObj" + mNextObjID;
         while (this.checkForNameConflict(name)) {
             mNextObjID++; // This has not been incremented yet so do it here.  After this method is over, + Object will increment it to a unique value.
             name = "GameObj" + mNextObjID;
         }
-
+        
+        // will be overwritten probably not needed
         window[name] = function(renderableObj) {
             GameObject.call(this, renderableObj);
         };
         gEngine.View.inheritPrototype(window[name], window["GameObject"]);
 		
 		var code = this.getDefaultCodeGO(name);
-        // Add code to system
+        // Add code to window
+        // dynamically create a new class which inherits from GameObject Class
         eval(code);
-        eval('newObj = new ' + name + '(new Renderable());');
+        // create a instance of this GO
+        var newGO;
+        eval('newGO = new ' + name + '(new Renderable());');
         // Make a default xform
-        var xf = newObj.getXform();                                             // set default transform
+        var xf = newGO.getXform();                                             // set default transform
         xf.setXPos(20);
         xf.setYPos(60);
         xf.setWidth(5);
         xf.setHeight(5);
-
-        newObj.mID = name;                                                      // set name
-        mGO[newObj.mID] = newObj;                                               // add to map
-        mGOCode[newObj.mID] = this.getDefaultCodeGO(newObj.mID);                // add code to code map
-        return newObj.mID;
+        newGO.mID = name;
+        newGO.mName = name;                                                    // object class name
+        mGO[newGO.mName] = newGO;                                               // add to map
+        mGOCode[newGO.mName] = this.getDefaultCodeGO(newGO.mName);                // add code to code map
+        return newGO.mName;
+    };
+    
+    var cloneGO = function ( gameObject ) {
+        var newGO;
+        eval('newGO = new ' + gameObject.mName + '(new Renderable());');
+        // Make a default xform
+        this.copyTransform(newGO, gameObject);
+        var rend = newGO.getRenderable();
+        rend.setColor(gameObject.getRenderable().getColor());
+        newGO.mName = name;                                                    // object class name
+        return newGO;
+    };
+    
+    var copyTransform = function ( targetGO, sourceGO ) {
+        var xf = targetGO.getXform();                                             // set default transform
+        var GOXf = sourceGO.getXform();
+        xf.setXPos(GOXf.getXPos());
+        xf.setYPos(GOXf.getYPos());
+        xf.setWidth(GOXf.getWidth());
+        xf.setHeight(GOXf.getHeight());
+        xf.setRotationInDegree(GOXf.getRotationInDegree());
     };
     
     // names are id, names must be unique
@@ -104,6 +127,8 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
     var mPublic = {
         createDefaultObject: createDefaultObject,
         checkForNameConflict: checkForNameConflict,
+        copyTransform: copyTransform,
+        cloneGO: cloneGO,
         getObjectList: getObjectList,
         getDefaultCodeGO: getDefaultCodeGO,
         getDefaultCodeClass: getDefaultCodeClass,
