@@ -182,29 +182,18 @@ TransformContent.prototype.onSliderChange = function(sliderValue) {
 TransformContent.prototype.updateFields = function( gameObject ) {
 	//update these widgets...
 	// set name field
-	//console.log( gameObject );
 	this.objectName.setText( gameObject.mID );
 	
 	// set x form
 	var xf = gameObject.getXform();
-
-	
-	console.log(xf);
 	this.objectX.setText( xf.getXPos() );
 	this.objectY.setText( xf.getYPos() );
-
 	// set width and height
 	this.objectW.setText( xf.getWidth() );
 	this.objectH.setText( xf.getHeight() );
 	
 	this.rotationField.setText(xf.getRotationInDegree());
 	$("#gameObjectRotationSlider").slider("value", xf.getRotationInDegree());
-	
-
-	// rotation is not implemented yet in the object
-	// this.rotationText = new Text("gameObjectRotationText", textStyle, "Rotation");
-	// this.rotationField = new TextField("gameObjectRotationField", textFieldStyle, "0");
-	// this.rotationSlider = new Slider("gameObjectRotationSlider", sliderStyle);
 };
 
 

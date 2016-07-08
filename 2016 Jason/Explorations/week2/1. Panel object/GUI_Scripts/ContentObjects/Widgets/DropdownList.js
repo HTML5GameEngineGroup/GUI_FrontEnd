@@ -22,7 +22,7 @@ DropdownList.prototype.setHTML = function() {
 
 	//Add each list element as an <option> tag
 	for (var i = 0; i < this.list.length; i++) {
-		this.htmlSnippet += '<option id="' + this.list[i] + '">' + this.list[i] + '</option>';
+		this.htmlSnippet += '<option value="' + this.list[i] + '">' + this.list[i] + '</option>';
 	}
 	
 	this.htmlSnippet += '</select>';

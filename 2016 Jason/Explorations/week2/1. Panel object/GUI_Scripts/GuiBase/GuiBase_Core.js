@@ -89,8 +89,6 @@ gGuiBase.Core = (function() {
 		detailsTransform.updateFields(camera);
 		gGuiBase.Core.selectedCamera = camera;
 
-		console.log(gGuiBase.SceneSupport.getSceneList());
-		
 		detailsTab.addContent(detailsTransform);
 		detailsTab.addContent(detailsColorTexture);
 		gGuiBase.View.refreshAllTabContent();
@@ -120,8 +118,9 @@ gGuiBase.Core = (function() {
 		var instName = gGuiBase.InstanceSupport.createInstanceOfObj( objName );							// create an instance of the object
 		gGuiBase.View.findWidgetByID("#instanceSelectList").addElement( instName );      				// add instance to instance content
 		var inst = gGuiBase.InstanceSupport.getInstanceByID( instName );								// add instance to current scene
-		// gGuiBase.SceneSupport.gCurrentScene.addInstance( inst );
+		gGuiBase.Core.selectInstanceDetails( instName );												// set details panel with instance info
 		gGuiBase.View.refreshAllTabContent();
+		gGuiBase.View.findTabContentByID('#InstancesContent').setDropdownToSelectedGO();
 	};
 
 	var selectInstanceDetails = function ( instanceID ) {

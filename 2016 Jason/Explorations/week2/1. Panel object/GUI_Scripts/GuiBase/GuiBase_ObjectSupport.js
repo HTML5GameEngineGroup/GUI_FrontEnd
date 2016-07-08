@@ -54,7 +54,7 @@ gGuiBase.ObjectSupport = (function() {
         this.copyTransform(newGO, gameObject);
         var rend = newGO.getRenderable();
         rend.setColor(gameObject.getRenderable().getColor());
-        newGO.mName = name;                                                    // object class name
+        newGO.mName = gameObject.mName;                                                    // object class name
         return newGO;
     };
     

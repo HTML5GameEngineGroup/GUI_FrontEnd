@@ -19,10 +19,9 @@ gGuiBase.View.inheritPrototype(InstanceContent, GuiTabContent);
 
 InstanceContent.prototype.initialize = function () {
     this.dropdownList = gGuiBase.Core.getObjectList();
-    console.log(this.dropdownList);
     this.objInstanceSelecter = new DropdownList(this.objDropdownSelectorID, GuiTabContent.NO_STYLE, this.dropdownList);
     this.widgetList.push(this.objInstanceSelecter);
-    console.log("after push select list");
+
     this.instanceAddButton = new Button("instanceAddButton", GuiTabContent.NO_STYLE, "+Instance");
     this.widgetList.push(this.instanceAddButton);
 
@@ -41,18 +40,19 @@ InstanceContent.prototype.buttonOnClick = function() {
 
 InstanceContent.prototype.onListSelect = function(ui) {
     // get objectName/objectID
-    console.log(ui["selected"]["id"]);
     var selectedInstanceName = ui["selected"]["id"];
     gGuiBase.Core.selectInstanceDetails( selectedInstanceName );
-
 };
 
 InstanceContent.prototype.getDropdownObjectName = function() {
-    console.log('int target function get selcted object');
-    console.log( $('#' + this.objDropdownSelectorID + ' option').filter(':selected').text() );
     return this.objInstanceSelecter.getSelectedListItem();
-
 };
 
+InstanceContent.prototype.setDropdownToSelectedGO = function() {
+    var selectedGO = gGuiBase.Core.selectedGameObject;
+    if (selectedGO) {
+        $('#' + this.objDropdownSelectorID).val(selectedGO.mName);
+    }
+};
 
 
