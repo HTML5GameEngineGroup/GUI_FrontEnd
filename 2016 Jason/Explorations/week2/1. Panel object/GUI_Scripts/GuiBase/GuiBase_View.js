@@ -565,6 +565,25 @@ gGuiBase.View = (function() {
 		}
 	};
 
+	
+	var colorStringToRGBA = function(colorPickerString) {
+		// We know the format of given string must be rgba(r,g,b,a) or r,g,b,a
+		var colors;
+		if (colorPickerString.startsWith("rgba(")) {
+			// Format was: rgba(r,g,b,a) from 0-255
+			colors = colorPickerString.split("rgba(")[1].split(")")[0].split(",");
+			colors[0] /= 255;
+			colors[1] /= 255;
+			colors[2] /= 255;
+		} else {
+			// Format was: r,g,b,a from 0-1
+			colors = colorPickerString.split(",");
+			colors[0] *= 255;
+			colors[1] *= 255;
+			colors[2] *= 255;
+		}
+		return colors;
+	};
 
 	//Public functions and variables
 	var mPublic = {
@@ -585,7 +604,7 @@ gGuiBase.View = (function() {
 		refreshAllTabContent: refreshAllTabContent,
 		getTabsWidth: getTabsWidth,
 		CONTENT_STYLE: CONTENT_STYLE,
-
+		colorStringToRGBA: colorStringToRGBA,
 		
 		inheritPrototype: inheritPrototype
     };

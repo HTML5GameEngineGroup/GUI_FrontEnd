@@ -57,7 +57,7 @@ gGuiBase.Core = (function() {
 
 	// ************* SCENE SUPPORT ****************
 	var initializeInitialScene = function() {
-		//gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
+		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
 		//gGuiBase.SceneSupport.selectScene(0);
 
 		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
@@ -83,14 +83,14 @@ gGuiBase.Core = (function() {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		detailsTab.clearContent();
 		var detailsTransform = new CameraTransformContent("CameraTransformContent", gGuiBase.View.CONTENT_STYLE, "Camera Transform");
-		var detailsColorTexture = new ColorTextureContent("ColorTextureContent", gGuiBase.View.CONTENT_STYLE, "Camera Color");
+		var detailsColor = new ColorCameraContent("ColorCameraContent", gGuiBase.View.CONTENT_STYLE, "Camera Color");
 		
 		var camera = gGuiBase.CameraSupport.getCameraByName(cameraName);
 		detailsTransform.updateFields(camera);
 		gGuiBase.Core.selectedCamera = camera;
 
 		detailsTab.addContent(detailsTransform);
-		detailsTab.addContent(detailsColorTexture);
+		detailsTab.addContent(detailsColor);
 		gGuiBase.View.refreshAllTabContent();
 	};
 	

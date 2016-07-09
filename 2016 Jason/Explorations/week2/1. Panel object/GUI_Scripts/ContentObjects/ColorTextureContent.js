@@ -22,6 +22,8 @@ ColorTextureContent.prototype.initialize = function () {
 	var textureArray = ["1", "2", "3"];
 	this.textureDropDown = new DropdownList("textureDropDown", textFieldStyle, textureArray);
 	
+	
+	
 	this.widgetList.push(this.colorText);
 	this.widgetList.push(this.colorField);
 	this.widgetList.push(this.textureText);
@@ -30,9 +32,28 @@ ColorTextureContent.prototype.initialize = function () {
 
 ColorTextureContent.prototype.initializeEventHandling = function () {
 	this.textureDropDown.setOnSelect(this.onListSelect);
+	$('#colorTextField').colorpicker({format:'rgba'});
+	this.colorField.setOnFocusOut(this.onFocusOut);
+	
+	var gameObject = gGuiBase.Core.selectedGameObject;
+	var oldColor = gameObject.getRenderable().getColor();
+	var newColor = [oldColor[0] * 255, oldColor[1] * 255, oldColor[2] * 255, oldColor[3]];
+	$(this.colorField.getID()).val("rgba(" + newColor + ")");
+	
+};
+
+ColorTextureContent.prototype.onFocusOut = function(textField) {
+	var gameObject = gGuiBase.Core.selectedGameObject;
+	var value = textField.val();
+	
+	var enteredColor = gGuiBase.View.colorStringToRGBA(value);
+	var renderable = gameObject.getRenderable();
+	renderable.setColor(enteredColor);
 };
 
 ColorTextureContent.prototype.onListSelect = function(value) {
 	console.log("Value is" + value);
 };
+
+
 
