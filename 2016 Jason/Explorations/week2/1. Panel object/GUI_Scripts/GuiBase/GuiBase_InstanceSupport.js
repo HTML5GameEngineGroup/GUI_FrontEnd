@@ -39,13 +39,13 @@ gGuiBase.InstanceSupport = (function() {
         return mInst[ instanceID ];
     };
 
-    var getInstanceNameList = function() {
-        var instanceNames = [];
-        for (var name in mInst.keys) {
-            instanceNames.push(name);
-        }
-        return instanceNames;
-    };
+    // var getInstanceNameList = function() {
+    //     var instanceNames = [];
+    //     for (var name in mInst.keys) {
+    //         instanceNames.push(name);
+    //     }
+    //     return instanceNames;
+    // };
 
     var inheritPrototype = function (subClass, superClass) {
         var prototype = Object.create(superClass.prototype);
@@ -59,7 +59,7 @@ gGuiBase.InstanceSupport = (function() {
         checkForNameConflict: checkForNameConflict,
         createInstanceOfObj: createInstanceOfObj,
         getInstanceByID: getInstanceByID,
-        getInstanceNameList: getInstanceNameList,
+        // getInstanceNameList: getInstanceNameList,
         getUniqueID: getUniqueID,
         
         inheritPrototype: inheritPrototype

@@ -138,9 +138,10 @@ ClientScene.prototype.getInstanceList = function() {
 
 ClientScene.prototype.getInstanceNameList = function() {
     var instanceNames = [];
-    for (var instance in this.mInstanceList) {
-        if (instance instanceof GameObject && !instance.mDestroy) { // i dont think this will be required
-            instanceNames.push(instance.mID);
+    var i;
+    for (i=0; i < this.mInstanceList.length; i++) {
+        if (this.mInstanceList[i] instanceof GameObject) { // i dont think this will be required
+            instanceNames.push(this.mInstanceList[i].mID);
         }
     }
     return instanceNames;

@@ -26,6 +26,8 @@ InstanceContent.prototype.initialize = function () {
     this.widgetList.push(this.instanceAddButton);
 
     this.instanceSelectList = new SelectList(this.selectListID, 'list-style-type: none; margin: 0; padding: 0', [], 'display: inline; margin: 5px');
+    var sceneInstances = gGuiBase.SceneSupport.gCurrentScene.getInstanceNameList();					// add instance to instance content
+    this.instanceSelectList.rebuildWithArray( sceneInstances );
     this.widgetList.push(this.instanceSelectList);
 };
 

@@ -75,6 +75,7 @@ gGuiBase.Core = (function() {
 		gGuiBase.SceneSupport.selectSceneByName(sceneName);
 		
 		detailsTab.addContent(detailsTransform);
+		this.updateInstanceSelectList();
 		gGuiBase.View.refreshAllTabContent();
 	};
 
@@ -116,11 +117,17 @@ gGuiBase.Core = (function() {
 		var objName = gGuiBase.View.findTabContentByID("#InstancesContent").getDropdownObjectName();	// get object selected by dropdown
 		if (objName == "") return;																		// dont add if no object selected
 		var instName = gGuiBase.InstanceSupport.createInstanceOfObj( objName );							// create an instance of the object
-		gGuiBase.View.findWidgetByID("#instanceSelectList").addElement( instName );      				// add instance to instance content
 		var inst = gGuiBase.InstanceSupport.getInstanceByID( instName );								// add instance to current scene
+		this.updateInstanceSelectList();
 		gGuiBase.Core.selectInstanceDetails( instName );												// set details panel with instance info
 		gGuiBase.View.refreshAllTabContent();
 		gGuiBase.View.findTabContentByID('#InstancesContent').setDropdownToSelectedGO();
+	};
+
+	// updates instanceSelectList
+	var updateInstanceSelectList = function () {
+		var sceneInstances = gGuiBase.SceneSupport.gCurrentScene.getInstanceNameList();					// add instance to instance content
+		gGuiBase.View.findWidgetByID("#instanceSelectList").rebuildWithArray( sceneInstances );
 	};
 
 	var selectInstanceDetails = function ( instanceID ) {
@@ -160,6 +167,7 @@ gGuiBase.Core = (function() {
 		reinitializeSceneTab: reinitializeSceneTab,
 		
 		addInstance: addInstance,
+		updateInstanceSelectList: updateInstanceSelectList,
 		selectInstanceDetails: selectInstanceDetails,
 		
         inheritPrototype: inheritPrototype,
