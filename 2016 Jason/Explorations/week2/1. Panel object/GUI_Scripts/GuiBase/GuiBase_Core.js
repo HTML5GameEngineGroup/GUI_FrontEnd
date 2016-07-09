@@ -57,8 +57,8 @@ gGuiBase.Core = (function() {
 
 	// ************* SCENE SUPPORT ****************
 	var initializeInitialScene = function() {
-		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
-		gGuiBase.SceneSupport.selectScene(0);
+		//gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
+		//gGuiBase.SceneSupport.selectScene(0);
 
 		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
 		gGuiBase.View.refreshAllTabContent();

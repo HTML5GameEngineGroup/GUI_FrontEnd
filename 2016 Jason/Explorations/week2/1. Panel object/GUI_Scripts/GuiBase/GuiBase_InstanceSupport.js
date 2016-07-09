@@ -17,6 +17,9 @@ gGuiBase.InstanceSupport = (function() {
         var GO = gGuiBase.ObjectSupport.getGameObjectByID( objName );
         var inst = gGuiBase.ObjectSupport.cloneGO( GO );
         inst.mID = this.getUniqueID( objName );
+		//console.log(inst);
+		//console.log(gEngine.DefaultResources.getConstColorShader());
+		gGuiBase.SceneSupport.gCurrentScene.addInstance(inst);
         // track new instance by id
         mInst[inst.mID] = inst;
         return inst.mID;
@@ -50,6 +53,8 @@ gGuiBase.InstanceSupport = (function() {
         subClass.prototype = prototype;
     };
 
+	
+	
     var mPublic = {
         checkForNameConflict: checkForNameConflict,
         createInstanceOfObj: createInstanceOfObj,
