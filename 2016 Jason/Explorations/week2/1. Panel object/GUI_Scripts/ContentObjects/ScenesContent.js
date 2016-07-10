@@ -29,6 +29,26 @@ ScenesContent.prototype.initializeEventHandling = function () {
 	this.sceneAddButton.setOnClick(this.buttonOnClick);
 	this.sceneSelectList.setOnSelect(this.onListSelect);
 
+	this.sceneSelectList.addListClass("sceneListMenu");
+	
+	$(this.sceneSelectList.getID()).contextmenu({
+		delegate: ".sceneListMenu",
+		menu: [
+			{title: "Details", cmd: "details", uiIcon: "ui-icon-info"},
+			{title: "Delete", cmd: "delete", uiIcon: "ui-icon-closethick"},
+			],
+		select: function(event, ui) {
+			switch (ui.cmd) {
+				case 'details':
+					gGuiBase.Core.selectDetailsScene(ui.target.text());
+					break;
+				case 'delete':
+                    gGuiBase.SceneSupport.deleteScene(ui.target.text());
+					break;
+			}
+		}
+	});
+	
 };
 
 ScenesContent.prototype.buttonOnClick = function() {

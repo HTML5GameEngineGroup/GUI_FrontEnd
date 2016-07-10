@@ -54,48 +54,28 @@ gGuiBase.SceneSupport = (function() {
 		return scene;
 	};
     
-	/*var deleteScene = function(index) {
-		var newID = gCurrentScene.mID;
-		if (gCurrentScene === this.mSceneList[index]) {
+	var deleteScene = function(sceneName) {
+		var scene = getSceneByName(sceneName);
+		var index = getSceneIndex(sceneName);
+		if (gGuiBase.SceneSupport.gCurrentScene === scene) {
 			gGuiBase.Core.emptyDetailsTab();
-			// Select the scene before as a replacement -- be careful about negative indices
-			if (index === 0) {
-				if (mSceneList.length <= 1) {
-					// We are splicing the only scene in the list
-					selectScene(null);
-				} else {
-					// We have other scenes, so pick scene 1
-					this.selectScene(1);
-					if (!gRunning) {
-						newID = this.mSceneList[1].mID;
-						createDetailsScenes();
-					}
-				}
-			} else {
-				// Simply pick the scene before
-				selectScene(index - 1);
-				if (!gRunning) {
-					newID = mSceneList[index - 1].mID;
-					createDetailsScenes();
-				}
-			}
 		}
-		this.mSceneList.splice(index, 1);
-		createPanelBottomScenes();
-		changeCurrentListItem(newID);
+	
+		mSceneList.splice(index, 1);
+		gGuiBase.Core.reinitializeSceneTab();
+		gGuiBase.View.refreshAllTabContent();
 	};
 	
-	var selectScene = function(index) {
-		// Select the scene at the index and run it too
-		gEngine.GameLoop.stop();
-		if (index !== null) {
-			gCurrentScene = this.mSceneList[index];
-			gEngine.Core.startScene(gCurrentScene);
-		} else {
-			this.runBlankScene();
+	var getSceneIndex = function(sceneName) {
+		var i;
+		for (i = 0; i < mSceneList.length; i++) {
+			if (mSceneList[i].mName === name) {
+				return i;
+			}
 		}
-		return gCurrentScene;
-	};*/
+		return -1;
+	};
+	
 	
 	var runBlankScene = function() {
 		var blank = new ClientScene(-1);
@@ -161,6 +141,7 @@ gGuiBase.SceneSupport = (function() {
 		getSceneListNames: getSceneListNames,
 		selectSceneByName: selectSceneByName,
 		selectScene: selectScene,
+		deleteScene: deleteScene,
 
     };
     return mPublic;
