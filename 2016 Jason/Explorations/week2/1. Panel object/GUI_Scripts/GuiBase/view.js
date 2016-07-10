@@ -3,6 +3,8 @@
  */
 $( document ).ready(function() {
 
+	
+
 	//Create bottom panel and tabs
 	var panelID = "#panelBottom";
     var bottomPanel = new GuiPanel(panelID, GuiPanelType.BOTTOM);

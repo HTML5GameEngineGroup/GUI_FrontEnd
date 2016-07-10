@@ -132,6 +132,15 @@ gGuiBase.Core = (function() {
 		gGuiBase.View.refreshAllTabContent();
 		gGuiBase.View.findTabContentByID('#InstancesContent').setDropdownToSelectedGO();
 	};
+	
+	var addInstanceWithName = function(objName) {
+		var instName = gGuiBase.InstanceSupport.createInstanceOfObj( objName );							// create an instance of the object
+		var inst = gGuiBase.InstanceSupport.getInstanceByID( instName );								// add instance to current scene
+		this.updateInstanceSelectList();
+		gGuiBase.Core.selectInstanceDetails( instName );												// set details panel with instance info
+		gGuiBase.View.refreshAllTabContent();
+		gGuiBase.View.findTabContentByID('#InstancesContent').setDropdownToSelectedGO();
+	};
 
 	// updates instanceSelectList
 	var updateInstanceSelectList = function () {
@@ -179,6 +188,7 @@ gGuiBase.Core = (function() {
 		reinitializeSceneTab: reinitializeSceneTab,
 		
 		addInstance: addInstance,
+		addInstanceWithName: addInstanceWithName,
 		updateInstanceSelectList: updateInstanceSelectList,
 		selectInstanceDetails: selectInstanceDetails,
 		

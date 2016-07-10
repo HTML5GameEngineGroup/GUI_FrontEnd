@@ -51,6 +51,14 @@ SelectList.prototype.rebuildWithArray = function(list) {
 	this.setHTML();
 }
 
+SelectList.prototype.addListClass = function(className) {
+	var list = $(this.getID() + ' li');
+
+	list.each(function(index) {
+		$(this).attr('class', $(this).attr('class') + ' ' + className);
+	});
+};
+
 //Set jquery ui selectable
 SelectList.prototype.setOnSelect = function (onSelectFunction) {
 	$(this.getID()).selectable({

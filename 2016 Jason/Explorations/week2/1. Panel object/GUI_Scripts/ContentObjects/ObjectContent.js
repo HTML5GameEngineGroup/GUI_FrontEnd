@@ -22,6 +22,32 @@ ObjectContent.prototype.initialize = function () {
 ObjectContent.prototype.initializeEventHandling = function () {
 	this.objectAddButton.setOnClick(this.buttonOnClick);
 	this.objectSelectList.setOnSelect(this.selectObject);
+	
+	this.objectSelectList.addListClass("objectListMenu");
+	
+	$(this.objectSelectList.getID()).contextmenu({
+		delegate: ".objectListMenu",
+		menu: [
+			{title: "Details", cmd: "details", uiIcon: "ui-icon-info"},
+			{title: "Edit code", cmd: "edit", uiIcon: "ui-icon-pencil"},
+			{title: "Instantiate to scene", cmd: "instantiate", uiIcon: "ui-icon-arrowthick-1-e"},
+			{title: "Delete", cmd: "delete", uiIcon: "ui-icon-closethick"},
+			],
+		select: function(event, ui) {
+			switch (ui.cmd) {
+				case 'details':
+					gGuiBase.Core.selectDetailsObject(ui.target.text());
+					break;
+				case 'edit':
+					break;
+				case 'instantiate':
+					gGuiBase.Core.addInstanceWithName(ui.target.text());
+					break;
+				case 'delete':
+					break;
+			}
+		}
+	});
 };
 
 // adds a new object when addObject button is left-clicked
