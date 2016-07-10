@@ -59,8 +59,14 @@ TransformContent.prototype.initializeEventHandling = function () {
 	this.objectW.setOnFocusOut(this.onTextFieldFocusOut);
 	this.objectH.setOnFocusOut(this.onTextFieldFocusOut);
 	this.rotationField.setOnFocusOut(this.onTextFieldFocusOut);
-	
 	this.rotationSlider.setOnSliderChange(this.onSliderChange);
+	
+	var gameObject = gGuiBase.Core.selectedGameObject;
+	if (gameObject.mID.includes('[') && gameObject.mID.includes(']')) {
+		$(this.objectName.getID()).prop('readonly', true);
+		$(this.objectName.getID()).css('background-color', 'gray');
+		
+	}
 };
 
 TransformContent.prototype.onTextFieldFocusOut = function(textField) {
@@ -74,6 +80,9 @@ TransformContent.prototype.onTextFieldFocusOut = function(textField) {
 		case "gameObjectNameField":
 			var gLastSetName = textField.val();
 			
+			if (gameObject.mID.includes('[') && gameObject.mID.includes(']')) {
+				break;
+			}
 			if (gLastSetName !== gameObject.mName) { // If the name is new
                 if (!gGuiBase.ObjectSupport.checkForNameConflict(gLastSetName)) {
                     // Create a new class with the new name
