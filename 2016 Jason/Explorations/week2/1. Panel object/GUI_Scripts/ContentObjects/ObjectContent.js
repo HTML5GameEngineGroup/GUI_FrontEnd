@@ -44,6 +44,9 @@ ObjectContent.prototype.initializeEventHandling = function () {
 					gGuiBase.Core.addInstanceWithName(ui.target.text());
 					break;
 				case 'delete':
+					if (confirm("Warning: This will delete all instances of " + ui.target.text() + ".\n\Delete anyways?")) { // Evalutes to true and perform an action if OK is pressed, otherwise do nothing
+                        gGuiBase.ObjectSupport.deleteObject(ui.target.text());
+					}
 					break;
 			}
 		}

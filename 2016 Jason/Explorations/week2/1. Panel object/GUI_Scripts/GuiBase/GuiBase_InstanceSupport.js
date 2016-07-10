@@ -23,6 +23,46 @@ gGuiBase.InstanceSupport = (function() {
         mInst[inst.mID] = inst;
         return inst.mID;
     };
+	
+	var deleteInstance = function(instanceID) {
+		
+		if (gGuiBase.Core.selectedGameObject !== null && instanceID === gGuiBase.Core.selectedGameObject.mID) {
+			gGuiBase.Core.emptyDetailsTab();
+			gGuiBase.Core.selectedGameObject = null;
+		}
+		
+		deleteInMap(instanceID);
+		
+		var sceneList = gGuiBase.SceneSupport.getSceneList();
+		for (var i = 0; i < sceneList.length; i++) {
+			var instances = sceneList[i].getInstanceList();
+			for (var j = 0; j < instances.length; j++) {
+				if (instances[j].mID === instanceID) {
+					instances.splice(j, 1);
+					break;
+				}
+			}
+		}
+		
+		gGuiBase.Core.updateInstanceSelectList();
+		gGuiBase.View.refreshAllTabContent();
+	};
+	
+	//Delete instances of a given object type (For when we're deleting an object)
+	var deleteInstancesWithName = function (objName) {
+		var sceneList = gGuiBase.SceneSupport.getSceneList();
+		for (var i = 0; i < sceneList.length; i++) {
+			var instances = sceneList[i].getInstanceList();
+
+			for (var j = 0; j < instances.length; j++) {
+				if (instances[j].mName === objName) {
+					deleteInMap(instances[j].mID);
+					instances.splice(j, 1);
+					j--;
+				}
+			}
+		}
+	};
 
     var getUniqueID = function ( objName ) {
         var instName = objName + "[" + mNextInstID + "]";
@@ -33,6 +73,11 @@ gGuiBase.InstanceSupport = (function() {
         return instName;
     };
 	
+	var deleteInMap = function(id) {
+		delete mInst[id];
+
+	};
+	
 	var replaceInMap = function (oldID, newID, newName) {
 		var object = mInst[oldID];
 		delete mInst[oldID];
@@ -40,7 +85,6 @@ gGuiBase.InstanceSupport = (function() {
 		object.mName = newName;
 		object.mID = newID;
 		mInst[newID] = object;
-		
 	};
 
     // returns the instance with the ID instanceID
@@ -75,6 +119,8 @@ gGuiBase.InstanceSupport = (function() {
         checkForNameConflict: checkForNameConflict,
         createInstanceOfObj: createInstanceOfObj,
         getInstanceByID: getInstanceByID,
+		deleteInstancesWithName: deleteInstancesWithName,
+		deleteInstance: deleteInstance,
         // getInstanceNameList: getInstanceNameList,
         getUniqueID: getUniqueID,
 		replaceInMap: replaceInMap,

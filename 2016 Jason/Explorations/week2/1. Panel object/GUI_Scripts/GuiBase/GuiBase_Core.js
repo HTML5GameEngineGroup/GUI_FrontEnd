@@ -192,6 +192,8 @@ gGuiBase.Core = (function() {
 		updateInstanceSelectList: updateInstanceSelectList,
 		selectInstanceDetails: selectInstanceDetails,
 		
+		emptyDetailsTab: emptyDetailsTab,
+		
         inheritPrototype: inheritPrototype,
 		
 		selectedGameObject: selectedGameObject,

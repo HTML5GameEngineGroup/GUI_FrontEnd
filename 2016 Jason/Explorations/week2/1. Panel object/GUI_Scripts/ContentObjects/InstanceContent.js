@@ -34,6 +34,27 @@ InstanceContent.prototype.initialize = function () {
 InstanceContent.prototype.initializeEventHandling = function () {
     this.instanceAddButton.setOnClick(this.buttonOnClick);
     this.instanceSelectList.setOnSelect(this.onListSelect);
+	
+	this.instanceSelectList.addListClass("instanceListMenu");
+	
+	$(this.instanceSelectList.getID()).contextmenu({
+		delegate: ".instanceListMenu",
+		menu: [
+			{title: "Details", cmd: "details", uiIcon: "ui-icon-info"},
+			{title: "Delete", cmd: "delete", uiIcon: "ui-icon-closethick"},
+			],
+		select: function(event, ui) {
+			switch (ui.cmd) {
+				case 'details':
+					gGuiBase.Core.selectInstanceDetails(ui.target.text());
+					break;
+				case 'delete':
+                    gGuiBase.InstanceSupport.deleteInstance(ui.target.text());
+					break;
+			}
+		}
+	});
+	
 };
 
 InstanceContent.prototype.buttonOnClick = function() {

@@ -52,24 +52,31 @@ gGuiBase.CameraSupport = (function() {
 		return cam;
 	};
 	
-	/*(var deleteCamera = function(index) {
-		var wasCurrentCam = false;
-		// Delete the camera.  If the instance is also the camera, then clean up the panel
-		var list = gCurrentScene.getCameraList();
-		var cam = list[index];
-		if (this.mSelectedCamera === cam) {
-			cleanUpPanelRightBody();
+	var deleteCamera = function(cameraName) {
+		
+		var list = getCameraList();
+		var camera = getCameraByName(cameraName);
+		
+		if (this.mSelectedCamera === camera) {
+			gGuiBase.Core.emptyDetailsTab();
 			this.mSelectedCamera = null;
-			wasCurrentCam = true;
 		}
+		
+		var index = getCameraIndex(cameraName);
 		list.splice(index, 1);
 		
-		// No need to check if the camera tab is open.  It MUST be open if you're deleting a camera.
-		createPanelBottomCameras();
-		if (!wasCurrentCam) {
-			changeCurrentListItem(this.mSelectedCamera.mID);
+		gGuiBase.Core.reinitializeCameraTab();
+		gGuiBase.View.refreshAllTabContent();
+	};
+	
+	var getCameraIndex = function(cameraName) {
+		var list = getCameraList();
+		for (var i = 0; i < list.length; i++) {
+			if (list[i].mName === cameraName)
+				return i;
 		}
-	};*/
+		return -1;
+	};
 	
 	var getCameraList = function() {
 		return gGuiBase.SceneSupport.gCurrentScene.getCameraList();
@@ -106,7 +113,8 @@ gGuiBase.CameraSupport = (function() {
 		checkForNameConflict: checkForNameConflict,
 		createDefaultCamera: createDefaultCamera,
 		getCameraListNames: getCameraListNames,
-		getCameraByName: getCameraByName
+		getCameraByName: getCameraByName,
+		deleteCamera: deleteCamera
     };
     return mPublic;
 }());

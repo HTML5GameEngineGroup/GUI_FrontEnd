@@ -29,6 +29,27 @@ CamerasContent.prototype.initializeEventHandling = function () {
 	this.cameraAddButton.setOnClick(this.buttonOnClick);
 	this.cameraSelectList.setOnSelect(this.onListSelect);
 
+	
+	this.cameraSelectList.addListClass("cameraListMenu");
+	
+	$(this.cameraSelectList.getID()).contextmenu({
+		delegate: ".cameraListMenu",
+		menu: [
+			{title: "Details", cmd: "details", uiIcon: "ui-icon-info"},
+			{title: "Delete", cmd: "delete", uiIcon: "ui-icon-closethick"},
+			],
+		select: function(event, ui) {
+			switch (ui.cmd) {
+				case 'details':
+					gGuiBase.Core.selectDetailsCamera(ui.target.text());
+					break;
+				case 'delete':
+                    gGuiBase.CameraSupport.deleteCamera(ui.target.text());
+					break;
+			}
+		}
+	});
+	
 };
 
 CamerasContent.prototype.buttonOnClick = function() {

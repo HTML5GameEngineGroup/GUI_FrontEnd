@@ -47,6 +47,27 @@ gGuiBase.ObjectSupport = (function() {
         return newGO.mName;
     };
 	
+	var deleteObject = function(objName) {
+		
+		if (objName === gGuiBase.Core.selectedGameObject.mName) {
+			gGuiBase.Core.emptyDetailsTab();
+			gGuiBase.Core.selectedGameObject = null;
+		}
+		
+		delete mGO[objName];
+		delete mGOCode[objName];
+		
+		console.log(getObjectList());
+		
+		gGuiBase.InstanceSupport.deleteInstancesWithName(objName); //Delete instances containing the object name
+		gGuiBase.Core.updateObjectSelectList();
+		gGuiBase.Core.updateInstanceSelectList();
+		
+		
+		
+		gGuiBase.View.refreshAllTabContent();		
+	};
+	
 	var replaceInMap = function(oldName, newName) {
 		var object = mGO[oldName];
 		delete mGO[oldName];
@@ -156,6 +177,7 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
 
     var mPublic = {
         createDefaultObject: createDefaultObject,
+		deleteObject: deleteObject,
         checkForNameConflict: checkForNameConflict,
         copyTransform: copyTransform,
 		replaceInMap: replaceInMap,
