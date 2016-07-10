@@ -17,8 +17,7 @@ gGuiBase.InstanceSupport = (function() {
         var GO = gGuiBase.ObjectSupport.getGameObjectByID( objName );
         var inst = gGuiBase.ObjectSupport.cloneGO( GO );
         inst.mID = this.getUniqueID( objName );
-		//console.log(inst);
-		//console.log(gEngine.DefaultResources.getConstColorShader());
+
 		gGuiBase.SceneSupport.gCurrentScene.addInstance(inst);
         // track new instance by id
         mInst[inst.mID] = inst;
@@ -33,6 +32,16 @@ gGuiBase.InstanceSupport = (function() {
         }
         return instName;
     };
+	
+	var replaceInMap = function (oldID, newID, newName) {
+		var object = mInst[oldID];
+		delete mInst[oldID];
+		
+		object.mName = newName;
+		object.mID = newID;
+		mInst[newID] = object;
+		
+	};
 
     // returns the instance with the ID instanceID
     var getInstanceByID = function( instanceID ) {
@@ -53,6 +62,13 @@ gGuiBase.InstanceSupport = (function() {
         subClass.prototype = prototype;
     };
 
+	var getInstanceList = function() {
+        var instanceList = [];
+        for (var objName in mInst) {
+            instanceList.push(objName);
+        }
+        return instanceList;
+    };
 	
 	
     var mPublic = {
@@ -61,6 +77,7 @@ gGuiBase.InstanceSupport = (function() {
         getInstanceByID: getInstanceByID,
         // getInstanceNameList: getInstanceNameList,
         getUniqueID: getUniqueID,
+		replaceInMap: replaceInMap,
         
         inheritPrototype: inheritPrototype
     };

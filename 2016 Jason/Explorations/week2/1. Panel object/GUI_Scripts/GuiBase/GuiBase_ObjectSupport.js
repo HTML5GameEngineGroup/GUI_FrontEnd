@@ -46,6 +46,20 @@ gGuiBase.ObjectSupport = (function() {
         mGOCode[newGO.mName] = this.getDefaultCodeGO(newGO.mName);                // add code to code map
         return newGO.mName;
     };
+	
+	var replaceInMap = function(oldName, newName) {
+		var object = mGO[oldName];
+		delete mGO[oldName];
+		var code = mGOCode[oldName];
+		delete mGOCode[oldName];
+		
+		object.mName = newName;
+		object.mID = newName;
+		mGO[newName] = object;
+		mGOCode[newName] = code;
+	};
+	
+	
     
     var cloneGO = function ( gameObject ) {
         var newGO;
@@ -117,6 +131,22 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
         }
         return objList;
     };
+	
+	var getObjectNameList = function() {
+		var objList = [];
+		for (var objName in mGO) {
+			objList.push(objName);
+		}
+		return objList;
+	};
+	
+	var getObjectCodeList = function() {
+		var objList = [];
+        for (var objName in mGOCode) {
+            objList.push(objName);
+        }
+        return objList;
+	};
     
     var inheritPrototype = function (subClass, superClass) {
         var prototype = Object.create(superClass.prototype);
@@ -128,8 +158,11 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
         createDefaultObject: createDefaultObject,
         checkForNameConflict: checkForNameConflict,
         copyTransform: copyTransform,
+		replaceInMap: replaceInMap,
         cloneGO: cloneGO,
         getObjectList: getObjectList,
+		getObjectNameList: getObjectNameList,
+		getObjectCodeList: getObjectCodeList,
         getDefaultCodeGO: getDefaultCodeGO,
         getDefaultCodeClass: getDefaultCodeClass,
         getGameObjectByID: getGameObjectByID,

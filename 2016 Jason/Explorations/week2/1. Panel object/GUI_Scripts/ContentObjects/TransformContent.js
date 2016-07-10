@@ -72,75 +72,83 @@ TransformContent.prototype.onTextFieldFocusOut = function(textField) {
 	
 	switch(textField.attr("id")) {
 		case "gameObjectNameField":
-			/*var gLastSetName = textField.val();
+			var gLastSetName = textField.val();
 			
 			if (gLastSetName !== gameObject.mName) { // If the name is new
-                if (!gGameCore.checkForNameConflict(gLastSetName)) {
+                if (!gGuiBase.ObjectSupport.checkForNameConflict(gLastSetName)) {
                     // Create a new class with the new name
-                    
+
 					window[gLastSetName] = function(renderableObj) {
 						GameObject.call(this, renderableObj);
 					};
-                    gEngine.Core.inheritPrototype(window[gLastSetName], GameObject);
+                    gEngine.View.inheritPrototype(window[gLastSetName], GameObject);
                     
                     // Re-eval any class code
                     var i;
-                    var objs = gGuiBase.Core.getObjectList();
+                    var objs = gGuiBase.ObjectSupport.getObjectList();
+					var objCode = gGuiBase.ObjectSupport.getObjectCodeList();
                     for (i = 0; i < objs.length; i++) {
-                        if (objs[i][0].mName === selected[0].mName) {
-                            eval(objs[i][1]);
+                        if (objs[i].mName === gameObject.mName) {
+                            eval(objCode[i]);
                         }
                     }
                     
-                    // First update all instances with the new name and class
-                    var instances = gGameCore.getInstanceList();
-                    for (i = 0; i < instances.length; i++) {
-                        if (instances[i].mName === selected[0].mName) {
-                            // Each instance needs to be re-created exactly as the old one, but as a new class
-                            // They also need their name value modified
-                            var rend = instances[i].getRenderable();
-                            var xf = instances[i].getXform();
-                            var newInstance;
-                            eval("newInstance = new " + gLastSetName + "(rend);");
-                            newInstance.mID = instances[i].mID;
-                            var newXf = newInstance.getXform();
-                            newXf = xf;
-                            instances[i] = newInstance;
-                            instances[i].mName = $(this).val();
-                        }
-                    }
-                    if ($('#panelBottomInstances').hasClass('current-tab')) {
-                        createPanelBottomInstances(); // Refresh only if open currently
-                    }
+					var sceneList = gGuiBase.SceneSupport.getSceneList();
+					for (var j = 0; j < sceneList.length; j++) {
+						
+						// First update all instances with the new name and class
+						var instances = sceneList[j].getInstanceList();
+				
+						for (i = 0; i < instances.length; i++) {
+							var name = instances[i].mName;
+							if (name === gameObject.mName) {
+								// Each instance needs to be re-created exactly as the old one, but as a new class
+								// They also need their name value modified
+								var rend = instances[i].getRenderable();
+								var xf = instances[i].getXform();
+								var newInstance;
+								eval("newInstance = new " + gLastSetName + "(rend);");
+								newInstance.mID = instances[i].mID;
+								var newXf = newInstance.getXform();
+								newXf = xf;
+								instances[i] = newInstance;
+								
+								var newID = value + instances[i].mID.substring(instances[i].mID.indexOf('['), instances[i].mID.length);
+								gGuiBase.InstanceSupport.replaceInMap(instances[i].mID, newID, value);
+					
+								instances[i].mName = value;
+								instances[i].mID = newID;
+								
+								
+							}
+						}
+					}
                     
                     // Now update the class itself, where the instances came from
-                    selected[0].mName = $(this).val();
-                    
-                    // Don't do anything with the code!  It isn't even updated yet.
+					gGuiBase.ObjectSupport.replaceInMap(gameObject.mName, value);
+                    //gameObject.mName = value;
+					//gameObject.mID = value;
+					
+					
+					
+					gGuiBase.Core.updateInstanceSelectList();
+					gGuiBase.Core.updateObjectSelectList();
+					
+					gGuiBase.Core.selectDetailsObject(value);
+                    gGuiBase.View.refreshAllTabContent();
+					
+					//console.log(gGuiBase.ObjectSupport.getObjectList());
+					
                     // The user NEEDS to update his/her own code to match the new name, then save it.
                     // That save will add it to the system.
-                    
-                    // Update the bottom
-                    if ($('#panelBottomInstances').hasClass('current-tab')) {
-                        createPanelBottomInstancesSelect(selected[0].mName);
-                    }
-                    
-                    // Update the left panel
-                    createPanelLeftObjects();
-                    changeCurrentListItem(selected[0].mID);
-                    
+      
+
                     alert("Remember to update all your code to match the new class name.");
                 } else {
                     alert("Names must be unique.");
-                    // Revert the name
-                    cleanUpPanelRightBody();
-                    if (!gRunning) {
-                        // No need to update the current list item color
-                        createDetailsObjects(selected[2]);
-                    }
-                    gLastSetName = selected[0].mName;
+
                 }
-            }*/
+            }
 		
 		
 		

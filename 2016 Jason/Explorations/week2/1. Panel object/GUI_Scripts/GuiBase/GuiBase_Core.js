@@ -10,15 +10,24 @@ gGuiBase.Core = (function() {
     var addDefaultObject = function () {
         var newObjID = gGuiBase.ObjectSupport.createDefaultObject();                    // create new gameObj
         //todo: abstract this to a content function call
-        gGuiBase.View.findWidgetByID("#objectSelectList1").addElement( newObjID );      // add to obj panel
+        //gGuiBase.View.findWidgetByID("#objectSelectList1").addElement( newObjID );      // add to obj panel
         this.selectDetailsObject( newObjID );                                           // select this object in details
-		gGuiBase.View.findWidgetByID("#instanceDropdown").addElement( newObjID );		// add object to instance drop
-        gGuiBase.View.refreshAllTabContent();                                           // refresh panel
+		//gGuiBase.View.findWidgetByID("#instanceDropdown").addElement( newObjID );		// add object to instance drop
+		updateObjectSelectList();
+        gGuiBase.View.refreshAllTabContent();  // refresh panel
+		
+		console.log(getObjectList());
     };
 	
 	// gets a list of names of all the objects
 	var getObjectList = function() {
 		return gGuiBase.ObjectSupport.getObjectList();
+	};
+	
+	var updateObjectSelectList = function() {
+		var objectInstances = gGuiBase.ObjectSupport.getObjectNameList();
+		gGuiBase.View.findWidgetByID("#objectSelectList1").rebuildWithArray( objectInstances );
+		gGuiBase.View.findWidgetByID("#instanceDropdown").rebuildWithArray(objectInstances);
 	};
 	
 	var addDefaultScene = function() {
@@ -126,7 +135,8 @@ gGuiBase.Core = (function() {
 
 	// updates instanceSelectList
 	var updateInstanceSelectList = function () {
-		var sceneInstances = gGuiBase.SceneSupport.gCurrentScene.getInstanceNameList();					// add instance to instance content
+
+		var sceneInstances = gGuiBase.SceneSupport.gCurrentScene.getInstanceNameList();			// add instance to instance content
 		gGuiBase.View.findWidgetByID("#instanceSelectList").rebuildWithArray( sceneInstances );
 	};
 
@@ -137,6 +147,7 @@ gGuiBase.Core = (function() {
 		var detailsColorTexture = new ColorTextureContent("ColorTextureContent", gGuiBase.View.CONTENT_STYLE, "Texture");
 
 		var inst = gGuiBase.InstanceSupport.getInstanceByID( instanceID );				// get instance
+		
 		gGuiBase.Core.selectedGameObject = inst;										// set to selected so it can update from panel
 		detailsTransform.updateFields( inst );											// give details instance data
 
@@ -156,6 +167,7 @@ gGuiBase.Core = (function() {
         addDefaultObject: addDefaultObject,
         selectDetailsObject: selectDetailsObject,
 		getObjectList: getObjectList,
+		updateObjectSelectList: updateObjectSelectList,
 
 		addDefaultScene: addDefaultScene,
 		selectDetailsScene: selectDetailsScene,

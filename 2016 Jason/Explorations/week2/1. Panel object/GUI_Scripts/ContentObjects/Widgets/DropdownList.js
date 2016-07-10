@@ -33,6 +33,11 @@ DropdownList.prototype.addElement = function(listElement) {
 	this.setHTML();
 };
 
+DropdownList.prototype.rebuildWithArray = function(list) {
+	this.list = list;
+	this.setHTML();
+};
+
 //On dropdown change
 DropdownList.prototype.setOnSelect = function (onSelectFunction) {
 	$(this.getID()).change(function() {
