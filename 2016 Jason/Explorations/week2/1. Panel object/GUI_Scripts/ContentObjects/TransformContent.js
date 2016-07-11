@@ -107,7 +107,6 @@ TransformContent.prototype.onTextFieldFocusOut = function(textField) {
 						
 						// First update all instances with the new name and class
 						var instances = sceneList[j].getInstanceList();
-				
 						for (i = 0; i < instances.length; i++) {
 							var name = instances[i].mName;
 							if (name === gameObject.mName) {
@@ -138,8 +137,6 @@ TransformContent.prototype.onTextFieldFocusOut = function(textField) {
                     //gameObject.mName = value;
 					//gameObject.mID = value;
 					
-					
-					
 					gGuiBase.Core.updateInstanceSelectList();
 					gGuiBase.Core.updateObjectSelectList();
 					
@@ -158,9 +155,6 @@ TransformContent.prototype.onTextFieldFocusOut = function(textField) {
 
                 }
             }
-		
-		
-		
 			break;
 		case "gameObjectXField":
 			xform.setXPos(value);

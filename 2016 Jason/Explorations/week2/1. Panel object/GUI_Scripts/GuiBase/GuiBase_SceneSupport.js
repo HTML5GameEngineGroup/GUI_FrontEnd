@@ -10,7 +10,6 @@ gGuiBase.SceneSupport = (function() {
 	mSceneList.push(gCurrentScene);
     gEngine.View.initializeEngineCore('GLCanvas', gCurrentScene);
 	
-	
 	var selectScene = function(index) {
 		gEngine.GameLoop.stop();
 		if (index !== null) {
@@ -142,7 +141,6 @@ gGuiBase.SceneSupport = (function() {
 		selectSceneByName: selectSceneByName,
 		selectScene: selectScene,
 		deleteScene: deleteScene,
-
     };
     return mPublic;
 }());

@@ -34,18 +34,21 @@ ObjectContent.prototype.initializeEventHandling = function () {
 			{title: "Delete", cmd: "delete", uiIcon: "ui-icon-closethick"},
 			],
 		select: function(event, ui) {
+			var GOName = ui.target.text();
 			switch (ui.cmd) {
 				case 'details':
-					gGuiBase.Core.selectDetailsObject(ui.target.text());
+					gGuiBase.Core.selectDetailsObject(GOName);
 					break;
 				case 'edit':
+					console.log(ui.target.text());
+					gGuiBase.EditorSupport.createFloatingEditor(GOName);
 					break;
 				case 'instantiate':
-					gGuiBase.Core.addInstanceWithName(ui.target.text());
+					gGuiBase.Core.addInstanceWithName(GOName);
 					break;
 				case 'delete':
-					if (confirm("Warning: This will delete all instances of " + ui.target.text() + ".\n\Delete anyways?")) { // Evalutes to true and perform an action if OK is pressed, otherwise do nothing
-                        gGuiBase.ObjectSupport.deleteObject(ui.target.text());
+					if (confirm("Warning: This will delete all instances of " + GOName + ".\n\Delete anyways?")) { // Evalutes to true and perform an action if OK is pressed, otherwise do nothing
+                        gGuiBase.ObjectSupport.deleteObject(GOName);
 					}
 					break;
 			}

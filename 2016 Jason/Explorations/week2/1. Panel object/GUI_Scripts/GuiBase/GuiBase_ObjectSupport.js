@@ -63,8 +63,6 @@ gGuiBase.ObjectSupport = (function() {
 		gGuiBase.Core.updateObjectSelectList();
 		gGuiBase.Core.updateInstanceSelectList();
 		
-		
-		
 		gGuiBase.View.refreshAllTabContent();		
 	};
 	
@@ -169,6 +167,14 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
         return objList;
 	};
     
+    var getGameObjectCodeByID = function ( GOName ) {
+        return mGOCode[GOName];
+    };
+    
+    var setGameObjectCodeByID = function ( GOName, Code ) {
+        mGOCode[GOName] = Code;  
+    };
+    
     var inheritPrototype = function (subClass, superClass) {
         var prototype = Object.create(superClass.prototype);
         prototype.constructor = subClass;
@@ -188,6 +194,8 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
         getDefaultCodeGO: getDefaultCodeGO,
         getDefaultCodeClass: getDefaultCodeClass,
         getGameObjectByID: getGameObjectByID,
+        getGameObjectCodeByID: getGameObjectCodeByID,
+        setGameObjectCodeByID: setGameObjectCodeByID,
 
         inheritPrototype: inheritPrototype
     };
