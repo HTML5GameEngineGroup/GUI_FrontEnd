@@ -86,7 +86,10 @@ gGuiBase.EditorSupport = (function() {
             '</ul>');
         $('#' + okName).css('float', 'right');
         $('#' + cancelName).css('float', 'right');
-
+        $('.floating-nav-menu')
+            .css('margin', 0)
+            .css('padding', 0)
+            .css('background-color', 'white');
         // Add the function directly to it
         $('#' + okName).click(function() {
             // Get editor contents as a string
