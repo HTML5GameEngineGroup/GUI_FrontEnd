@@ -153,7 +153,6 @@ gGuiBase.SaveLoadSupport = (function() {
 		for (i = 0; i < objectList.length; i++) {
 			var objectData = {};
 			var obj = objectList[i];
-			console.log(obj);
 			var objCode = gGuiBase.ObjectSupport.getGameObjectCodeByID(obj.mName);
 			var xf = obj.getXform();
 			
@@ -341,7 +340,6 @@ gGuiBase.SaveLoadSupport = (function() {
 						// Cameras auto-add themselves to gCurrentScene once created, so we need the scene selected first
 						
 						var idx = gGuiBase.SceneSupport.getSceneIndex(sceneName);
-						console.log(idx);
 						gGuiBase.SceneSupport.selectScene(idx);
 						gGuiBase.SceneSupport.gCurrentScene.mAllCamera = [];
 			
