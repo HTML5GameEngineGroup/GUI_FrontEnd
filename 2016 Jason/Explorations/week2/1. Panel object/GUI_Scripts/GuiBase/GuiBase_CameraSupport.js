@@ -79,6 +79,7 @@ gGuiBase.CameraSupport = (function() {
 	};
 	
 	var getCameraList = function() {
+		console.log('get camera list:' + gGuiBase.SceneSupport.gCurrentScene.getCameraList())
 		return gGuiBase.SceneSupport.gCurrentScene.getCameraList();
 	};
 	
@@ -101,7 +102,8 @@ gGuiBase.CameraSupport = (function() {
 			nameArray.push(cameraList[i].mName);
 		}
 		return nameArray;
-	}
+		console.log('camera list names:' + nameArray + '.');
+	};
 	
 	var checkForNameConflict = function(name) {
 		// Returns true if the name appears more than once

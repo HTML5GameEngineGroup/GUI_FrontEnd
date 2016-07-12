@@ -17,8 +17,6 @@ gGuiBase.Core = (function() {
 		//gGuiBase.View.findWidgetByID("#instanceDropdown").addElement( newObjID );		// add object to instance drop
 		updateObjectSelectList();
         gGuiBase.View.refreshAllTabContent();  // refresh panel
-		
-		console.log(getObjectList());
     };
 	
 	// gets a list of names of all the objects
@@ -29,7 +27,7 @@ gGuiBase.Core = (function() {
 	var updateObjectSelectList = function() {
 		var objectInstances = gGuiBase.ObjectSupport.getObjectNameList();
 		gGuiBase.View.findWidgetByID("#objectSelectList1").rebuildWithArray( objectInstances );
-		gGuiBase.View.findWidgetByID("#instanceDropdown").rebuildWithArray(objectInstances);
+		gGuiBase.View.findWidgetByID("#instanceDropdown").rebuildWithArray( objectInstances );
 	};
 	
 	var addDefaultScene = function() {
@@ -40,7 +38,6 @@ gGuiBase.Core = (function() {
 	};
 
 	var addDefaultCamera = function() {
-		
 		var newCamera = gGuiBase.CameraSupport.createDefaultCamera();
 		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
 		this.selectDetailsCamera(newCamera.mName);
@@ -53,14 +50,14 @@ gGuiBase.Core = (function() {
 		detailsTab.clearContent();
 		var detailsTransform = new TransformContent("TransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
 		var detailsColorTexture = new ColorTextureContent("ColorTextureContent", gGuiBase.View.CONTENT_STYLE, "Texture");
-		
+
 		var gameObject = gGuiBase.ObjectSupport.getGameObjectByID( objName );           // get gameObj
 		gGuiBase.Core.selectedGameObject = gameObject;
 		detailsTransform.updateFields(gameObject);
 		
 		detailsTab.addContent(detailsTransform);
 		detailsTab.addContent(detailsColorTexture);
-		
+
 		//var transformContent = gGuiBase.View.findTabContentByID("#TransformContent");
 		//transformContent.updateFields(gameObject);
         gGuiBase.View.refreshAllTabContent();                                           // refresh panel
@@ -68,9 +65,9 @@ gGuiBase.Core = (function() {
 
 	// ************* SCENE SUPPORT ****************
 	var initializeInitialScene = function() {
+		gGuiBase.SceneSupport.gCurrentScene.initialize();
 		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
-		//gGuiBase.SceneSupport.selectScene(0);
-
+		// gGuiBase.SceneSupport.selectScene(0);
 		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
 		gGuiBase.View.refreshAllTabContent();
 	};

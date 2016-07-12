@@ -65,7 +65,6 @@ GuiPanelTab.prototype.refreshContent = function() {
 	for (var i = 0; i < this.content.length; i++) {
 		this.appendContent(this.content[i], this.content[i].getID(), this.content[i].getHTMLContent());
 		this.content[i].initializeEventHandling();
-		
 	}
 	
 	if ($(this.getID()).accordion( "instance" ) !== undefined) {
