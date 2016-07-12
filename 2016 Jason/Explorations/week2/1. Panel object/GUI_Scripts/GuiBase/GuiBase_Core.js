@@ -4,6 +4,8 @@ var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been
 gGuiBase.Core = (function() {
 	var selectedGameObject = null;
 	var selectedCamera = null;
+	var gRunning = false;    
+	var gBackup = null;
 	
 	// ************* OBJECT SUPPORT ****************
 	// Adds a default gameObject to the Object Tab and updates detail tab with this object
@@ -197,7 +199,9 @@ gGuiBase.Core = (function() {
         inheritPrototype: inheritPrototype,
 		
 		selectedGameObject: selectedGameObject,
-		selectedCamera: selectedCamera
+		selectedCamera: selectedCamera,
+		gRunning: gRunning,
+		gBackup: gBackup
     };
     return mPublic;
 

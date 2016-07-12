@@ -100,7 +100,7 @@ ClientScene.prototype.update = function() {
         this.mAllCamera[i].update();
     }
     
-    if (gRunning) {
+    if (gGuiBase.Core.gRunning) {
         for (i = 0; i < this.mInstanceList.length; i++) {
             if (this.mInstanceList[i] instanceof GameObject) {
                 if (this.mInstanceList[i].mDestroy) { // uses this variable to destroy from external pointer
@@ -148,7 +148,7 @@ ClientScene.prototype.getInstanceNameList = function() {
 };
 
 ClientScene.prototype.collision = function() {
-    if (!gRunning) {
+    if (!gGuiBase.Core.gRunning) {
         return;
     }
     

@@ -1,0 +1,408 @@
+var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
+
+gGuiBase.SaveLoadSupport = (function() {
+    
+	$('#menuFileNew').click(function(event) {
+		cleanUpGameCore();
+		
+		gCurrentScene = new ClientScene(0);
+		gGameCore.getSceneList().push(gCurrentScene);
+		gEngine.GameLoop.stop();
+		gEngine.Core.startScene(gCurrentScene);
+		
+		refreshAllPanels();
+	});
+	
+	$('#menuFileOpen').click(function(event) {
+		event.preventDefault();
+		$('#menuFileOpenInput').trigger('click');
+	});
+		
+	$('#menuFileSave').click(function() {
+		fileSave();
+	});
+	
+	$('#menuRun').click(function() {
+		gRunning = !gRunning;
+		if (gRunning) {
+			// Back up game state
+			fileSave(true);
+			
+			$('#menuRun').css('background-color', '#c7b6b2');
+			cleanUpPanelRightBody();
+			if (gCurrentListItem !== null) {
+				gCurrentListItem.removeClass('current-list-item');
+			}
+		} else {
+			// Load the backed-up game state
+			fileOpen(true);
+			
+			$('#menuRun').css('background-color', '#ab9b97');
+		}
+	});
+		
+	var fileOpen = function(backup) {
+		// Here is the JSZip API for reference (recommended to understand the 4 loading methods):
+		// https://stuk.github.io/jszip/documentation/api_jszip.html
+		// Also, here is the FileReader API:
+		// https://developer.mozilla.org/en-US/docs/Web/API/FileReader
+		
+		var input;
+		if (backup) {
+			input = gBackup;
+		} else {
+			input = document.getElementById("menuFileOpenInput").files[0];
+		}
+		
+		if (input) {
+			// Only accept .zip
+			if (!backup && input.name.endsWith(".zip")) { // Make sure it is in a .js format
+				// Read the .zip file with FileReader
+				var reader = new FileReader();
+				reader.readAsArrayBuffer(input); // Read as ArrayBuffer for this particular file type
+				var files;
+				
+				// Loads files into a JSZip object to be processed
+				reader.onload = function(event) {
+					files = new JSZip();
+					files.loadAsync(event.target.result);
+				};
+				
+				// You can only work with the files once the asynchronous loading finishes
+				// Thus, we need reader.onloadend()
+				reader.onloadend = function() {
+					if (!confirm("Loading a file will erase current work.  Load anyways?")) {
+						return;
+					}
+					
+					try {
+						// Clears everything to an empty state
+						cleanUpGameCore();
+						// Load everything from the file
+						gRunning = false;
+						$('#menuRun').css('background-color', '#ab9b97');
+						loadMisc(files, function() {
+							loadTextures(files, function() {
+								loadObjects(files, function() {
+									loadScenes(files, function() {
+										refreshAllPanels();
+									});
+								});
+							});
+						});
+					} catch (error) {
+						alert("There were issues with loading your file.\n\nErrors:\n" + error);
+						cleanUpGameCore();
+					}
+				};
+			} else if (backup) {
+				// This is for backing up the game
+				try {
+					// Clears everything to an empty state
+					cleanUpGameCore();
+					// Load everything from the file
+					gRunning = false;
+					$('#menuRun').css('background-color', '#ab9b97');
+					loadMisc(gBackup, function() {
+						loadTextures(gBackup, function() {
+							loadObjects(gBackup, function() {
+								loadScenes(gBackup, function() {
+									refreshAllPanels();
+								});
+							});
+						});
+					});
+				} catch (error) {
+					alert("There were issues with loading your file.\n\nErrors:\n" + error);
+					cleanUpGameCore();
+				}
+			} else {
+				alert("Your file was not a project file.");
+			}
+		}
+		// Clears the current file by replacing itself with a fresh file input component (e.g. a clone)
+		// This allows for same-file loading, where "onchange" would normally not activate on the same file
+		$("#menuFileOpenInput").replaceWith($("#menuFileOpenInput").val('').clone(true));
+	};
+	
+	var fileSave = function(backup) {
+		var files = new JSZip();
+		
+		// Folders
+		var misc = files.folder("Misc");
+		var objects = files.folder("Objects");
+		var scenes = files.folder("Scenes");
+		var textures = files.folder("Textures"); // Not used yet
+		
+		// JSON files not in folders
+		var globalVars;
+		
+		// Global vars
+		var globalVarData = {};
+		globalVarData[0] = gNextObjectID;
+		globalVarData[1] = gNextInstanceID;
+		globalVarData[2] = gNextSceneID;
+		globalVars = JSON.stringify(globalVarData);
+		misc.file("vars.json", globalVars);
+		
+		// Objects
+		var i;
+		var objectList = gGameCore.getObjectList();
+		for (i = 0; i < objectList.length; i++) {
+			var objectData = {};
+			var obj = objectList[i];
+			var xf = obj[0].getXform();
+			
+			objectData[0] = obj[0].mID;
+			objectData[1] = obj[1];
+			objectData[2] = obj[2];
+			if (objectData[2] === 1) {
+				// If it's a GO, get the relevant data
+				objectData[3] = xf.getXPos();
+				objectData[4] = xf.getYPos();
+				objectData[5] = xf.getWidth();
+				objectData[6] = xf.getHeight();
+				objectData[7] = xf.getRotationInDegree();
+				objectData[8] = obj[0].getRenderable().getColor();
+				// TODO: Do it for texture
+			}
+			
+			objects.file(obj[0].mName + ".json", JSON.stringify(objectData));
+		}
+		
+		
+		// Scenes
+		var sceneList = gGameCore.getSceneList();
+		for (i = 0; i < sceneList.length; i++) {
+			// For each scene...
+			var scene = sceneList[i];
+			
+			// Give it a folder
+			var sceneFolder = scenes.folder(scene.mName);
+			
+			// Make a JSON file with that scene's vars
+			var sceneData = {};
+			sceneData[0] = scene.mID;
+			sceneData[1] = scene.mNextCameraID;
+			sceneFolder.file(scene.mName + ".json", JSON.stringify(sceneData));
+			
+			// Now do it for each camera of each scene (all cameras in one JSON file)
+			var j;
+			var camList = scene.getCameraList();
+			var cameraData = {};
+			for (j = 0; j < camList.length; j++) {
+				var cam = camList[j];
+				
+				cameraData[0 + (j * 6)] = cam.mName;
+				cameraData[1 + (j * 6)] = cam.mID;
+				cameraData[2 + (j * 6)] = cam.getWCCenter();  // [x, y]
+				cameraData[3 + (j * 6)] = cam.getWCWidth();
+				cameraData[4 + (j * 6)] = cam.getViewport();  // [x, y, w, h]
+				cameraData[5 + (j * 6)] = cam.getBackgroundColor();
+			}
+			sceneFolder.file("cameras.json", JSON.stringify(cameraData));
+			
+			// Finally, do it for the instances (all instances in one JSON file)
+			var instanceList = scene.getInstanceList();
+			var instanceData = {};
+			for (j = 0; j < instanceList.length; j++) {
+				var inst = instanceList[j];
+				
+				instanceData[0 + (j * 8)] = inst.mName;
+				instanceData[1 + (j * 8)] = inst.mID;
+				if (inst instanceof GameObject) {
+					// If it's a GO, get the relevant data
+					var xf = inst.getXform();
+					instanceData[2 + (j * 8)] = xf.getXPos();
+					instanceData[3 + (j * 8)] = xf.getYPos();
+					instanceData[4 + (j * 8)] = xf.getWidth();
+					instanceData[5 + (j * 8)] = xf.getHeight();
+					instanceData[6 + (j * 8)] = xf.getRotationInDegree();
+					instanceData[7 + (j * 8)] = inst.getRenderable().getColor();
+					// TODO: Do it for texture
+				} else {
+					// Blank placeholders
+					instanceData[2 + (j * 8)] = 0;
+					instanceData[3 + (j * 8)] = 0;
+					instanceData[4 + (j * 8)] = 0;
+					instanceData[5 + (j * 8)] = 0;
+					instanceData[6 + (j * 8)] = 0;
+					instanceData[7 + (j * 8)] = 0;
+					// TODO: Needs one more placeholder if texture is added above
+				}
+			}
+			sceneFolder.file("instances.json", JSON.stringify(instanceData));
+		}
+		
+		// TODO: Textures too
+		
+		if (backup) {
+			gBackup = files;
+			return;   // Ends the function here, so it doesn't download anything when we just want to backup
+		}
+		
+		// Download it
+		files.generateAsync({type:"blob"}).then(function(blob) {
+			// Use FileSaver to download it to the user's computer
+			saveAs(blob, "my_project.zip");
+		});
+	};
+	
+
+	var loadMisc = function(files, callback) {
+		// Global vars
+		files.folder("Misc").forEach(function(relativePath, file) {
+			// Read the ZipObject item as a JSON file, and then store the information where it belongs
+			files.file(file.name).async("string").then(function success(content) {
+				var data = JSON.parse(content);
+				gNextObjectID = data[0];
+				gNextInstanceID = data[1];
+				gNextSceneID = data[2];
+			}, function error(error) {
+				throw "There were issues with loading your file.\n\nErrors:\n" + error;
+			});
+		});
+		callback();
+	};
+
+	var loadTextures = function(files, callback) {
+		// TODO (see other similar functions)
+		callback();
+	};
+
+	var loadObjects = function(files, callback) {
+		// Objects
+		files.folder("Objects").forEach(function(relativePath, file) {
+			// Read the ZipObject item as a JSON file, and then store the information where it belongs
+			files.file(file.name).async("string").then(function success(content) {
+				
+				var data = JSON.parse(content);
+				var obj;
+				// Put code in system so it can recognize it before making objects
+				eval(data[1]);
+				var className = relativePath.substring(0, relativePath.lastIndexOf(".")); // Just get rid of .json
+				eval("obj = new " + className + "(new Renderable());");
+				var entry = [obj, data[1], data[2]];
+				obj.mID = data[0];
+				obj.mName = className;
+				// If it is a GO
+				if (data[2] === 1) {
+					var xf = obj.getXform();
+					xf.setXPos(data[3]);
+					xf.setYPos(data[4]);
+					xf.setWidth(data[5]);
+					xf.setHeight(data[6]);
+					xf.setRotationInDegree(data[7]);
+					obj.getRenderable().setColor(data[8]);
+				}
+				
+				// Add entry
+				var list = gGameCore.getObjectList();
+				list.push(entry);
+				createPanelLeftObjects();
+			}, function error(error) {
+				throw "There were issues with loading your file.\n\nErrors:\n" + error;
+			});
+		});
+		callback();
+	};
+
+	var loadScenes = function(files, callback) {
+		// Scenes (scenes, cameras, and instances)
+		files.folder("Scenes").forEach(function(relativePath, file) {
+
+			var currentScene;
+			if (relativePath.endsWith("/")) {
+				// Process each folder (technically iterates through everything but we will only do stuff if it's a folder)
+				var sceneName = relativePath.substring(0, relativePath.indexOf("/"));
+
+				// Use gCurrentScene to hold current scene info
+				currentScene = new ClientScene(-1); // Number is temporary
+				currentScene.mName = sceneName;
+				currentScene.mID = "unset";
+				currentScene.mAllCamera = [];
+				currentScene.mAllObject = [];
+				
+				var sceneList = gGameCore.getSceneList();
+				sceneList.push(currentScene);
+				gGameCore.selectScene(sceneList.length - 1); // This starts the scene
+			} else {
+				//files.folder("Scenes").folder(sceneName).forEach(function(relativePath2, file2) {
+				files.file(file.name).async("string").then(function success(content) {
+					var data = JSON.parse(content);
+					var sceneName = relativePath.substring(0, relativePath.indexOf("/"));
+
+					if (relativePath.endsWith("cameras.json")) {
+						// This file contains (unless the user modified it) the data for every camera in the scene
+						var i = 0;
+						
+						// Cameras auto-add themselves to gCurrentScene once created, so we need the scene selected first
+						var idx = gGameCore.getSceneIndexByName(sceneName);
+						gGameCore.selectScene(idx);
+						gCurrentScene.mAllCamera = [];
+						
+						while (typeof(data[i]) !== "undefined") {
+							
+							// Note: new cameras are automatically added to mAllCamera
+							var cam = new Camera(
+								vec2.fromValues(data[i + 2][0], data[i + 2][1]),    // position of the camera
+								data[i + 3],                                        // width of camera
+								data[i + 4]                                         // viewport (orgX, orgY, width, height));
+							);
+					
+							// Modify the camera some more
+							gCurrentScene.mAllCamera[i / 6].setBackgroundColor(data[i + 5]);
+							gCurrentScene.mAllCamera[i / 6].mName = data[i];
+							gCurrentScene.mAllCamera[i / 6].mID = data[i + 1];
+							
+							i += 6;
+						}
+						// Select the first scene when this process is done
+						gGameCore.selectScene(0);
+					} else if (relativePath.endsWith("instances.json")) {
+						// This file contains (unless the user modified it) the data for every instance in the scene
+						var i = 0;
+						while (typeof(data[i]) !== "undefined") {
+							var inst;
+							if (window[data[0]].prototype instanceof GameObject) {
+								eval("inst = new " + data[i + 0] + "(new Renderable())"); // Requires Objects to have been fully processed before this
+								var xf = inst.getXform();
+								xf.setXPos(data[i + 2]);
+								xf.setYPos(data[i + 3]);
+								xf.setWidth(data[i + 4]);
+								xf.setHeight(data[i + 5]);
+								xf.setRotationInDegree(data[i + 6]);
+								var rend = inst.getRenderable();
+								rend.setColor(data[i + 7]);
+							} else {
+								eval("inst = new " + data[i + 0] + "()");
+							}
+							inst.mName = data[i + 0];
+							inst.mID = data[i + 1];
+							
+							// Add it to the scene
+							gGameCore.getSceneByName(sceneName).addInstance(inst);
+							i += 8;
+						}
+					} else if (relativePath.endsWith(".json")) {
+						// Unless the user inserted a .json, this is the scene file
+						var theScene = gGameCore.getSceneByName(sceneName);
+						theScene.mName = relativePath.substring(0, relativePath.lastIndexOf("/"));
+						theScene.mID = data[0];
+						theScene.mNextCameraID = data[1];
+						
+						createPanelBottomScenes();
+					}
+				}, function error(error) {
+					throw "There were issues with loading your file.\n\nErrors:\n" + error;
+				});
+			}        
+		});
+		callback();
+	};
+	
+    var mPublic = {
+        
+    };
+    return mPublic;
+}());
