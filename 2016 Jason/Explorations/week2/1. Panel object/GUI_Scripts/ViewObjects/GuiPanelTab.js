@@ -53,13 +53,28 @@ GuiPanelTab.prototype.addContent = function(contentobject) {
 	
 };
 
+GuiPanelTab.prototype.getContentObject = function (contentID) {
+	for (var i = 0; i < this.content.length; i++) {
+		console.log(this.content[i].getID() + " " + contentID);
+		
+		if (this.content[i].getID() === contentID) {
+			return this.content[i];
+		}
+	}
+};
+
+GuiPanelTab.prototype.addContentToFront = function(contentobject) {
+	this.content.push(contentobject);
+	this.prependContent(contentobject, content,contentobject.getID(), contentobject.getHTMLContent());
+	contentobject.initializeEventHandling();
+};
+
 GuiPanelTab.prototype.clearContent = function() {
 	$(this.getID()).empty();
 	this.content.splice(0, this.content.length);
 };
 
 GuiPanelTab.prototype.refreshContent = function() {
-
 	$(this.getID()).empty();
 
 	for (var i = 0; i < this.content.length; i++) {
@@ -82,13 +97,30 @@ GuiPanelTab.prototype.appendContent = function (content, contentID, contentHTML 
 		
 };
 
+GuiPanelTab.prototype.prependContent = function(content, contentID, contentHTML) {
+	this.content[contentID] = true;
+	if (content.title !== undefined) 
+		$(this.getID()).prepend('<h3>' + content.title + '</h3>');
+    $('#' + this.tabID).prepend( contentHTML );
+};
+
 // removes content with ID contentID
-GuiPanelTab.prototype.removeContent = function ( contentID ) {
+/*GuiPanelTab.prototype.removeContent = function ( contentID ) {
     if (!(contentID in this.content)) throw contentID + " not found";
     else {
         delete this.content[contentID];
         $('#' + contentID).remove();
     }
+};*/
+
+GuiPanelTab.prototype.removeContent = function (contentID) {
+	for (var i = 0; i < this.content.length; i++) {
+		if (this.content[i].getID() === contentID) {
+			$(contentID).empty();
+			$(contentID).remove();
+			this.content.splice(i, 1);
+		}
+	}
 };
 
 //From http://stackoverflow.com/questions/15702444/jquery-ui-accordion-open-multiple-panels-at-once

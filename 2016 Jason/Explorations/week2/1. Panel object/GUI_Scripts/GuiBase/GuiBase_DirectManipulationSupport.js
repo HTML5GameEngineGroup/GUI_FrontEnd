@@ -3,6 +3,10 @@ var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been
 gGuiBase.DirectManipulationSupport = (function() {
 	var camera = null;
 	var prevMouseDownState = false;
+	var prevX = 0;
+	var prevY = 0;
+	var objectSelected = false;
+	
 	
 	var setCameraToCurrentScene = function() {
 		camera = gGuiBase.SceneSupport.gCurrentScene.getFirstCamera();
@@ -15,7 +19,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 		var mouseX = camera.mouseWCX();
 		var mouseY = camera.mouseWCY();
 		
-		if (prevMouseDownState && (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) == false)) {
+		if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && !objectSelected) {
 			var instances = gGuiBase.SceneSupport.gCurrentScene.getInstanceList();
 			var mouseInXform = false;
 			var i = 0;
@@ -27,10 +31,33 @@ gGuiBase.DirectManipulationSupport = (function() {
 			
 			if (mouseInXform) {
 				gGuiBase.Core.selectInstanceDetails(instances[i].mID);
+				objectSelected = true;
 			}
 		}
 		
+		if (prevMouseDownState && (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) == false) && objectSelected) {
+			objectSelected = false;
+		}
+		
+		if(gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && (prevX !== mouseX || prevY !== mouseY) && objectSelected) {
+
+			var xform = gGuiBase.Core.selectedGameObject.getXform();
+			xform.setXPos(mouseX);
+			xform.setYPos(mouseY);
+			
+			/*var detailsTab = gGuiBase.View.findTabByID("#Details");
+			
+			var detailsTransform = new TransformContent("TransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
+			detailsTransform.updateFields(gGuiBase.Core.selectedGameObject);
+			detailsTab.removeContent("#TransformContent");
+			detailsTab.addContentToFront(detailsTransform);*/
+			
+
+		}
+		
 		prevMouseDownState = gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left);
+		prevX = mouseX;
+		prevY = mouseY;
 	};
 	window.addEventListener('mousedown', checkForSelect);
     window.addEventListener('mouseup', checkForSelect);
