@@ -4,19 +4,6 @@ var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been
 gGuiBase.CameraSupport = (function() {
 	var mSelectedCamera = null;
 	
-	/*var selectCamera = function(index) {
-		// Select the camera at the index
-		var list = getCameraList();
-		this.mSelectedCamera = list[index];
-		createPanelBottomCameras();
-		cleanUpPanelRightBody();
-		if (!gRunning) {
-			changeCurrentListItem(this.mSelectedCamera.mID);
-			createDetailsCameras();
-		}
-		return this.mSelectedCamera;
-	};*/
-	
 	var getCameraByName = function(name) {
 		var result = null;
 		var cameraList = getCameraList();
@@ -46,9 +33,6 @@ gGuiBase.CameraSupport = (function() {
 		cam.mName = name;
 		cam.mID = "cameraListItem" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID;; // This is still unique despite the check (doesn't need to be updated to the next cam id)
 		gGuiBase.SceneSupport.gCurrentScene.mNextCameraID++;
-		//gCurrentScene.addCamera(cam);  // The scene already adds it for us so we don't need to add it again
-		var list = gGuiBase.SceneSupport.gCurrentScene.getCameraList();
-		//this.selectCamera(list.length - 1); // Refreshes
 		return cam;
 	};
 	
@@ -79,7 +63,6 @@ gGuiBase.CameraSupport = (function() {
 	};
 	
 	var getCameraList = function() {
-		console.log('get camera list:' + gGuiBase.SceneSupport.gCurrentScene.getCameraList())
 		return gGuiBase.SceneSupport.gCurrentScene.getCameraList();
 	};
 	
@@ -97,12 +80,12 @@ gGuiBase.CameraSupport = (function() {
 	var getCameraListNames = function() {
 		var cameraList = getCameraList();
 		var nameArray = [];
+		var i;
 		for (i = 0; i < cameraList.length; i++) {
 			//console.log(cameraList[i].mName);
 			nameArray.push(cameraList[i].mName);
 		}
 		return nameArray;
-		console.log('camera list names:' + nameArray + '.');
 	};
 	
 	var checkForNameConflict = function(name) {
