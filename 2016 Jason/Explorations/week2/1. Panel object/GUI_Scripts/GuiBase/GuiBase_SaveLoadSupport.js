@@ -104,10 +104,10 @@ gGuiBase.SaveLoadSupport = (function() {
 					// Load everything from the file
 					gGuiBase.Core.gRunning = false;
 					$('#menuRun').css('background-color', '#ab9b97');
-					loadMisc(gBackup, function() {
-						loadTextures(gBackup, function() {
-							loadObjects(gBackup, function() {
-								loadScenes(gBackup, function() {
+					loadMisc(gGuiBase.Core.gBackup, function() {
+						loadTextures(gGuiBase.Core.gBackup, function() {
+							loadObjects(gGuiBase.Core.gBackup, function() {
+								loadScenes(gGuiBase.Core.gBackup, function() {
 									gGuiBase.View.refreshAllTabContent();
 									gGuiBase.Core.reinitializeTabs();
 								});
@@ -116,7 +116,7 @@ gGuiBase.SaveLoadSupport = (function() {
 					});
 				} catch (error) {
 					alert("There were issues with loading your file.\n\nErrors:\n" + error);
-					cleanUpGameCore();
+					gGuiBase.Core.cleanUpGameCore();
 				}
 			} else {
 				alert("Your file was not a project file.");
@@ -239,7 +239,7 @@ gGuiBase.SaveLoadSupport = (function() {
 		// TODO: Textures too
 		
 		if (backup) {
-			gBackup = files;
+			gGuiBase.Core.gBackup = files;
 			return;   // Ends the function here, so it doesn't download anything when we just want to backup
 		}
 		

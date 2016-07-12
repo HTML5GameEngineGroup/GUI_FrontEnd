@@ -81,3 +81,12 @@ $( document ).ready(function() {
 	
 });
 
+var move = function(go, x, y) {
+    // A function that can be called by the user's code to move a GO
+    if (go instanceof GameObject) {
+        var xf = go.getXform();
+        xf.setXPos(xf.getXPos() + x);
+        xf.setYPos(xf.getYPos() + y);
+    }
+};
+
