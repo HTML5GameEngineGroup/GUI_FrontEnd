@@ -2,15 +2,18 @@ var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been
 
 gGuiBase.SaveLoadSupport = (function() {
     
+	$('#menuFileOpenInput').hide();
+	
 	$('#menuFileNew').click(function(event) {
-		cleanUpGameCore();
+		gGuiBase.Core.cleanUpGameCore();
 		
-		gCurrentScene = new ClientScene(0);
-		gGameCore.getSceneList().push(gCurrentScene);
+		gGuiBase.SceneSupport.gCurrentScene = new ClientScene(0);
+		gGuiBase.SceneSupport.getSceneList().push(gGuiBase.SceneSupport.gCurrentScene);
 		gEngine.GameLoop.stop();
-		gEngine.Core.startScene(gCurrentScene);
+		gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
 		
-		refreshAllPanels();
+		gGuiBase.View.refreshAllTabContent();
+		gGuiBase.Core.reinitializeTabs();
 	});
 	
 	$('#menuFileOpen').click(function(event) {
@@ -19,23 +22,20 @@ gGuiBase.SaveLoadSupport = (function() {
 	});
 		
 	$('#menuFileSave').click(function() {
-		fileSave();
+		gGuiBase.SaveLoadSupport.fileSave();
 	});
 	
 	$('#menuRun').click(function() {
-		gRunning = !gRunning;
-		if (gRunning) {
+		gGuiBase.Core.gRunning = !gGuiBase.Core.gRunning;
+		if (gGuiBase.Core.gRunning) {
 			// Back up game state
 			fileSave(true);
 			
 			$('#menuRun').css('background-color', '#c7b6b2');
-			cleanUpPanelRightBody();
-			if (gCurrentListItem !== null) {
-				gCurrentListItem.removeClass('current-list-item');
-			}
+			gGuiBase.Core.emptyDetailsTab();
 		} else {
 			// Load the backed-up game state
-			fileOpen(true);
+			gGuiBase.SaveLoadSupport.fileOpen(true);
 			
 			$('#menuRun').css('background-color', '#ab9b97');
 		}
@@ -49,7 +49,7 @@ gGuiBase.SaveLoadSupport = (function() {
 		
 		var input;
 		if (backup) {
-			input = gBackup;
+			input = gGuiBase.Core.gBackup;
 		} else {
 			input = document.getElementById("menuFileOpenInput").files[0];
 		}
@@ -77,7 +77,7 @@ gGuiBase.SaveLoadSupport = (function() {
 					
 					try {
 						// Clears everything to an empty state
-						cleanUpGameCore();
+						gGuiBase.Core.cleanUpGameCore();
 						// Load everything from the file
 						gRunning = false;
 						$('#menuRun').css('background-color', '#ab9b97');
@@ -85,29 +85,31 @@ gGuiBase.SaveLoadSupport = (function() {
 							loadTextures(files, function() {
 								loadObjects(files, function() {
 									loadScenes(files, function() {
-										refreshAllPanels();
+										gGuiBase.View.refreshAllTabContent();
+										gGuiBase.Core.reinitializeTabs();
 									});
 								});
 							});
 						});
 					} catch (error) {
 						alert("There were issues with loading your file.\n\nErrors:\n" + error);
-						cleanUpGameCore();
+						gGuiBase.Core.cleanUpGameCore();
 					}
 				};
 			} else if (backup) {
 				// This is for backing up the game
 				try {
 					// Clears everything to an empty state
-					cleanUpGameCore();
+					gGuiBase.Core.cleanUpGameCore();
 					// Load everything from the file
-					gRunning = false;
+					gGuiBase.Core.gRunning = false;
 					$('#menuRun').css('background-color', '#ab9b97');
 					loadMisc(gBackup, function() {
 						loadTextures(gBackup, function() {
 							loadObjects(gBackup, function() {
 								loadScenes(gBackup, function() {
-									refreshAllPanels();
+									gGuiBase.View.refreshAllTabContent();
+									gGuiBase.Core.reinitializeTabs();
 								});
 							});
 						});
@@ -139,40 +141,40 @@ gGuiBase.SaveLoadSupport = (function() {
 		
 		// Global vars
 		var globalVarData = {};
-		globalVarData[0] = gNextObjectID;
-		globalVarData[1] = gNextInstanceID;
-		globalVarData[2] = gNextSceneID;
+		globalVarData[0] = gGuiBase.ObjectSupport.mNextObjID;
+		globalVarData[1] = gGuiBase.InstanceSupport.mNextInstID;
+		globalVarData[2] = gGuiBase.SceneSupport.mNextSceneID;
 		globalVars = JSON.stringify(globalVarData);
 		misc.file("vars.json", globalVars);
 		
 		// Objects
 		var i;
-		var objectList = gGameCore.getObjectList();
+		var objectList = gGuiBase.ObjectSupport.getObjectList();
 		for (i = 0; i < objectList.length; i++) {
 			var objectData = {};
 			var obj = objectList[i];
-			var xf = obj[0].getXform();
+			console.log(obj);
+			var objCode = gGuiBase.ObjectSupport.getGameObjectCodeByID(obj.mName);
+			var xf = obj.getXform();
 			
-			objectData[0] = obj[0].mID;
-			objectData[1] = obj[1];
-			objectData[2] = obj[2];
-			if (objectData[2] === 1) {
-				// If it's a GO, get the relevant data
-				objectData[3] = xf.getXPos();
-				objectData[4] = xf.getYPos();
-				objectData[5] = xf.getWidth();
-				objectData[6] = xf.getHeight();
-				objectData[7] = xf.getRotationInDegree();
-				objectData[8] = obj[0].getRenderable().getColor();
+			objectData[0] = obj.mID;
+			objectData[1] = objCode; //Code
+			//objectData[2] = obj[2];
+			
+			objectData[3] = xf.getXPos();
+			objectData[4] = xf.getYPos();
+			objectData[5] = xf.getWidth();
+			objectData[6] = xf.getHeight();
+			objectData[7] = xf.getRotationInDegree();
+			objectData[8] = obj.getRenderable().getColor();
 				// TODO: Do it for texture
-			}
 			
-			objects.file(obj[0].mName + ".json", JSON.stringify(objectData));
+			objects.file(obj.mName + ".json", JSON.stringify(objectData));
 		}
 		
 		
 		// Scenes
-		var sceneList = gGameCore.getSceneList();
+		var sceneList = gGuiBase.SceneSupport.getSceneList();
 		for (i = 0; i < sceneList.length; i++) {
 			// For each scene...
 			var scene = sceneList[i];
@@ -255,9 +257,9 @@ gGuiBase.SaveLoadSupport = (function() {
 			// Read the ZipObject item as a JSON file, and then store the information where it belongs
 			files.file(file.name).async("string").then(function success(content) {
 				var data = JSON.parse(content);
-				gNextObjectID = data[0];
-				gNextInstanceID = data[1];
-				gNextSceneID = data[2];
+				gGuiBase.ObjectSupport.mNextObjID = data[0];
+				gGuiBase.InstanceSupport.mNextInstID = data[1];
+				gGuiBase.SceneSupport.mNextSceneID = data[2];
 			}, function error(error) {
 				throw "There were issues with loading your file.\n\nErrors:\n" + error;
 			});
@@ -282,24 +284,23 @@ gGuiBase.SaveLoadSupport = (function() {
 				eval(data[1]);
 				var className = relativePath.substring(0, relativePath.lastIndexOf(".")); // Just get rid of .json
 				eval("obj = new " + className + "(new Renderable());");
-				var entry = [obj, data[1], data[2]];
+				//var entry = [obj, data[1], data[2]];
 				obj.mID = data[0];
 				obj.mName = className;
-				// If it is a GO
-				if (data[2] === 1) {
-					var xf = obj.getXform();
-					xf.setXPos(data[3]);
-					xf.setYPos(data[4]);
-					xf.setWidth(data[5]);
-					xf.setHeight(data[6]);
-					xf.setRotationInDegree(data[7]);
-					obj.getRenderable().setColor(data[8]);
-				}
+
+				var xf = obj.getXform();
+				xf.setXPos(data[3]);
+				xf.setYPos(data[4]);
+				xf.setWidth(data[5]);
+				xf.setHeight(data[6]);
+				xf.setRotationInDegree(data[7]);
+				obj.getRenderable().setColor(data[8]);
 				
-				// Add entry
-				var list = gGameCore.getObjectList();
-				list.push(entry);
-				createPanelLeftObjects();
+				//console.log(obj);
+				
+				gGuiBase.ObjectSupport.setGameObjectByID(obj.mName, obj);
+				gGuiBase.ObjectSupport.setGameObjectCodeByID(obj.mName, data[1]);
+				
 			}, function error(error) {
 				throw "There were issues with loading your file.\n\nErrors:\n" + error;
 			});
@@ -323,9 +324,9 @@ gGuiBase.SaveLoadSupport = (function() {
 				currentScene.mAllCamera = [];
 				currentScene.mAllObject = [];
 				
-				var sceneList = gGameCore.getSceneList();
+				var sceneList = gGuiBase.SceneSupport.getSceneList();
 				sceneList.push(currentScene);
-				gGameCore.selectScene(sceneList.length - 1); // This starts the scene
+				gGuiBase.SceneSupport.selectScene(sceneList.length - 1); // This starts the scene
 			} else {
 				//files.folder("Scenes").folder(sceneName).forEach(function(relativePath2, file2) {
 				files.file(file.name).async("string").then(function success(content) {
@@ -333,14 +334,17 @@ gGuiBase.SaveLoadSupport = (function() {
 					var sceneName = relativePath.substring(0, relativePath.indexOf("/"));
 
 					if (relativePath.endsWith("cameras.json")) {
+						
 						// This file contains (unless the user modified it) the data for every camera in the scene
 						var i = 0;
 						
 						// Cameras auto-add themselves to gCurrentScene once created, so we need the scene selected first
-						var idx = gGameCore.getSceneIndexByName(sceneName);
-						gGameCore.selectScene(idx);
-						gCurrentScene.mAllCamera = [];
 						
+						var idx = gGuiBase.SceneSupport.getSceneIndex(sceneName);
+						console.log(idx);
+						gGuiBase.SceneSupport.selectScene(idx);
+						gGuiBase.SceneSupport.gCurrentScene.mAllCamera = [];
+			
 						while (typeof(data[i]) !== "undefined") {
 							
 							// Note: new cameras are automatically added to mAllCamera
@@ -351,14 +355,14 @@ gGuiBase.SaveLoadSupport = (function() {
 							);
 					
 							// Modify the camera some more
-							gCurrentScene.mAllCamera[i / 6].setBackgroundColor(data[i + 5]);
-							gCurrentScene.mAllCamera[i / 6].mName = data[i];
-							gCurrentScene.mAllCamera[i / 6].mID = data[i + 1];
+							gGuiBase.SceneSupport.gCurrentScene.mAllCamera[i / 6].setBackgroundColor(data[i + 5]);
+							gGuiBase.SceneSupport.gCurrentScene.mAllCamera[i / 6].mName = data[i];
+							gGuiBase.SceneSupport.gCurrentScene.mAllCamera[i / 6].mID = data[i + 1];
 							
 							i += 6;
 						}
 						// Select the first scene when this process is done
-						gGameCore.selectScene(0);
+						gGuiBase.SceneSupport.selectScene(0);
 					} else if (relativePath.endsWith("instances.json")) {
 						// This file contains (unless the user modified it) the data for every instance in the scene
 						var i = 0;
@@ -381,17 +385,18 @@ gGuiBase.SaveLoadSupport = (function() {
 							inst.mID = data[i + 1];
 							
 							// Add it to the scene
-							gGameCore.getSceneByName(sceneName).addInstance(inst);
+							//gGameCore.getSceneByName(sceneName).addInstance(inst);
+							var scene = gGuiBase.SceneSupport.getSceneByName(sceneName);
+							gGuiBase.InstanceSupport.addInstance(inst, scene);
 							i += 8;
 						}
 					} else if (relativePath.endsWith(".json")) {
 						// Unless the user inserted a .json, this is the scene file
-						var theScene = gGameCore.getSceneByName(sceneName);
+						var theScene = gGuiBase.SceneSupport.getSceneByName(sceneName);
 						theScene.mName = relativePath.substring(0, relativePath.lastIndexOf("/"));
 						theScene.mID = data[0];
 						theScene.mNextCameraID = data[1];
 						
-						createPanelBottomScenes();
 					}
 				}, function error(error) {
 					throw "There were issues with loading your file.\n\nErrors:\n" + error;
@@ -402,7 +407,8 @@ gGuiBase.SaveLoadSupport = (function() {
 	};
 	
     var mPublic = {
-        
+        fileOpen: fileOpen,
+		fileSave: fileSave,
     };
     return mPublic;
 }());

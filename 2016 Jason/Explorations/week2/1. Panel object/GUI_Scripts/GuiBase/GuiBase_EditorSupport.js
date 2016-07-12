@@ -159,7 +159,8 @@ gGuiBase.EditorSupport = (function() {
 
 
     var mPublic = {
-        createFloatingEditor: createFloatingEditor
+        createFloatingEditor: createFloatingEditor,
+		gEditorMap: gEditorMap
     };
     return mPublic;
 }());

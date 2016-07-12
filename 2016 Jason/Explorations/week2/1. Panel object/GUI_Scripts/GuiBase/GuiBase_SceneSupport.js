@@ -68,7 +68,7 @@ gGuiBase.SceneSupport = (function() {
 	var getSceneIndex = function(sceneName) {
 		var i;
 		for (i = 0; i < mSceneList.length; i++) {
-			if (mSceneList[i].mName === name) {
+			if (mSceneList[i].mName === sceneName) {
 				return i;
 			}
 		}
@@ -81,7 +81,7 @@ gGuiBase.SceneSupport = (function() {
 		gCurrentScene = blank;
 		blank.mName = "";
 		blank.mID = "sceneListItemBlank";
-		gEngine.Core.startScene(blank);
+		gEngine.View.startScene(blank);
 		blank.mAllCamera[1] = new Camera(
 			vec2.fromValues(20,60),   // position of the camera
 			50,                        // width of camera
@@ -136,11 +136,14 @@ gGuiBase.SceneSupport = (function() {
         createDefaultScene: createDefaultScene,
         checkForNameConflict: checkForNameConflict,
         getSceneList: getSceneList,
+		getSceneIndex: getSceneIndex,
         getSceneByName: getSceneByName,
 		getSceneListNames: getSceneListNames,
 		selectSceneByName: selectSceneByName,
 		selectScene: selectScene,
 		deleteScene: deleteScene,
+		mNextSceneID: mNextSceneID,
+		runBlankScene: runBlankScene
     };
     return mPublic;
 }());

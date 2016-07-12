@@ -24,6 +24,11 @@ gGuiBase.InstanceSupport = (function() {
         return inst.mID;
     };
 	
+	var addInstance = function (object, scene) {
+		scene.addInstance(object);
+		mInst[object.mID] = object;
+	};
+	
 	var deleteInstance = function(instanceID) {
 		
 		if (gGuiBase.Core.selectedGameObject !== null && instanceID === gGuiBase.Core.selectedGameObject.mID) {
@@ -114,18 +119,36 @@ gGuiBase.InstanceSupport = (function() {
         return instanceList;
     };
 	
+	var clearInstances = function() {
+		for (var objName in mInst) {
+			delete mInst[objName];
+		}
+		mInst = {};
+		mNextInstID = 0;
+		
+		var sceneList = gGuiBase.SceneSupport.getSceneList();
+		for (var i = 0; i < sceneList.length; i++) {
+			var instances = sceneList[i].getInstanceList();
+			instances.splice(0, instances.length);
+			instances = [];
+		}
+	};
+	
 	
     var mPublic = {
         checkForNameConflict: checkForNameConflict,
         createInstanceOfObj: createInstanceOfObj,
+		addInstance: addInstance,
         getInstanceByID: getInstanceByID,
 		deleteInstancesWithName: deleteInstancesWithName,
 		deleteInstance: deleteInstance,
+		getInstanceList: getInstanceList,
         // getInstanceNameList: getInstanceNameList,
         getUniqueID: getUniqueID,
 		replaceInMap: replaceInMap,
-        
-        inheritPrototype: inheritPrototype
+        clearInstances: clearInstances,
+        inheritPrototype: inheritPrototype,
+		mNextInstID: mNextInstID
     };
     return mPublic;
 }());

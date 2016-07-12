@@ -82,6 +82,17 @@ gGuiBase.CameraSupport = (function() {
 		return gGuiBase.SceneSupport.gCurrentScene.getCameraList();
 	};
 	
+	var clearCameras = function() {
+		var sceneList = gGuiBase.SceneSupport.getSceneList();
+		for (var i = 0; i < sceneList.length; i++) {
+			var cameras = sceneList[i].getCameraList();
+
+			cameras.splice(0, cameras.length);
+			cameras = [];
+
+		}
+	};
+	
 	var getCameraListNames = function() {
 		var cameraList = getCameraList();
 		var nameArray = [];
@@ -114,7 +125,8 @@ gGuiBase.CameraSupport = (function() {
 		createDefaultCamera: createDefaultCamera,
 		getCameraListNames: getCameraListNames,
 		getCameraByName: getCameraByName,
-		deleteCamera: deleteCamera
+		deleteCamera: deleteCamera,
+		clearCameras: clearCameras,
     };
     return mPublic;
 }());

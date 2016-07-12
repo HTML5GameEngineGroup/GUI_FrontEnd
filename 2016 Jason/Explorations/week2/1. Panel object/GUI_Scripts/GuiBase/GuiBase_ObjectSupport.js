@@ -146,7 +146,7 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
     var getObjectList = function() {
         var objList = [];
         for (var objName in mGO) {
-            objList.push(objName);
+            objList.push(mGO[objName]);
         }
         return objList;
     };
@@ -167,6 +167,10 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
         return objList;
 	};
     
+	var setGameObjectByID = function ( GOName, object ) {
+		mGO[GOName] = object;
+	};
+	
     var getGameObjectCodeByID = function ( GOName ) {
         return mGOCode[GOName];
     };
@@ -174,6 +178,20 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
     var setGameObjectCodeByID = function ( GOName, Code ) {
         mGOCode[GOName] = Code;  
     };
+	
+	var clearObjects = function() {
+		for (var objName in mGO) {
+			delete mGO[objName];
+		}
+		
+		for (var objName in mGOCode) {
+			delete mGOCode[objName];
+		}
+		
+		mGO = {};
+		mGOCode = {};
+		mNextObjID = 0;
+	};
     
     var inheritPrototype = function (subClass, superClass) {
         var prototype = Object.create(superClass.prototype);
@@ -194,8 +212,11 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
         getDefaultCodeGO: getDefaultCodeGO,
         getDefaultCodeClass: getDefaultCodeClass,
         getGameObjectByID: getGameObjectByID,
+		setGameObjectByID: setGameObjectByID,
         getGameObjectCodeByID: getGameObjectCodeByID,
         setGameObjectCodeByID: setGameObjectCodeByID,
+		mNextObjID: mNextObjID,
+		clearObjects: clearObjects,
 
         inheritPrototype: inheritPrototype
     };

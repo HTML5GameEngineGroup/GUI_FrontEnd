@@ -173,6 +173,45 @@ gGuiBase.Core = (function() {
         prototype.constructor = subClass;
         subClass.prototype = prototype;
     };
+	
+	var cleanUpGameCore = function() {
+		// Close (delete) all code editor windows that are open
+		for (var i in gGuiBase.EditorSupport.gEditorMap) {
+			$('#' + gGuiBase.EditorSupport.gEditorMap[i]).remove();
+			delete gGuiBase.EditorSupport.gEditorMap[i];
+		}
+		
+		// Rest the vars (for loading)
+		gGuiBase.ObjectSupport.clearObjects();
+		gGuiBase.InstanceSupport.clearInstances();
+		gGuiBase.CameraSupport.clearCameras();
+		var sceneList = gGuiBase.SceneSupport.getSceneList();
+		sceneList.splice(0, sceneList.length);
+		
+
+		var selectedGameObject = null;
+		var selectedCamera = null;
+		
+		gEngine.GameLoop.stop();
+		gGuiBase.SceneSupport.runBlankScene();
+		
+		gNextObjectID = 0;          // For making unique IDs
+		gGuiBase.InstanceSupport.mNextInstID = 0;
+		gGuiBase.SceneSupport.mNextSceneID = 0;
+		gGuiBase.ObjectSupport.mNextObjID = 0;  
+		gGuiBase.Core.gRunning = false;           // If true, the update function will be called each game loop
+		
+		gGuiBase.View.refreshAllTabContent();
+		reinitializeTabs();
+	};
+	
+	var reinitializeTabs = function() {
+		reinitializeCameraTab();
+		reinitializeSceneTab();
+		updateObjectSelectList();
+		updateInstanceSelectList();
+		emptyDetailsTab();
+	};
 
     var mPublic = {
         addDefaultObject: addDefaultObject,
@@ -188,6 +227,7 @@ gGuiBase.Core = (function() {
 		selectDetailsCamera: selectDetailsCamera,
 		reinitializeCameraTab: reinitializeCameraTab,
 		reinitializeSceneTab: reinitializeSceneTab,
+		reinitializeTabs: reinitializeTabs,
 		
 		addInstance: addInstance,
 		addInstanceWithName: addInstanceWithName,
@@ -197,6 +237,7 @@ gGuiBase.Core = (function() {
 		emptyDetailsTab: emptyDetailsTab,
 		
         inheritPrototype: inheritPrototype,
+		cleanUpGameCore: cleanUpGameCore,
 		
 		selectedGameObject: selectedGameObject,
 		selectedCamera: selectedCamera,
