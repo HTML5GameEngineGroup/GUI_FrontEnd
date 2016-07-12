@@ -185,26 +185,25 @@ gGuiBase.Core = (function() {
 		var sceneList = gGuiBase.SceneSupport.getSceneList();
 		sceneList.splice(0, sceneList.length);
 		
-
 		var selectedGameObject = null;
 		var selectedCamera = null;
 		
 		gEngine.GameLoop.stop();
 		gGuiBase.SceneSupport.runBlankScene();
 		
-		gNextObjectID = 0;          // For making unique IDs
+		//gNextObjectID = 0;          // For making unique IDs
 		gGuiBase.InstanceSupport.mNextInstID = 0;
 		gGuiBase.SceneSupport.mNextSceneID = 0;
 		gGuiBase.ObjectSupport.mNextObjID = 0;  
 		gGuiBase.Core.gRunning = false;           // If true, the update function will be called each game loop
-		
+
 		gGuiBase.View.refreshAllTabContent();
 		reinitializeTabs();
 	};
 	
 	var reinitializeTabs = function() {
-		reinitializeCameraTab();
 		reinitializeSceneTab();
+		reinitializeCameraTab();
 		updateObjectSelectList();
 		updateInstanceSelectList();
 		emptyDetailsTab();

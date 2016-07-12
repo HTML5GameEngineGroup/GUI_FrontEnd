@@ -56,9 +56,7 @@ gGuiBase.ObjectSupport = (function() {
 		
 		delete mGO[objName];
 		delete mGOCode[objName];
-		
-		console.log(getObjectList());
-		
+        
 		gGuiBase.InstanceSupport.deleteInstancesWithName(objName); //Delete instances containing the object name
 		gGuiBase.Core.updateObjectSelectList();
 		gGuiBase.Core.updateInstanceSelectList();
@@ -183,7 +181,7 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
 		for (var objName in mGO) {
 			delete mGO[objName];
 		}
-		
+
 		for (var objName in mGOCode) {
 			delete mGOCode[objName];
 		}

@@ -85,12 +85,12 @@ gGuiBase.SaveLoadSupport = (function() {
 							loadTextures(files, function() {
 								loadObjects(files, function() {
 									loadScenes(files, function() {
-										gGuiBase.View.refreshAllTabContent();
-										gGuiBase.Core.reinitializeTabs();
 									});
 								});
 							});
 						});
+						gGuiBase.View.refreshAllTabContent();
+						gGuiBase.Core.reinitializeTabs();
 					} catch (error) {
 						alert("There were issues with loading your file.\n\nErrors:\n" + error);
 						gGuiBase.Core.cleanUpGameCore();
@@ -108,8 +108,6 @@ gGuiBase.SaveLoadSupport = (function() {
 						loadTextures(gGuiBase.Core.gBackup, function() {
 							loadObjects(gGuiBase.Core.gBackup, function() {
 								loadScenes(gGuiBase.Core.gBackup, function() {
-									gGuiBase.View.refreshAllTabContent();
-									gGuiBase.Core.reinitializeTabs();
 								});
 							});
 						});
@@ -158,7 +156,7 @@ gGuiBase.SaveLoadSupport = (function() {
 			
 			objectData[0] = obj.mID;
 			objectData[1] = objCode; //Code
-			//objectData[2] = obj[2];
+			//objectData[2] = obj[2]; // type
 			
 			objectData[3] = xf.getXPos();
 			objectData[4] = xf.getYPos();
@@ -299,7 +297,6 @@ gGuiBase.SaveLoadSupport = (function() {
 				
 				gGuiBase.ObjectSupport.setGameObjectByID(obj.mName, obj);
 				gGuiBase.ObjectSupport.setGameObjectCodeByID(obj.mName, data[1]);
-				
 			}, function error(error) {
 				throw "There were issues with loading your file.\n\nErrors:\n" + error;
 			});
@@ -396,6 +393,7 @@ gGuiBase.SaveLoadSupport = (function() {
 						theScene.mNextCameraID = data[1];
 						
 					}
+					refreshView();	// not sure how to force this to be used as the callback
 				}, function error(error) {
 					throw "There were issues with loading your file.\n\nErrors:\n" + error;
 				});
@@ -403,10 +401,17 @@ gGuiBase.SaveLoadSupport = (function() {
 		});
 		callback();
 	};
+
+	var refreshView = function() {
+		console.log("REFRESH FUNCTION HERE");
+		gGuiBase.Core.reinitializeTabs();
+		gGuiBase.View.refreshAllTabContent();
+	};
 	
     var mPublic = {
         fileOpen: fileOpen,
 		fileSave: fileSave,
+		refreshView: refreshView
     };
     return mPublic;
 }());

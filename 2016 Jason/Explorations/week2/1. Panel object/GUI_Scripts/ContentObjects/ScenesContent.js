@@ -19,10 +19,7 @@ ScenesContent.prototype.initialize = function () {
 	this.widgetList.push(this.sceneAddButton);
 	
 	this.sceneSelectList = new SelectList(this.selectListID, 'list-style-type: none; margin: 0; padding: 0', [], 'display: inline; margin: 5px');
-	
 	this.widgetList.push(this.sceneSelectList);
-
-
 };
 
 ScenesContent.prototype.initializeEventHandling = function () {
@@ -56,12 +53,9 @@ ScenesContent.prototype.buttonOnClick = function() {
 };
 
 ScenesContent.prototype.onListSelect = function(ui) {
-	
 	// get objectName/objectID
 	var selectedSceneName = ui["selected"]["id"];
 	gGuiBase.Core.selectDetailsScene( selectedSceneName );
-
-
 	//todo: use this function to populate the details panel
 };
 
