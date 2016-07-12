@@ -31,13 +31,13 @@ gGuiBase.SaveLoadSupport = (function() {
 			// Back up game state
 			fileSave(true);
 			
-			$('#menuRun').css('background-color', '#c7b6b2');
+			$('#menuRun').css('background-color', '#D4D4D4');
 			gGuiBase.Core.emptyDetailsTab();
 		} else {
 			// Load the backed-up game state
 			gGuiBase.SaveLoadSupport.fileOpen(true);
 			
-			$('#menuRun').css('background-color', '#ab9b97');
+			$('#menuRun').css('background-color', '#FFFFFF');
 		}
 	});
 		
