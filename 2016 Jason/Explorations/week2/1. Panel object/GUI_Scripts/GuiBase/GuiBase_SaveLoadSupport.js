@@ -31,13 +31,13 @@ gGuiBase.SaveLoadSupport = (function() {
 			// Back up game state
 			fileSave(true);
 			
-			$('#menuRun').css('background-color', '#D4D4D4');
+			$('#menuRun').css('background-color', 'grey');
 			gGuiBase.Core.emptyDetailsTab();
 		} else {
 			// Load the backed-up game state
 			gGuiBase.SaveLoadSupport.fileOpen(true);
 			
-			$('#menuRun').css('background-color', '#FFFFFF');
+			$('#menuRun').css('background-color', 'white');
 		}
 	});
 		
@@ -80,7 +80,7 @@ gGuiBase.SaveLoadSupport = (function() {
 						gGuiBase.Core.cleanUpGameCore();
 						// Load everything from the file
 						gRunning = false;
-						$('#menuRun').css('background-color', '#ab9b97');
+						$('#menuRun').css('background-color', 'white');
 						loadMisc(files, function() {
 							loadTextures(files, function() {
 								loadObjects(files, function() {
@@ -103,7 +103,7 @@ gGuiBase.SaveLoadSupport = (function() {
 					gGuiBase.Core.cleanUpGameCore();
 					// Load everything from the file
 					gGuiBase.Core.gRunning = false;
-					$('#menuRun').css('background-color', '#ab9b97');
+					$('#menuRun').css('background-color', 'white');
 					loadMisc(gGuiBase.Core.gBackup, function() {
 						loadTextures(gGuiBase.Core.gBackup, function() {
 							loadObjects(gGuiBase.Core.gBackup, function() {
@@ -403,7 +403,6 @@ gGuiBase.SaveLoadSupport = (function() {
 	};
 
 	var refreshView = function() {
-		console.log("REFRESH FUNCTION HERE");
 		gGuiBase.Core.reinitializeTabs();
 		gGuiBase.View.refreshAllTabContent();
 	};
