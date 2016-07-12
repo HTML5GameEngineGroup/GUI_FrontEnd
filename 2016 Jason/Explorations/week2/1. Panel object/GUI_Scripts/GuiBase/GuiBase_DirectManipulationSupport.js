@@ -45,12 +45,11 @@ gGuiBase.DirectManipulationSupport = (function() {
 			xform.setXPos(mouseX);
 			xform.setYPos(mouseY);
 			
-			/*var detailsTab = gGuiBase.View.findTabByID("#Details");
-			
-			var detailsTransform = new TransformContent("TransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
+			var detailsTab = gGuiBase.View.findTabByID("#Details");
+			var detailsTransform = detailsTab.getContentObject("#TransformContent");
 			detailsTransform.updateFields(gGuiBase.Core.selectedGameObject);
-			detailsTab.removeContent("#TransformContent");
-			detailsTab.addContentToFront(detailsTransform);*/
+			detailsTab.refreshSpecificContent("#TransformContent");
+			
 			
 
 		}

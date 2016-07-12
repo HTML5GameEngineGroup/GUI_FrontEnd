@@ -55,7 +55,6 @@ GuiPanelTab.prototype.addContent = function(contentobject) {
 
 GuiPanelTab.prototype.getContentObject = function (contentID) {
 	for (var i = 0; i < this.content.length; i++) {
-		console.log(this.content[i].getID() + " " + contentID);
 		
 		if (this.content[i].getID() === contentID) {
 			return this.content[i];
@@ -86,6 +85,13 @@ GuiPanelTab.prototype.refreshContent = function() {
 		$(this.getID()).accordion( "destroy" );
 		this.tabContentAccordion(this.getID());
 	}
+};
+
+GuiPanelTab.prototype.refreshSpecificContent = function(contentID) {
+	var contentObject = this.getContentObject(contentID);
+	$(contentID).empty();
+	$(contentID).append(contentObject.getWidgetHTMLContent());
+	contentObject.initializeEventHandling();
 };
 
 // appends jquery/html to the tab
