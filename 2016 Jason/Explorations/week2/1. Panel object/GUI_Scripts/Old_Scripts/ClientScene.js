@@ -128,6 +128,10 @@ ClientScene.prototype.getCameraList = function() {
     return this.mAllCamera;
 };
 
+ClientScene.prototype.getFirstCamera = function() {
+	if (this.mAllCamera.length > 0) return this.mAllCamera[0];
+};
+
 ClientScene.prototype.getInstance = function ( instID ) {
     
 };
