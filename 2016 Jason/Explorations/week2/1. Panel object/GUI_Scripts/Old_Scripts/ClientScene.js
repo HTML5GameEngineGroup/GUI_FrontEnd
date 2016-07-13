@@ -92,20 +92,24 @@ ClientScene.prototype.draw = function() {
                 this.mInstanceList[j].draw(cam);
             }
         }
+		
+		if (i === 0) {
+			if (camera !== null && gGuiBase.Core.selectedGameObject !== null &&
+				gGuiBase.Core.selectedGameObject.mID.includes('[')) { 
+		
+				if (this.selectObject !== null)
+					this.selectObject.draw(cam);
+				if (this.rotationObject !== null)
+					this.rotationObject.draw(cam);
+			}
+		}
     }
 	
 	var camera = this.getFirstCamera();
-
+	
 	//Selection should not be shown if there is no selection object, if the camera does not exist,
 	// if there is no selected gameobject, and if the selected gameobject is an instance
-	if (camera !== null && gGuiBase.Core.selectedGameObject !== null &&
-		gGuiBase.Core.selectedGameObject.mID.includes('[')) { 
-		
-		if (this.selectObject !== null)
-			this.selectObject.draw(camera);
-		if (this.rotationobject !== null)
-			this.rotationObject.draw(camera);
-	}
+	
 };
 
 // The update function, updates the application state. Make sure to _NOT_ draw
@@ -154,7 +158,9 @@ ClientScene.prototype.getCameraList = function() {
 };
 
 ClientScene.prototype.getFirstCamera = function() {
+	//if (this.mAllCamera.length > 0) return this.mAllCamera[0];
 	if (this.mAllCamera.length > 0) return this.mAllCamera[0];
+	
 };
 
 ClientScene.prototype.getInstance = function ( instID ) {
