@@ -60,7 +60,9 @@ gGuiBase.DirectManipulationSupport = (function() {
 				gGuiBase.SceneSupport.gCurrentScene.setSelectObject(selectObject);
 				
 				var rotationObject = gGuiBase.SceneSupport.gCurrentScene.getRotationObject();
+				rotationObject = new RotationObject(xform.getXPos(), xform.getYPos(), xform.getWidth(), xform.getHeight(), xform.getRotationInRad());
 				
+				gGuiBase.SceneSupport.gCurrentScene.setRotationObject(rotationObject);
 			} else { //Clicked on empty
 				gGuiBase.Core.selectedGameObject = null;
 				gGuiBase.Core.emptyDetailsTab();
