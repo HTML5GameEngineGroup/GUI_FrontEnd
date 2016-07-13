@@ -20,6 +20,8 @@ gGuiBase.DirectManipulationSupport = (function() {
 	var draggingTop = false;
 	var draggingLeft = false;
 	
+
+	
 	var setCameraToCurrentScene = function() {
 		camera = gGuiBase.SceneSupport.gCurrentScene.getFirstCamera();
 	};
@@ -56,6 +58,9 @@ gGuiBase.DirectManipulationSupport = (function() {
 				selectObject = new SelectionObject(xform.getXPos(), xform.getYPos(), xform.getWidth(), xform.getHeight());
 				
 				gGuiBase.SceneSupport.gCurrentScene.setSelectObject(selectObject);
+				
+				var rotationObject = gGuiBase.SceneSupport.gCurrentScene.getRotationObject();
+				
 			} else { //Clicked on empty
 				gGuiBase.Core.selectedGameObject = null;
 				gGuiBase.Core.emptyDetailsTab();

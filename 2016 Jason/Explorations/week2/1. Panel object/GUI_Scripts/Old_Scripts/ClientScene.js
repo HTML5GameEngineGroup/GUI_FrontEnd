@@ -23,6 +23,7 @@ function ClientScene(number) {
     this.isInitialized = false;
 	
 	this.selectObject = null;
+	this.rotationObject = null;
 
 }
 gEngine.View.inheritPrototype(ClientScene, Scene);
@@ -97,9 +98,13 @@ ClientScene.prototype.draw = function() {
 
 	//Selection should not be shown if there is no selection object, if the camera does not exist,
 	// if there is no selected gameobject, and if the selected gameobject is an instance
-	if (this.selectObject !== null && camera !== null && gGuiBase.Core.selectedGameObject !== null &&
+	if (camera !== null && gGuiBase.Core.selectedGameObject !== null &&
 		gGuiBase.Core.selectedGameObject.mID.includes('[')) { 
-		this.selectObject.draw(camera);
+		
+		if (this.selectObject !== null)
+			this.selectObject.draw(camera);
+		if (this.rotationobject !== null)
+			this.rotationObject.draw(camera);
 	}
 };
 
@@ -126,6 +131,10 @@ ClientScene.prototype.update = function() {
 	
 	if (this.selectObject !== null && gGuiBase.Core.selectedGameObject !== null) {
 		this.selectObject.update()
+	}
+	
+	if (this.rotationObject !== null && gGuiBase.Core.selectedGameObject !== null) {
+		this.rotationObject.update()
 	}
 	
 };
@@ -173,6 +182,14 @@ ClientScene.prototype.getSelectObject = function() {
 
 ClientScene.prototype.setSelectObject = function(selectObject) {
 	this.selectObject = selectObject;
+};
+
+ClientScene.prototype.getRotationObject = function() {
+	return this.rotationObject;
+};
+
+ClientScene.prototype.setRotationObject = function(rotationObject) {
+	this.rotationObject = rotationObject;
 };
 
 ClientScene.prototype.collision = function() {

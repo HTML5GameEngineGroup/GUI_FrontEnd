@@ -1,7 +1,7 @@
 
 function SelectionObject(x, y, w, h) {
 	this.mTopLine = new LineRenderable((x-w/2), (y+h/2), (x+w/2), (y+h/2));
-	this.mTopLine.setColor([1, 1, 1, 2]);
+	this.mTopLine.setColor([1, 1, 1, 1]);
 	this.mLeftLine = new LineRenderable((x-w/2), (y+h/2), (x-w/2), (y-h/2));
 	this.mLeftLine.setColor([1,1,1,1]);
 	this.mRightLine = new LineRenderable((x+w/2), (y+h/2), (x+w/2), (y-h/2));
