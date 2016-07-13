@@ -20,7 +20,6 @@ gGuiBase.DirectManipulationSupport = (function() {
 	var draggingTop = false;
 	var draggingLeft = false;
 	
-	
 	var setCameraToCurrentScene = function() {
 		camera = gGuiBase.SceneSupport.gCurrentScene.getFirstCamera();
 	};
@@ -51,13 +50,26 @@ gGuiBase.DirectManipulationSupport = (function() {
 			if (mouseInXform) {
 				gGuiBase.Core.selectInstanceDetails(instances[i].mID);
 				objectSelected = true;
+				
+				var selectObject = gGuiBase.SceneSupport.gCurrentScene.getSelectObject();
+				var xform = gGuiBase.Core.selectedGameObject.getXform();
+				selectObject = new SelectionObject(xform.getXPos(), xform.getYPos(), xform.getWidth(), xform.getHeight());
+				
+				gGuiBase.SceneSupport.gCurrentScene.setSelectObject(selectObject);
+			} else { //Clicked on empty
+				gGuiBase.Core.selectedGameObject = null;
+				gGuiBase.Core.emptyDetailsTab();
 			}
 		}
 		
 		//Left mouse released -- reset some bools
 		if (prevMouseDownState && (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) == false) && objectSelected) {
-			objectSelected = false;
-			draggingCorner = false;
+			if (objectSelected) {
+				objectSelected = false;
+				draggingCorner = false;
+			}
+			
+			
 		}
 
 		//Drag

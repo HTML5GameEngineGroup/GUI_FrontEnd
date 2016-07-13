@@ -21,6 +21,8 @@ function ClientScene(number) {
     this.mInstanceList = [];
     this.mAllUpdateSet = new GameObjectSet();
     this.isInitialized = false;
+	
+	this.selectObject = null;
 
 }
 gEngine.View.inheritPrototype(ClientScene, Scene);
@@ -90,6 +92,15 @@ ClientScene.prototype.draw = function() {
             }
         }
     }
+	
+	var camera = this.getFirstCamera();
+
+	//Selection should not be shown if there is no selection object, if the camera does not exist,
+	// if there is no selected gameobject, and if the selected gameobject is an instance
+	if (this.selectObject !== null && camera !== null && gGuiBase.Core.selectedGameObject !== null &&
+		gGuiBase.Core.selectedGameObject.mID.includes('[')) { 
+		this.selectObject.draw(camera);
+	}
 };
 
 // The update function, updates the application state. Make sure to _NOT_ draw
@@ -112,6 +123,11 @@ ClientScene.prototype.update = function() {
             }
         }
     }
+	
+	if (this.selectObject !== null && gGuiBase.Core.selectedGameObject !== null) {
+		this.selectObject.update()
+	}
+	
 };
 
 ClientScene.prototype.addInstance = function(inst) {
@@ -149,6 +165,14 @@ ClientScene.prototype.getInstanceNameList = function() {
         }
     }
     return instanceNames;
+};
+
+ClientScene.prototype.getSelectObject = function() {
+	return this.selectObject;
+};
+
+ClientScene.prototype.setSelectObject = function(selectObject) {
+	this.selectObject = selectObject;
 };
 
 ClientScene.prototype.collision = function() {

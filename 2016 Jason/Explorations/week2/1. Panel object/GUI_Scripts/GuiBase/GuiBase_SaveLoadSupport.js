@@ -33,6 +33,7 @@ gGuiBase.SaveLoadSupport = (function() {
 			
 			$('#menuRun').css('background-color', 'grey');
 			gGuiBase.Core.emptyDetailsTab();
+			gGuiBase.Core.selectedGameObject = null;
 		} else {
 			// Load the backed-up game state
 			gGuiBase.SaveLoadSupport.fileOpen(true);
