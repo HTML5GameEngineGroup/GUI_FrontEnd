@@ -1663,9 +1663,11 @@ var loadObjects = function(files, callback) {
         files.file(file.name).async("string").then(function success(content) {
             
             var data = JSON.parse(content);
-            var obj;
             // Put code in system so it can recognize it before making objects
-            eval(data[1]);
+            var objCode = data[1];
+            eval(objCode);
+
+            var obj;
             var className = relativePath.substring(0, relativePath.lastIndexOf(".")); // Just get rid of .json
             eval("obj = new " + className + "(new Renderable());");
             var entry = [obj, data[1], data[2]];

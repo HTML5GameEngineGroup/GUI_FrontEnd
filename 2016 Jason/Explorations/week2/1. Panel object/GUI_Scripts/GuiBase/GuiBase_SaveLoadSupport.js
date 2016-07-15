@@ -26,22 +26,20 @@ gGuiBase.SaveLoadSupport = (function() {
 	});
 	
 	$('#menuRun').click(function() {
-		// gGuiBase.Core.gRunning = !gGuiBase.Core.gRunning;
-		// if (gGuiBase.Core.gRunning) {
-		// 	// Back up game state
-		// 	fileSave(true);
-		//	
-		// 	$('#menuRun').css('background-color', 'grey');
-		// 	gGuiBase.Core.emptyDetailsTab();
-		// 	gGuiBase.Core.selectedGameObject = null;
-		// } else {
-		// 	// Load the backed-up game state
-		// 	gGuiBase.SaveLoadSupport.fileOpen(true);
-		//	
-		// 	$('#menuRun').css('background-color', 'white');
-		// }
-		//
-		refreshView();
+		gGuiBase.Core.gRunning = !gGuiBase.Core.gRunning;
+		if (gGuiBase.Core.gRunning) {
+			// Back up game state
+			fileSave(true);
+
+			$('#menuRun').css('background-color', 'grey');
+			gGuiBase.Core.emptyDetailsTab();
+			gGuiBase.Core.selectedGameObject = null;
+		} else {
+			// Load the backed-up game state
+			gGuiBase.SaveLoadSupport.fileOpen(true);
+
+			$('#menuRun').css('background-color', 'white');
+		}
 	});
 		
 	var fileOpen = function(backup) {
