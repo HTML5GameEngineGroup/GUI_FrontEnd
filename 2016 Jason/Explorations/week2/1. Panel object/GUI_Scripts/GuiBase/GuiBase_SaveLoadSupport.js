@@ -26,20 +26,22 @@ gGuiBase.SaveLoadSupport = (function() {
 	});
 	
 	$('#menuRun').click(function() {
-		gGuiBase.Core.gRunning = !gGuiBase.Core.gRunning;
-		if (gGuiBase.Core.gRunning) {
-			// Back up game state
-			fileSave(true);
-			
-			$('#menuRun').css('background-color', 'grey');
-			gGuiBase.Core.emptyDetailsTab();
-			gGuiBase.Core.selectedGameObject = null;
-		} else {
-			// Load the backed-up game state
-			gGuiBase.SaveLoadSupport.fileOpen(true);
-			
-			$('#menuRun').css('background-color', 'white');
-		}
+		// gGuiBase.Core.gRunning = !gGuiBase.Core.gRunning;
+		// if (gGuiBase.Core.gRunning) {
+		// 	// Back up game state
+		// 	fileSave(true);
+		//	
+		// 	$('#menuRun').css('background-color', 'grey');
+		// 	gGuiBase.Core.emptyDetailsTab();
+		// 	gGuiBase.Core.selectedGameObject = null;
+		// } else {
+		// 	// Load the backed-up game state
+		// 	gGuiBase.SaveLoadSupport.fileOpen(true);
+		//	
+		// 	$('#menuRun').css('background-color', 'white');
+		// }
+		//
+		refreshView();
 	});
 		
 	var fileOpen = function(backup) {
@@ -85,13 +87,11 @@ gGuiBase.SaveLoadSupport = (function() {
 						loadMisc(files, function() {
 							loadTextures(files, function() {
 								loadObjects(files, function() {
-									loadScenes(files, function() {
-									});
+									loadScenes(files, function(){ });
 								});
 							});
 						});
-						gGuiBase.View.refreshAllTabContent();
-						gGuiBase.Core.reinitializeTabs();
+						
 					} catch (error) {
 						alert("There were issues with loading your file.\n\nErrors:\n" + error);
 						gGuiBase.Core.cleanUpGameCore();
@@ -108,8 +108,7 @@ gGuiBase.SaveLoadSupport = (function() {
 					loadMisc(gGuiBase.Core.gBackup, function() {
 						loadTextures(gGuiBase.Core.gBackup, function() {
 							loadObjects(gGuiBase.Core.gBackup, function() {
-								loadScenes(gGuiBase.Core.gBackup, function() {
-								});
+								loadScenes(gGuiBase.Core.gBackup, function(){});
 							});
 						});
 					});
@@ -271,8 +270,8 @@ gGuiBase.SaveLoadSupport = (function() {
 	};
 
 	var loadObjects = function(files, callback) {
-		// Objects
 		files.folder("Objects").forEach(function(relativePath, file) {
+
 			// Read the ZipObject item as a JSON file, and then store the information where it belongs
 			files.file(file.name).async("string").then(function success(content) {
 				
@@ -293,11 +292,10 @@ gGuiBase.SaveLoadSupport = (function() {
 				xf.setHeight(data[6]);
 				xf.setRotationInDegree(data[7]);
 				obj.getRenderable().setColor(data[8]);
-				
-				//console.log(obj);
-				
+
 				gGuiBase.ObjectSupport.setGameObjectByID(obj.mName, obj);
 				gGuiBase.ObjectSupport.setGameObjectCodeByID(obj.mName, data[1]);
+				gGuiBase.Core.updateObjectSelectList();
 			}, function error(error) {
 				throw "There were issues with loading your file.\n\nErrors:\n" + error;
 			});
@@ -307,6 +305,7 @@ gGuiBase.SaveLoadSupport = (function() {
 
 	var loadScenes = function(files, callback) {
 		// Scenes (scenes, cameras, and instances)
+		var count = 0;
 		files.folder("Scenes").forEach(function(relativePath, file) {
 
 			var currentScene;
@@ -324,6 +323,7 @@ gGuiBase.SaveLoadSupport = (function() {
 				var sceneList = gGuiBase.SceneSupport.getSceneList();
 				sceneList.push(currentScene);
 				gGuiBase.SceneSupport.selectScene(sceneList.length - 1); // This starts the scene
+				gGuiBase.Core.reinitializeSceneTab();
 			} else {
 				//files.folder("Scenes").folder(sceneName).forEach(function(relativePath2, file2) {
 				files.file(file.name).async("string").then(function success(content) {
@@ -386,6 +386,9 @@ gGuiBase.SaveLoadSupport = (function() {
 							gGuiBase.InstanceSupport.addInstance(inst, scene);
 							i += 8;
 						}
+						// should be done adding instances refresh instances!
+						gGuiBase.Core.updateInstanceSelectList();
+						// gGuiBase.View.refreshAllTabContent()
 					} else if (relativePath.endsWith(".json")) {
 						// Unless the user inserted a .json, this is the scene file
 						var theScene = gGuiBase.SceneSupport.getSceneByName(sceneName);
@@ -394,7 +397,6 @@ gGuiBase.SaveLoadSupport = (function() {
 						theScene.mNextCameraID = data[1];
 						
 					}
-					refreshView();	// not sure how to force this to be used as the callback
 				}, function error(error) {
 					throw "There were issues with loading your file.\n\nErrors:\n" + error;
 				});

@@ -75,8 +75,6 @@ gGuiBase.DirectManipulationSupport = (function() {
 				objectSelected = false;
 				draggingCorner = false;
 			}
-			
-			
 		}
 
 		//Drag

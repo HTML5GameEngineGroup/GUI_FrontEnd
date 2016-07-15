@@ -112,7 +112,6 @@ gGuiBase.Core = (function() {
 	
 	var reinitializeSceneTab = function() {
 		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
-		gGuiBase.View.refreshAllTabContent();
 	};
 	
 	var emptyDetailsTab = function () {
@@ -143,7 +142,6 @@ gGuiBase.Core = (function() {
 
 	// updates instanceSelectList
 	var updateInstanceSelectList = function () {
-
 		var sceneInstances = gGuiBase.SceneSupport.gCurrentScene.getInstanceNameList();			// add instance to instance content
 		gGuiBase.View.findWidgetByID("#instanceSelectList").rebuildWithArray( sceneInstances );
 	};
