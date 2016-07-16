@@ -69,8 +69,9 @@ function Camera(wcCenter, wcWidth, viewportArray, bound) {
         // SHOULD NOT be used except 
         // xform operations during the rendering
         // Client game should not access this!
-		
-    gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(this);
+	
+	
+    //gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(this);
 
 }
 

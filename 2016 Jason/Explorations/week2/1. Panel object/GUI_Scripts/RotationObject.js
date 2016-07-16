@@ -4,10 +4,19 @@ function RotationObject(x, y, w, h, r) {
 	var endPointY = Math.sin(r) * radius;
 	this.mRotationLine = new LineRenderable(x, y, endPointX, endPointY);
 	this.mRotationLine.setColor([1, 1, 1, 1]);
+	
+	this.mRotationSquare = new Renderable();
+	var xform = this.mRotationSquare.getXform();
+	xform.setXPos(endPointX + x);
+	xform.setYPos(endPointY + y);
+	xform.setWidth(0.75);
+	xform.setHeight(0.75);
+	this.mRotationSquare.setColor([1, 0, 0, 1]);
 }
 
 RotationObject.prototype.draw = function(aCamera) {
 	this.mRotationLine.draw(aCamera);
+	this.mRotationSquare.draw(aCamera);
 };
 
 RotationObject.prototype.update = function() {
@@ -24,4 +33,8 @@ RotationObject.prototype.update = function() {
 	
 	this.mRotationLine.setFirstVertex(x, y);
 	this.mRotationLine.setSecondVertex(x + endPointX, y + endPointY);
+	
+	var xform = this.mRotationSquare.getXform();
+	xform.setXPos(endPointX + x);
+	xform.setYPos(endPointY + y);
 };

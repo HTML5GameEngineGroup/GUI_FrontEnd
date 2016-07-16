@@ -24,6 +24,7 @@ function ClientScene(number) {
 	
 	this.selectObject = null;
 	this.rotationObject = null;
+	this.sceneViewCamera = null;
 
 }
 gEngine.View.inheritPrototype(ClientScene, Scene);
@@ -74,6 +75,16 @@ ClientScene.prototype.initialize = function() {
     cam.setBackgroundColor([0.8,0.8,0.8,1]);
     cam.mName = "Camera0";  // Cameras don't have a mName, but we can just add it in like this
     cam.mID = "cameraListItem0";
+	gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
+	
+	this.sceneViewCamera = new Camera(
+			vec2.fromValues(20,60), // position of the camera
+			50,                     // width of camera
+			[0,0,640,480]           // viewport (orgX, orgY, width, height)
+			);
+	this.sceneViewCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
+	this.sceneViewCamera.mName = "SceneCam"; 
+    this.sceneViewCamera.mID = "SceneViewCamera";
     
     this.isInitialized = true;
 };
@@ -81,32 +92,40 @@ ClientScene.prototype.initialize = function() {
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
 ClientScene.prototype.draw = function() {
-    gEngine.View.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
-    var i, j;
-    for (i = 0; i < this.mAllCamera.length; i++) {
-        var cam = this.mAllCamera[i];
-        cam.setupViewProjection();
-        
-        for (j = 0; j < this.mInstanceList.length; j++) {
-            if (this.mInstanceList[j] instanceof GameObject) {
-                this.mInstanceList[j].draw(cam);
+	
+	gEngine.View.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
+	 
+	if (!gGuiBase.Core.gRunning) {
+		this.sceneViewCamera.setupViewProjection();
+		for (var i = 0; i < this.mInstanceList.length; i++) {
+            if (this.mInstanceList[i] instanceof GameObject) {
+                this.mInstanceList[i].draw(this.sceneViewCamera);
             }
         }
 		
-		if (i === 0) {
-			if (camera !== null && gGuiBase.Core.selectedGameObject !== null &&
-				gGuiBase.Core.selectedGameObject.mID.includes('[')) { 
+		if (this.sceneViewCamera !== null && gGuiBase.Core.selectedGameObject !== null &&
+			gGuiBase.Core.selectedGameObject.mID.includes('[')) { 
+			if (this.selectObject !== null)
+				this.selectObject.draw(this.sceneViewCamera);
+			if (this.rotationObject !== null)
+				this.rotationObject.draw(this.sceneViewCamera);
+		}
 		
-				if (this.selectObject !== null)
-					this.selectObject.draw(cam);
-				if (this.rotationObject !== null)
-					this.rotationObject.draw(cam);
+	} else {
+		
+		var i, j;
+		for (i = 0; i < this.mAllCamera.length; i++) {
+			var cam = this.mAllCamera[i];
+			cam.setupViewProjection();
+			
+			for (j = 0; j < this.mInstanceList.length; j++) {
+				if (this.mInstanceList[j] instanceof GameObject) {
+					this.mInstanceList[j].draw(cam);
+				}
 			}
 		}
-    }
-	
-	var camera = this.getFirstCamera();
-	
+	}
+		
 	//Selection should not be shown if there is no selection object, if the camera does not exist,
 	// if there is no selected gameobject, and if the selected gameobject is an instance
 	
@@ -119,6 +138,8 @@ ClientScene.prototype.update = function() {
     for (i = 0; i < this.mAllCamera.length; i++) {
         this.mAllCamera[i].update();
     }
+	
+	this.sceneViewCamera.update();
     
     if (gGuiBase.Core.gRunning) {
         for (i = 0; i < this.mInstanceList.length; i++) {
@@ -157,9 +178,9 @@ ClientScene.prototype.getCameraList = function() {
     return this.mAllCamera;
 };
 
-ClientScene.prototype.getFirstCamera = function() {
+ClientScene.prototype.getSceneCamera = function() {
 	//if (this.mAllCamera.length > 0) return this.mAllCamera[0];
-	if (this.mAllCamera.length > 0) return this.mAllCamera[0];
+	return this.sceneViewCamera;
 	
 };
 

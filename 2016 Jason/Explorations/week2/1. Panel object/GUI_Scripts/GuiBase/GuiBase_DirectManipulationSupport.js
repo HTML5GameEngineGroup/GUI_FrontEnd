@@ -19,6 +19,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 	var draggingCorner = false;
 	var draggingTop = false;
 	var draggingLeft = false;
+	var draggingRotate = false;
 	
 
 	
@@ -29,8 +30,8 @@ gGuiBase.DirectManipulationSupport = (function() {
 	
 	var handleMouseInput = function() {
 		//Get the camera
-		var camera = gGuiBase.SceneSupport.gCurrentScene.getFirstCamera();
-		if (camera === undefined) return;
+		var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
+		if (camera === undefined || camera === null) return;
 		
 		//Get mouse position in world space
 		var mouseX = camera.mouseWCX();
@@ -46,6 +47,8 @@ gGuiBase.DirectManipulationSupport = (function() {
 			for (i = 0; i < instances.length; i++) {
 				var xform = instances[i].getXform();
 				mouseInXform = mousePosInTransform(xform, mouseX, mouseY);
+				if (mouseInXform) break;
+				mouseInXform = mousePosOnRotationSquare(xform, mouseX, mouseY);
 				if (mouseInXform) break;
 			}
 			
@@ -74,16 +77,20 @@ gGuiBase.DirectManipulationSupport = (function() {
 			if (objectSelected) {
 				objectSelected = false;
 				draggingCorner = false;
+				draggingRotate = false;
 			}
 		}
 
 		//Drag
-		if(gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && (prevX !== mouseX || prevY !== mouseY) && objectSelected && !draggingCorner) {
+		if(gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && (prevX !== mouseX || prevY !== mouseY) && objectSelected && !draggingCorner && !draggingRotate) {
 
 			var xform = gGuiBase.Core.selectedGameObject.getXform();
 			
 			//Set bools to determine how dragging corner should be handled
-			if (mousePosOnTopLeftCorner(xform, mouseX, mouseY)) {
+			if (mousePosOnRotationSquare(xform, mouseX, mouseY)) {
+				draggingRotate = true;
+			
+			} else if (mousePosOnTopLeftCorner(xform, mouseX, mouseY)) {
 				draggingCorner = true;
 				draggingLeft = true;
 				draggingTop = true;
@@ -129,6 +136,23 @@ gGuiBase.DirectManipulationSupport = (function() {
 			
 			xform.setWidth(width);
 			xform.setHeight(height);
+			
+			var detailsTab = gGuiBase.View.findTabByID("#Details");
+			var detailsTransform = detailsTab.getContentObject("#TransformContent");
+			detailsTransform.updateFields(gGuiBase.Core.selectedGameObject);
+			detailsTab.refreshSpecificContent("#TransformContent");
+		} else if (draggingRotate) {
+			var xform = gGuiBase.Core.selectedGameObject.getXform();
+			var dx = mouseX - xform.getXPos();
+			var dy = mouseY - xform.getYPos();
+			
+			var angle = Math.atan2(dy, dx);
+			var angleInDegree = angle * 180 / Math.PI;
+		
+			if (angleInDegree < 0) { //Don't use negative degree
+				angleInDegree += 360;
+			}
+			xform.setRotationInDegree(angleInDegree);
 			
 			var detailsTab = gGuiBase.View.findTabByID("#Details");
 			var detailsTransform = detailsTab.getContentObject("#TransformContent");
@@ -196,6 +220,24 @@ gGuiBase.DirectManipulationSupport = (function() {
 		}
 		return false;
 	};
+	
+	var mousePosOnRotationSquare = function(transform, mouseX, mouseY) {
+		var xform = gGuiBase.Core.selectedGameObject.getXform();
+		var x = xform.getXPos();
+		var y = xform.getYPos();
+		var w = xform.getWidth();
+		var h = xform.getHeight();
+		var r = xform.getRotationInRad();
+	
+		var radius = Math.sqrt((w*w) + (h*h)) / 2;
+		var endPointX = Math.cos(r) * radius + x;
+		var endPointY = Math.sin(r) * radius + y;
+		
+		var distance = Math.sqrt(Math.pow((mouseX - endPointX), 2) + Math.pow((mouseY - endPointY), 2));
+		if (distance < 0.75) return true;
+		return false;
+		
+	}
 	
     var mPublic = {
        

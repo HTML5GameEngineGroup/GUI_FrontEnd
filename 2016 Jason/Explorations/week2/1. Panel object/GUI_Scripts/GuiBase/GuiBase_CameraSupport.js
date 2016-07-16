@@ -34,7 +34,7 @@ gGuiBase.CameraSupport = (function() {
 		cam.mID = "cameraListItem" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID;; // This is still unique despite the check (doesn't need to be updated to the next cam id)
 		gGuiBase.SceneSupport.gCurrentScene.mNextCameraID++;
 		
-		console.log(getCameraList());
+		gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
 		return cam;
 	};
 	
