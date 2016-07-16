@@ -222,12 +222,12 @@ gGuiBase.DirectManipulationSupport = (function() {
 	};
 	
 	var mousePosOnRotationSquare = function(transform, mouseX, mouseY) {
-		var xform = gGuiBase.Core.selectedGameObject.getXform();
-		var x = xform.getXPos();
-		var y = xform.getYPos();
-		var w = xform.getWidth();
-		var h = xform.getHeight();
-		var r = xform.getRotationInRad();
+		
+		var x = transform.getXPos();
+		var y = transform.getYPos();
+		var w = transform.getWidth();
+		var h = transform.getHeight();
+		var r = transform.getRotationInRad();
 	
 		var radius = Math.sqrt((w*w) + (h*h)) / 2;
 		var endPointX = Math.cos(r) * radius + x;
