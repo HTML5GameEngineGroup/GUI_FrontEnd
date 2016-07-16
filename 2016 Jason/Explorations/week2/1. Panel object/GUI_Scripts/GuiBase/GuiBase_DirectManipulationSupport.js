@@ -7,6 +7,7 @@
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.DirectManipulationSupport = (function() {
+	
 	var camera = null; //Camera that we're using to manipulate the instances
 	
 	//Keep track of some variables so we know if we're dragging
@@ -20,13 +21,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 	var draggingTop = false;
 	var draggingLeft = false;
 	var draggingRotate = false;
-	
-
-	
-	var setCameraToCurrentScene = function() {
-		camera = gGuiBase.SceneSupport.gCurrentScene.getFirstCamera();
-	};
-	
+	var draggingCamera = false;
 	
 	var handleMouseInput = function() {
 		//Get the camera
@@ -78,11 +73,12 @@ gGuiBase.DirectManipulationSupport = (function() {
 				objectSelected = false;
 				draggingCorner = false;
 				draggingRotate = false;
+				draggingCamera = false;
 			}
 		}
 
 		//Drag
-		if(gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && (prevX !== mouseX || prevY !== mouseY) && objectSelected && !draggingCorner && !draggingRotate) {
+		if(gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && (prevX !== mouseX || prevY !== mouseY) && objectSelected && !draggingCorner && !draggingRotate && !draggingCamera) {
 
 			var xform = gGuiBase.Core.selectedGameObject.getXform();
 			
@@ -117,6 +113,12 @@ gGuiBase.DirectManipulationSupport = (function() {
 			detailsTransform.updateFields(gGuiBase.Core.selectedGameObject);
 			detailsTab.refreshSpecificContent("#TransformContent");
 
+		} else if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && (prevX !== mouseX || prevY !== mouseY) && !draggingCorner && !draggingRotate) {
+			draggingCamera = true;
+			//Not dragging fast enough
+			var dx = (mouseX - prevX) + camera.getWCCenter()[0];
+			var dy = (mouseY - prevY) + camera.getWCCenter()[1];
+			camera.setWCCenter(dx, dy);
 		}
 		
 		//If we're dragging a corner and not the main body of the object instance
@@ -149,7 +151,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 			var angle = Math.atan2(dy, dx);
 			var angleInDegree = angle * 180 / Math.PI;
 		
-			if (angleInDegree < 0) { //Don't use negative degree
+			if (angleInDegree < 0) { //Don't use negative degree because the slider is 0-360
 				angleInDegree += 360;
 			}
 			xform.setRotationInDegree(angleInDegree);
@@ -165,6 +167,19 @@ gGuiBase.DirectManipulationSupport = (function() {
 		prevX = mouseX;
 		prevY = mouseY;
 	};
+	
+	var handleKeyboardInput = function() {
+		var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
+		if (camera === undefined || camera === null) return;
+		
+		if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
+			camera.zoomBy(0.5);
+		} else if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Down)) {
+			camera.zoomBy(1.5);
+		}
+	};
+	
+	setInterval(handleKeyboardInput, 10);
 	
 	//Call the above function when mouse events happen
 	window.addEventListener('mousedown', handleMouseInput);
