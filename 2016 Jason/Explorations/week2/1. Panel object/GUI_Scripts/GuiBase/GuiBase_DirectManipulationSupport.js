@@ -14,6 +14,8 @@ gGuiBase.DirectManipulationSupport = (function() {
 	var prevMouseDownState = false;
 	var prevX = 0;
 	var prevY = 0;
+	var prevXPixel = 0;
+	var prevYPixel = 0;
 	var objectSelected = false;
 	
 	//Booleans to determine if we're dragging a corner and which one
@@ -113,11 +115,32 @@ gGuiBase.DirectManipulationSupport = (function() {
 			detailsTransform.updateFields(gGuiBase.Core.selectedGameObject);
 			detailsTab.refreshSpecificContent("#TransformContent");
 
+		//Drag the camera
 		} else if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && (prevX !== mouseX || prevY !== mouseY) && !draggingCorner && !draggingRotate) {
 			draggingCamera = true;
 			//Not dragging fast enough
-			var dx = (mouseX - prevX) + camera.getWCCenter()[0];
-			var dy = (mouseY - prevY) + camera.getWCCenter()[1];
+			var cameraCenter = camera.getWCCenter();
+			
+			var dx = (mouseX - prevX) + cameraCenter[0];
+			var dy = (mouseY - prevY) + cameraCenter[1];
+			
+			/*var mouseXPixel = gEngine.Input.getMousePosX();
+			var mouseYPixel = gEngine.Input.getMousePosY();
+			
+			var cameraPositionPixel = vec3.fromValues(cameraCenter[0], cameraCenter[1], 0);
+			cameraPositionPixel = camera.wcPosToPixel(cameraPositionPixel);
+			
+			var dx = (mouseXPixel - prevXPixel) * 3 + cameraPositionPixel[0];
+			var dy = (mouseYPixel - prevYPixel) * 3 + cameraPositionPixel[1];
+			
+			dx = camera.positionWCX(dx);
+			dy = camera.positionWCY(dy);
+			
+			
+			
+			console.log(dx + " " + dy);
+			*/
+
 			camera.setWCCenter(dx, dy);
 		}
 		
@@ -166,8 +189,11 @@ gGuiBase.DirectManipulationSupport = (function() {
 		prevMouseDownState = gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left);
 		prevX = mouseX;
 		prevY = mouseY;
+		prevXPixel = gEngine.Input.getMousePosX();
+		prevYPixel = gEngine.Input.getMousePosY();
 	};
 	
+	//Handle zooming in and out using up and down arrows
 	var handleKeyboardInput = function() {
 		var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
 		if (camera === undefined || camera === null) return;
@@ -198,9 +224,12 @@ gGuiBase.DirectManipulationSupport = (function() {
 	
 	//Checks if the mouse position is within a 1x1 WC space window on the top left corner of the transform
 	var mousePosOnTopLeftCorner = function(transform, mouseX, mouseY) {
-
-		if ((mouseX > (transform.getXPos() - transform.getWidth()/2)) && (mouseX < (transform.getXPos() - transform.getWidth()/2) + 1) &&
-			(mouseY < (transform.getYPos() + transform.getHeight()/2)) && (mouseY > (transform.getYPos() + transform.getHeight()/2) - 1)) {
+		var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
+		var camW = camera.getWCWidth();
+		var boxSize = camW / 50 * 0.5;
+		
+		if ((mouseX > (transform.getXPos() - transform.getWidth()/2)) && (mouseX < (transform.getXPos() - transform.getWidth()/2) + boxSize) &&
+			(mouseY < (transform.getYPos() + transform.getHeight()/2)) && (mouseY > (transform.getYPos() + transform.getHeight()/2) - boxSize)) {
 			return true;
 		}
 		return false;
@@ -208,9 +237,12 @@ gGuiBase.DirectManipulationSupport = (function() {
 	
 	//Checks if the mouse position is within a 1x1 WC space window on the top right corner of the transform
 	var mousePosOnTopRightCorner = function(transform, mouseX, mouseY) {
-
-		if ((mouseX > (transform.getXPos() + transform.getWidth()/2) - 1) && (mouseX < (transform.getXPos() + transform.getWidth()/2)) &&
-			(mouseY < (transform.getYPos() + transform.getHeight()/2)) && (mouseY > (transform.getYPos() + transform.getHeight()/2) - 1)) {
+		var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
+		var camW = camera.getWCWidth();
+		var boxSize = camW / 50 * 0.5;
+		
+		if ((mouseX > (transform.getXPos() + transform.getWidth()/2) - boxSize) && (mouseX < (transform.getXPos() + transform.getWidth()/2)) &&
+			(mouseY < (transform.getYPos() + transform.getHeight()/2)) && (mouseY > (transform.getYPos() + transform.getHeight()/2) - boxSize)) {
 			return true;
 		}
 		return false;
@@ -218,9 +250,12 @@ gGuiBase.DirectManipulationSupport = (function() {
 	
 	//Checks if the mouse position is within a 1x1 WC space window on the bottom lefts corner of the transform
 	var mousePosOnBottomLeftCorner = function(transform, mouseX, mouseY) {
-
-		if ((mouseX > (transform.getXPos() - transform.getWidth()/2)) && (mouseX < (transform.getXPos() - transform.getWidth()/2) + 1) &&
-			(mouseY < (transform.getYPos() - transform.getHeight()/2) + 1) && (mouseY > (transform.getYPos() - transform.getHeight()/2))) {
+		var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
+		var camW = camera.getWCWidth();
+		var boxSize = camW / 50 * 0.5;
+		
+		if ((mouseX > (transform.getXPos() - transform.getWidth()/2)) && (mouseX < (transform.getXPos() - transform.getWidth()/2) + boxSize) &&
+			(mouseY < (transform.getYPos() - transform.getHeight()/2) + boxSize) && (mouseY > (transform.getYPos() - transform.getHeight()/2))) {
 			return true;
 		}
 		return false;
@@ -228,15 +263,21 @@ gGuiBase.DirectManipulationSupport = (function() {
 	
 	//Checks if the mouse position is within a 1x1 WC space window on the bottom right corner of the transform
 	var mousePosOnBottomRightCorner = function(transform, mouseX, mouseY) {
-
-		if ((mouseX > (transform.getXPos() + transform.getWidth()/2) - 1) && (mouseX < (transform.getXPos() + transform.getWidth()/2)) &&
-			(mouseY < (transform.getYPos() - transform.getHeight()/2) + 1) && (mouseY > (transform.getYPos() - transform.getHeight()/2))) {
+		var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
+		var camW = camera.getWCWidth();
+		var boxSize = camW / 50 * 0.5;
+		
+		if ((mouseX > (transform.getXPos() + transform.getWidth()/2) - boxSize) && (mouseX < (transform.getXPos() + transform.getWidth()/2)) &&
+			(mouseY < (transform.getYPos() - transform.getHeight()/2) + boxSize) && (mouseY > (transform.getYPos() - transform.getHeight()/2))) {
 			return true;
 		}
 		return false;
 	};
 	
 	var mousePosOnRotationSquare = function(transform, mouseX, mouseY) {
+		var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
+		var camW = camera.getWCWidth();
+		var boxSize = camW / 50 * 0.75;
 		
 		var x = transform.getXPos();
 		var y = transform.getYPos();
@@ -249,7 +290,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 		var endPointY = Math.sin(r) * radius + y;
 		
 		var distance = Math.sqrt(Math.pow((mouseX - endPointX), 2) + Math.pow((mouseY - endPointY), 2));
-		if (distance < 0.75) return true;
+		if (distance < boxSize) return true;
 		return false;
 		
 	}

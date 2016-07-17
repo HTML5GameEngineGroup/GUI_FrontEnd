@@ -27,6 +27,10 @@ RotationObject.prototype.update = function() {
 	var h = xform.getHeight();
 	var r = xform.getRotationInRad();
 	
+	var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
+	var camW = camera.getWCWidth();
+	var boxSize = camW / 50 * 0.75;
+	
 	var radius = Math.sqrt((w*w) + (h*h)) / 2;
 	var endPointX = Math.cos(r) * radius;
 	var endPointY = Math.sin(r) * radius;
@@ -37,4 +41,6 @@ RotationObject.prototype.update = function() {
 	var xform = this.mRotationSquare.getXform();
 	xform.setXPos(endPointX + x);
 	xform.setYPos(endPointY + y);
+	xform.setWidth(boxSize);
+	xform.setHeight(boxSize);
 };

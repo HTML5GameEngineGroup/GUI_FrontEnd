@@ -63,6 +63,10 @@ SelectionObject.prototype.update = function() {
 	var w = xform.getWidth();
 	var h = xform.getHeight();
 	
+	var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
+	var camW = camera.getWCWidth();
+	var boxSize = camW / 50 * 0.5;
+	
 	this.mTopLine.setFirstVertex((x-w/2), (y+h/2));
 	this.mTopLine.setSecondVertex((x+w/2), (y+h/2));
 
@@ -76,26 +80,26 @@ SelectionObject.prototype.update = function() {
 	this.mBotLine.setSecondVertex((x+w/2), (y-h/2));
 	
 	var xform = this.mTL.getXform();
-	xform.setXPos((x-w/2) + 0.25);
-	xform.setYPos((y+h/2) - 0.25);
-	xform.setWidth(0.5);
-	xform.setHeight(0.5);
+	xform.setXPos((x-w/2) + boxSize/2);
+	xform.setYPos((y+h/2) - boxSize/2);
+	xform.setWidth(boxSize);
+	xform.setHeight(boxSize);
 	
 	var xform = this.mBL.getXform();
-	xform.setXPos((x-w/2) + 0.25);
-	xform.setYPos((y-h/2) + 0.25);
-	xform.setWidth(0.5);
-	xform.setHeight(0.5);
+	xform.setXPos((x-w/2) + boxSize/2);
+	xform.setYPos((y-h/2) + boxSize/2);
+	xform.setWidth(boxSize);
+	xform.setHeight(boxSize);
 	
 	var xform = this.mTR.getXform();
-	xform.setXPos((x+w/2) - 0.25);
-	xform.setYPos((y+h/2) - 0.25);
-	xform.setWidth(0.5);
-	xform.setHeight(0.5);
+	xform.setXPos((x+w/2) - boxSize/2);
+	xform.setYPos((y+h/2) - boxSize/2);
+	xform.setWidth(boxSize);
+	xform.setHeight(boxSize);
 
 	var xform = this.mBR.getXform();
-	xform.setXPos((x+w/2) - 0.25);
-	xform.setYPos((y-h/2) + 0.25);
-	xform.setWidth(0.5);
-	xform.setHeight(0.5);
+	xform.setXPos((x+w/2) - boxSize/2);
+	xform.setYPos((y-h/2) + boxSize/2);
+	xform.setWidth(boxSize);
+	xform.setHeight(boxSize);
 };

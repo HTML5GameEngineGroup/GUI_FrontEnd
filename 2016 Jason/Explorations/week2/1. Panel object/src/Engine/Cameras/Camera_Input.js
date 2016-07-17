@@ -17,6 +17,10 @@ Camera.prototype.mouseDCX = function () {
     return gEngine.Input.getMousePosX() - this.mViewport[Camera.eViewport.eOrgX];
 };
 
+Camera.prototype.positionDCX = function(x) {
+	return x - this.mViewport[Camera.eViewport.eOrgX];
+};
+
 /**
  * Returns mouse Y position.
  * @memberOf Camera
@@ -24,6 +28,10 @@ Camera.prototype.mouseDCX = function () {
  */
 Camera.prototype.mouseDCY = function () {
     return gEngine.Input.getMousePosY() - this.mViewport[Camera.eViewport.eOrgY];
+};
+
+Camera.prototype.positionDCY = function(y) {
+	return y - this.mViewport[Camera.eViewport.eOrgY];
 };
 
 /**
@@ -56,4 +64,14 @@ Camera.prototype.mouseWCX = function () {
 Camera.prototype.mouseWCY = function () {
     var minWCY = this.getWCCenter()[1] - this.getWCHeight() / 2;
     return minWCY + (this.mouseDCY() * (this.getWCHeight() / this.mViewport[Camera.eViewport.eHeight]));
+};
+
+Camera.prototype.positionWCX = function(x) {
+	var minWCX = this.getWCCenter()[0] - this.getWCWidth() / 2;
+    return minWCX + (this.positionDCX(x) * (this.getWCWidth() / this.mViewport[Camera.eViewport.eWidth]));
+};
+
+Camera.prototype.positionWCY = function(y) {
+	var minWCY = this.getWCCenter()[1] - this.getWCHeight() / 2;
+    return minWCY + (this.positionDCY(y) * (this.getWCHeight() / this.mViewport[Camera.eViewport.eHeight]));
 };
