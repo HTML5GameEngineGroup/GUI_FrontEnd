@@ -196,6 +196,7 @@ gGuiBase.SaveLoadSupport = (function() {
 				cameraData[3 + (j * 6)] = cam.getWCWidth();
 				cameraData[4 + (j * 6)] = cam.getViewport();  // [x, y, w, h]
 				cameraData[5 + (j * 6)] = cam.getBackgroundColor();
+				
 			}
 			sceneFolder.file("cameras.json", JSON.stringify(cameraData));
 			
@@ -347,7 +348,8 @@ gGuiBase.SaveLoadSupport = (function() {
 								data[i + 3],                                        // width of camera
 								data[i + 4]                                         // viewport (orgX, orgY, width, height));
 							);
-					
+							gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
+							
 							// Modify the camera some more
 							gGuiBase.SceneSupport.gCurrentScene.mAllCamera[i / 6].setBackgroundColor(data[i + 5]);
 							gGuiBase.SceneSupport.gCurrentScene.mAllCamera[i / 6].mName = data[i];
