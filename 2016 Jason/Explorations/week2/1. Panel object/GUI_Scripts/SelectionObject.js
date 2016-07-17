@@ -1,5 +1,9 @@
 
 function SelectionObject(x, y, w, h) {
+	var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
+	var camW = camera.getWCWidth();
+	var boxSize = camW / 50 * 0.5;
+	
 	this.mTopLine = new LineRenderable((x-w/2), (y+h/2), (x+w/2), (y+h/2));
 	this.mTopLine.setColor([1, 1, 1, 1]);
 	this.mLeftLine = new LineRenderable((x-w/2), (y+h/2), (x-w/2), (y-h/2));
@@ -12,34 +16,34 @@ function SelectionObject(x, y, w, h) {
 	this.mTL = new Renderable();
 	this.mTL.setColor([0, 0, 1, 1]);
 	var xform = this.mTL.getXform();
-	xform.setXPos((x-w/2) + 0.25);
-	xform.setYPos((y+h/2) - 0.25);
-	xform.setWidth(0.5);
-	xform.setHeight(0.5);
+	xform.setXPos((x-w/2) + boxSize/2);
+	xform.setYPos((y+h/2) - boxSize/2);
+	xform.setWidth(boxSize);
+	xform.setHeight(boxSize);
 	
 	this.mBL = new Renderable();
 	this.mBL.setColor([0, 0, 1, 1]);
 	var xform = this.mBL.getXform();
-	xform.setXPos((x-w/2) + 0.25);
-	xform.setYPos((y-h/2) + 0.25);
-	xform.setWidth(0.5);
-	xform.setHeight(0.5);
+	xform.setXPos((x-w/2) + boxSize/2);
+	xform.setYPos((y-h/2) + boxSize/2);
+	xform.setWidth(boxSize);
+	xform.setHeight(boxSize);
 	
 	this.mTR = new Renderable();
 	this.mTR.setColor([0, 0, 1, 1]);
 	var xform = this.mTR.getXform();
-	xform.setXPos((x+w/2) - 0.25);
-	xform.setYPos((y+h/2) - 0.25);
-	xform.setWidth(0.5);
-	xform.setHeight(0.5);
+	xform.setXPos((x+w/2) - boxSize/2);
+	xform.setYPos((y+h/2) - boxSize/2);
+	xform.setWidth(boxSize);
+	xform.setHeight(boxSize);
 	
 	this.mBR = new Renderable();
 	this.mBR.setColor([0, 0, 1, 1]);
 	var xform = this.mBR.getXform();
-	xform.setXPos((x+w/2) - 0.25);
-	xform.setYPos((y-h/2) + 0.25);
-	xform.setWidth(0.5);
-	xform.setHeight(0.5);
+	xform.setXPos((x+w/2) - boxSize/2);
+	xform.setYPos((y-h/2) + boxSize/2);
+	xform.setWidth(boxSize);
+	xform.setHeight(boxSize);
 	
 	
 }
