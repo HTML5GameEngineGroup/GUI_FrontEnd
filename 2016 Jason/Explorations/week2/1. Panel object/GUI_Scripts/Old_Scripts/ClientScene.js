@@ -184,6 +184,10 @@ ClientScene.prototype.getSceneCamera = function() {
 	
 };
 
+ClientScene.prototype.setSceneCamera = function(camera) {
+	this.sceneViewCamera = camera;
+};
+
 ClientScene.prototype.getInstance = function ( instID ) {
     
 };

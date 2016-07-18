@@ -187,15 +187,24 @@ gGuiBase.SaveLoadSupport = (function() {
 			var j;
 			var camList = scene.getCameraList();
 			var cameraData = {};
+			
+			var sceneViewCamera = scene.getSceneCamera();
+			cameraData[0] = sceneViewCamera.mName;
+			cameraData[1] = sceneViewCamera.mID;
+			cameraData[2] = sceneViewCamera.getWCCenter();  // [x, y]
+			cameraData[3] = sceneViewCamera.getWCWidth();
+			cameraData[4] = sceneViewCamera.getViewport();  // [x, y, w, h]
+			cameraData[5] = sceneViewCamera.getBackgroundColor();
+			
 			for (j = 0; j < camList.length; j++) {
 				var cam = camList[j];
-				
-				cameraData[0 + (j * 6)] = cam.mName;
-				cameraData[1 + (j * 6)] = cam.mID;
-				cameraData[2 + (j * 6)] = cam.getWCCenter();  // [x, y]
-				cameraData[3 + (j * 6)] = cam.getWCWidth();
-				cameraData[4 + (j * 6)] = cam.getViewport();  // [x, y, w, h]
-				cameraData[5 + (j * 6)] = cam.getBackgroundColor();
+			
+				cameraData[0 + (j+1 * 6)] = cam.mName;
+				cameraData[1 + (j+1 * 6)] = cam.mID;
+				cameraData[2 + (j+1 * 6)] = cam.getWCCenter();  // [x, y]
+				cameraData[3 + (j+1 * 6)] = cam.getWCWidth();
+				cameraData[4 + (j+1 * 6)] = cam.getViewport();  // [x, y, w, h]
+				cameraData[5 + (j+1 * 6)] = cam.getBackgroundColor();
 				
 			}
 			sceneFolder.file("cameras.json", JSON.stringify(cameraData));
@@ -348,13 +357,17 @@ gGuiBase.SaveLoadSupport = (function() {
 								data[i + 3],                                        // width of camera
 								data[i + 4]                                         // viewport (orgX, orgY, width, height));
 							);
-							gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
 							
-							// Modify the camera some more
-							gGuiBase.SceneSupport.gCurrentScene.mAllCamera[i / 6].setBackgroundColor(data[i + 5]);
-							gGuiBase.SceneSupport.gCurrentScene.mAllCamera[i / 6].mName = data[i];
-							gGuiBase.SceneSupport.gCurrentScene.mAllCamera[i / 6].mID = data[i + 1];
+							cam.setBackgroundColor(data[i + 5]);
+							cam.mName = data[i];
+							cam.mID = data[i + 1];
 							
+							if (data[i+1] === "SceneViewCamera") {
+								gGuiBase.SceneSupport.gCurrentScene.setSceneCamera(cam);
+							} else {
+								gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
+							}
+						
 							i += 6;
 						}
 						// Select the first scene when this process is done
