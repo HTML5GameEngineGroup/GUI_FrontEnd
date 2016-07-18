@@ -81,12 +81,38 @@ $( document ).ready(function() {
 	
 });
 
+var instantiate = function(inst) {
+    // A function for instantiating to the scene
+    if (gCurrentScene instanceof ClientScene) {
+        gCurrentScene.addInstance(inst);
+    }
+};
+
 var move = function(go, x, y) {
     // A function that can be called by the user's code to move a GO
     if (go instanceof GameObject) {
         var xf = go.getXform();
         xf.setXPos(xf.getXPos() + x);
         xf.setYPos(xf.getYPos() + y);
+    }
+};
+
+var switchScene = function(name) {
+    // A function that can be called by the user's code to switch scenes
+    var i;
+    var list = gGameCore.getSceneList();
+    for (i = 0; i < list.length; i++) {
+        if (list[i].mName === name) {
+            gEngine.GameLoop.stop();
+            gCurrentScene = list[i];
+            gEngine.Core.startScene(gCurrentScene);
+            if (!gRunning) {
+                changeCurrentListItem(gCurrentScene.mID);
+                cleanUpPanelRightBody();
+                createDetailsScenes();
+            }
+            break;
+        }
     }
 };
 
