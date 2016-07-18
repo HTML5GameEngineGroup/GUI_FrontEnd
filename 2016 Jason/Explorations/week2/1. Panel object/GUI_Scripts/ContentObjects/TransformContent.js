@@ -184,9 +184,9 @@ TransformContent.prototype.onSliderChange = function(sliderValue) {
 	var gameObject = gGuiBase.Core.selectedGameObject;
 	var xform = gameObject.getXform();
 	
-	xform.setRotationInDegree(sliderValue);
+	xform.setRotationInDegree(sliderValue.toFixed(2));
 	//var rotationField = gGuiBase.View.findWidgetByID("#gameObjectRotationField");
-	$("#gameObjectRotationField").attr("value", sliderValue);
+	$("#gameObjectRotationField").attr("value", sliderValue.toFixed(2));
 	
 };
 
@@ -197,14 +197,14 @@ TransformContent.prototype.updateFields = function( gameObject ) {
 	
 	// set x form
 	var xf = gameObject.getXform();
-	this.objectX.setText( xf.getXPos() );
-	this.objectY.setText( xf.getYPos() );
+	this.objectX.setText( xf.getXPos().toFixed(2) );
+	this.objectY.setText( xf.getYPos().toFixed(2) );
 	// set width and height
-	this.objectW.setText( xf.getWidth() );
-	this.objectH.setText( xf.getHeight() );
+	this.objectW.setText( xf.getWidth().toFixed(2) );
+	this.objectH.setText( xf.getHeight().toFixed(2) );
 	
-	this.rotationField.setText(xf.getRotationInDegree());
-	$("#gameObjectRotationSlider").slider("value", xf.getRotationInDegree());
+	this.rotationField.setText(xf.getRotationInDegree().toFixed(2));
+	$("#gameObjectRotationSlider").slider("value", xf.getRotationInDegree().toFixed(2));
 };
 
 
