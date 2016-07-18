@@ -65,10 +65,14 @@ gGuiBase.ObjectSupport = (function() {
 	};
 	
 	var replaceInMap = function(oldName, newName) {
+		
+		console.log(mGO[oldName]);
+		console.log(mGOCode[oldName]);
 		var object = mGO[oldName];
 		delete mGO[oldName];
 		var code = mGOCode[oldName];
 		delete mGOCode[oldName];
+		
 		
 		object.mName = newName;
 		object.mID = newName;
@@ -160,7 +164,7 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
 	var getObjectCodeList = function() {
 		var objList = [];
         for (var objName in mGOCode) {
-            objList.push(objName);
+            objList.push(mGOCode[objName]);
         }
         return objList;
 	};

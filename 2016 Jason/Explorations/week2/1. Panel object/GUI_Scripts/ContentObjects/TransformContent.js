@@ -86,7 +86,8 @@ TransformContent.prototype.onTextFieldFocusOut = function(textField) {
 			if (gLastSetName !== gameObject.mName) { // If the name is new
                 if (!gGuiBase.ObjectSupport.checkForNameConflict(gLastSetName)) {
                     // Create a new class with the new name
-
+					//delete window[gameObject.mName];
+					
 					window[gLastSetName] = function(renderableObj) {
 						GameObject.call(this, renderableObj);
 					};
@@ -94,14 +95,20 @@ TransformContent.prototype.onTextFieldFocusOut = function(textField) {
                     
                     // Re-eval any class code
                     var i;
+					var code;
                     var objs = gGuiBase.ObjectSupport.getObjectList();
 					var objCode = gGuiBase.ObjectSupport.getObjectCodeList();
-                    for (i = 0; i < objs.length; i++) {
+                    for (i = 0; i < objs.length; i++) { //Find the old code
                         if (objs[i].mName === gameObject.mName) {
-                            eval(objCode[i]);
+							code = objCode[i];
+                            
                         }
                     }
-                    
+					
+					code = gGuiBase.Core.replaceObjectNameInCode(code, gameObject.mName, gLastSetName);
+					gGuiBase.ObjectSupport.setGameObjectCodeByID(gameObject.mName, code);
+                    eval(code);
+					
 					var sceneList = gGuiBase.SceneSupport.getSceneList();
 					for (var j = 0; j < sceneList.length; j++) {
 						

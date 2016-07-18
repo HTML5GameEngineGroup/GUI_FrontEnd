@@ -163,6 +163,17 @@ gGuiBase.Core = (function() {
 		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
 	};
 	
+	var replaceObjectNameInCode = function(code, oldName, newName) {
+		return code.replaceAll(oldName, newName);
+	};
+	
+	String.prototype.replaceAll = function(search, replace) {
+		if (replace === undefined) {
+			return this.toString();
+		}
+		return this.split(search).join(replace);
+	}
+	
     var inheritPrototype = function (subClass, superClass) {
         var prototype = Object.create(superClass.prototype);
         prototype.constructor = subClass;
@@ -232,6 +243,7 @@ gGuiBase.Core = (function() {
 		
         inheritPrototype: inheritPrototype,
 		cleanUpGameCore: cleanUpGameCore,
+		replaceObjectNameInCode: replaceObjectNameInCode,
 		
 		selectedGameObject: selectedGameObject,
 		selectedCamera: selectedCamera,
