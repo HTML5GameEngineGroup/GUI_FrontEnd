@@ -34,6 +34,10 @@ gGuiBase.CameraSupport = (function() {
 		cam.mID = "cameraListItem" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID;; // This is still unique despite the check (doesn't need to be updated to the next cam id)
 		gGuiBase.SceneSupport.gCurrentScene.mNextCameraID++;
 		
+		
+		//console.log(gEngine.DefaultResources.getConstColorShader())
+		var cameraObject = new CameraObject(cam);
+		gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
 		gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
 		return cam;
 	};

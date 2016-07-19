@@ -369,6 +369,8 @@ gGuiBase.SaveLoadSupport = (function() {
 							if (data[i+1] === "SceneViewCamera") {
 								gGuiBase.SceneSupport.gCurrentScene.setSceneCamera(cam);
 							} else {
+								var cameraObject = new CameraObject(cam);
+								gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
 								gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
 							}
 						

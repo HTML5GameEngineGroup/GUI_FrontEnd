@@ -165,36 +165,16 @@ gGuiBase.DirectManipulationSupport = (function() {
 			var xform = gGuiBase.Core.selectedGameObject.getXform();
 			var selectObject = gGuiBase.SceneSupport.gCurrentScene.getSelectObject();
 			
-			/*var width = ((mouseX - xform.getXPos()) * 2);
-			var height = ((mouseY - xform.getYPos()) * 2);
-			
-			//Ensure that our width and height don't go negative
-			//If width and height are negative, the functions to check mouse position versus object position don't work
-			if (draggingLeft) width = -width;
-			if (!draggingTop) height = -height;
-			
-			if (width < 0.25) width = 0.25;
-			if (height < 0.25) height = 0.25;
-			
-			xform.setWidth(width);
-			xform.setHeight(height);*/
 			var x = xform.getXPos();
 			var y = xform.getYPos();
 			var w = xform.getWidth();
 			var h = xform.getHeight();
 			var r = xform.getRotationInRad();
 			
-			var draggedPoint;
-			if (draggingLeft && draggingTop) draggedPoint = vec2.fromValues(selectObject.topLeftX, selectObject.topLeftY);
-			else if (draggingLeft && !draggingTop) draggedPoint = vec2.fromValues(selectObject.botLeftX, selectObject.botLeftY);
-			else if (!draggingLeft && draggingTop) draggedPoint = vec2.fromValues(selectObject.topRightX, selectObject.topRightY);
-			else draggedPoint = vec2.fromValues(selectObject.botRightX, selectObject.botRightY);
-			
 			var mousePos = vec2.fromValues(mouseX, mouseY);
 			
 			//Apply inverse rotation to fit the object & mouse position to the x/y axis
 			mousePos = rotatePoint(x, y, -r, mousePos);
-			draggedPoint = rotatePoint(x, y, -r, draggedPoint);
 			
 			var dx = mousePos[0] - x;
 			var dy = mousePos[1] - y;

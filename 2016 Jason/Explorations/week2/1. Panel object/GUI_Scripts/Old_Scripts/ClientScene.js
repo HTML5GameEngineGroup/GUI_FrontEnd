@@ -26,6 +26,7 @@ function ClientScene(number) {
 	this.selectObject = null;
 	this.rotationObject = null;
 	this.sceneViewCamera = null;
+	this.cameraObjects = [];
 
 }
 gEngine.View.inheritPrototype(ClientScene, Scene);
@@ -85,7 +86,9 @@ ClientScene.prototype.initialize = function() {
     cam.setBackgroundColor([0.8,0.8,0.8,1]);
     cam.mName = "Camera0";  // Cameras don't have a mName, but we can just add it in like this
     cam.mID = "cameraListItem0";
-	gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
+	
+	
+	
 	
 	this.sceneViewCamera = new Camera(
 			vec2.fromValues(20,60), // position of the camera
@@ -95,7 +98,12 @@ ClientScene.prototype.initialize = function() {
 	this.sceneViewCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
 	this.sceneViewCamera.mName = "SceneCam"; 
     this.sceneViewCamera.mID = "SceneViewCamera";
-    
+	
+	
+    var cameraObject = new CameraObject(cam);
+	this.cameraObjects.push(cameraObject);
+	gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
+	
     this.isInitialized = true;
 };
 
@@ -119,6 +127,10 @@ ClientScene.prototype.draw = function() {
 				this.selectObject.draw(this.sceneViewCamera);
 			if (this.rotationObject !== null)
 				this.rotationObject.draw(this.sceneViewCamera);
+		}
+		
+		for(var i = 0; i < this.cameraObjects.length; i++) {
+			this.cameraObjects[i].draw(this.sceneViewCamera);
 		}
 		
 	} else {
@@ -148,6 +160,10 @@ ClientScene.prototype.update = function() {
     for (i = 0; i < this.mAllCamera.length; i++) {
         this.mAllCamera[i].update();
     }
+	
+	for (i = 0; i < this.cameraObjects.length; i++) {
+		this.cameraObjects[i].update();
+	}
 	
 	this.sceneViewCamera.update();
     
@@ -204,6 +220,15 @@ ClientScene.prototype.getSceneCamera = function() {
 
 ClientScene.prototype.setSceneCamera = function(camera) {
 	this.sceneViewCamera = camera;
+};
+
+ClientScene.prototype.setInitialCameraObject = function() {
+	if (this.cameraObjects.length === 0) {
+		if (this.mAllCamera.length > 0) {
+			var cameraObject = new CameraObject(this.mAllCamera[0]);
+			this.cameraObjects.push(cameraObject);
+		}
+	}
 };
 
 ClientScene.prototype.getInstance = function ( instID ) {
