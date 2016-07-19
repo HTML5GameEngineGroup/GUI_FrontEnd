@@ -21,6 +21,7 @@ function ClientScene(number) {
     this.mInstanceList = [];
     this.mAllUpdateSet = new GameObjectSet();
     this.isInitialized = false;
+    this.mAllTextures = {};
 	
 	this.selectObject = null;
 	this.rotationObject = null;
@@ -34,6 +35,11 @@ ClientScene.prototype.loadScene = function() {
     //gEngine.AudioClips.loadAudio(this.kBgClip);
    // gEngine.AudioClips.loadAudio(this.kCue);
     //gEngine.TextFileLoader.loadTextFile(this.kSceneFile, gEngine.TextFileLoader.eTextFileType.eTextFile);
+    // gEngine.Textures.loadTexture("assets/minion_sprite.png");
+    for (var texture in this.mAllTextures) {
+        console.log("calling load texture from scene:", texture);
+      gEngine.Textures.loadTexture(texture);
+    };
 };
 
 
@@ -55,6 +61,10 @@ ClientScene.prototype.unloadScene = function() {
     // starts the next level
     //var nextLevel = new BlueLevel();  // next level to be loaded
     //gEngine.View.startScene(nextLevel);
+    for (var texture in this.mAllTextures) {
+        console.log('calling unload from scene', texture);
+        gEngine.Textures.unloadTexture(texture);
+    };
 };
 
 ClientScene.prototype.initialize = function() {
@@ -162,6 +172,14 @@ ClientScene.prototype.update = function() {
 		this.rotationObject.update()
 	}
 	
+};
+
+ClientScene.prototype.addTexture = function(texture) {
+    this.mAllTextures[texture] = texture;
+};
+
+ClientScene.prototype.removeTexture = function(texture) {
+    delete this.mAllTextures[texture];
 };
 
 ClientScene.prototype.addInstance = function(inst) {

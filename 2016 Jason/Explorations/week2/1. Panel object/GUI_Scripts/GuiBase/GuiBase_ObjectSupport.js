@@ -46,6 +46,41 @@ gGuiBase.ObjectSupport = (function() {
         mGOCode[newGO.mName] = this.getDefaultCodeGO(newGO.mName);                // add code to code map
         return newGO.mName;
     };
+
+    var createDefaultTextObject = function(texture) {
+        // create new default name
+        var name = "GameObj" + mNextObjID;
+        while (this.checkForNameConflict(name)) {
+            mNextObjID++; // This has not been incremented yet so do it here.  After this method is over, + Object will increment it to a unique value.
+            name = "GameObj" + mNextObjID;
+        }
+
+        // will be overwritten probably not needed
+        window[name] = function(renderableObj) {
+            GameObject.call(this, renderableObj);
+        };
+        gEngine.View.inheritPrototype(window[name], window["GameObject"]);
+
+        var code = this.getDefaultCodeGO(name);
+        // Add code to window
+        // dynamically create a new class which inherits from GameObject Class
+        eval(code);
+        // create a instance of this GO
+        var newGO;
+        eval('newGO = new ' + name + '(new TextureRenderable("' + texture + '"));');
+        // Make a default xform
+        var xf = newGO.getXform();                                             // set default transform
+        xf.setXPos(20);
+        xf.setYPos(60);
+        xf.setWidth(5);
+        xf.setHeight(5);
+        newGO.mID = name;
+        newGO.mName = name;                                                    // object class name
+        mGO[newGO.mName] = newGO;                                               // add to map
+        mGOCode[newGO.mName] = code;                // add code to code map
+
+        return newGO.mName;
+    };
 	
 	var deleteObject = function(objName) {
 		
@@ -138,6 +173,8 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
 };';
     };
 
+
+
     var getDefaultCodeClass = function(name, id) {
         return 'window["' + name + '"] = function() {\n\
     this.mName = "' + name + '";\n\
@@ -203,6 +240,7 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
 
     var mPublic = {
         createDefaultObject: createDefaultObject,
+        createDefaultTextObject: createDefaultTextObject,
 		deleteObject: deleteObject,
         checkForNameConflict: checkForNameConflict,
         copyTransform: copyTransform,

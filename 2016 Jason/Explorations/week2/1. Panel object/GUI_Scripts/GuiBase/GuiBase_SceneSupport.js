@@ -12,8 +12,10 @@ gGuiBase.SceneSupport = (function() {
 	
 	var selectScene = function(index) {
 		gEngine.GameLoop.stop();
+		// gGuiBase.SceneSupport.gCurrentScene.unloadScene();
 		if (index !== null) {
 			gGuiBase.SceneSupport.gCurrentScene = mSceneList[index];
+			gGuiBase.SceneSupport.gCurrentScene.loadScene();
 			gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
 			gGuiBase.Core.reinitializeCameraTab();
 			

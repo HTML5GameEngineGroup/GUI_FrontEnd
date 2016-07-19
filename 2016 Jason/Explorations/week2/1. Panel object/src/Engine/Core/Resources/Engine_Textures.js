@@ -84,6 +84,7 @@ gEngine.Textures = (function () {
      * @returns {void}
      */
     var loadTexture = function (textureName) {
+        console.log("loadTexture");
         if (!(gEngine.ResourceMap.isAssetLoaded(textureName))) {
             // Create new Texture object.
             var img = new Image();
@@ -95,6 +96,29 @@ gEngine.Textures = (function () {
             // it back into the mTextureMap.
             img.onload = function () {
                 _processLoadedImage(textureName, img);
+                console.log(textureName, img);
+            };
+            img.src = textureName;
+        } else {
+            gEngine.ResourceMap.incAssetRefCount(textureName);
+        }
+    };
+
+    var loadSingleTexture = function (textureName, callBack) {
+        console.log("loadsingletexture");
+        if (!(gEngine.ResourceMap.isAssetLoaded(textureName))) {
+            // Create new Texture object.
+            var img = new Image();
+
+            // Update resources in loading counter.
+            gEngine.ResourceMap.asyncLoadRequested(textureName);
+
+            // When the texture loads, convert it to the WebGL format then put
+            // it back into the mTextureMap.
+            img.onload = function () {
+                _processLoadedImage(textureName, img);
+                alert(textureName + 'imageloaded');
+                callBack();
             };
             img.src = textureName;
         } else {
@@ -219,6 +243,7 @@ gEngine.Textures = (function () {
     // not be accessable.
     var mPublic = {
         loadTexture: loadTexture,
+        loadSingleTexture: loadSingleTexture,
         unloadTexture: unloadTexture,
         activateTexture: activateTexture,
         activateNormalMap: activateNormalMap,
