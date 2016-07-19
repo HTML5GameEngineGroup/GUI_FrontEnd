@@ -39,6 +39,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 			
 			//Get instances to determine if the mouse is in a gameobject
 			var instances = gGuiBase.SceneSupport.gCurrentScene.getInstanceList();
+			var selectedGameObject = gGuiBase.Core.selectedGameObject;
 			var mouseInXform = false;
 			var i = 0;
 			for (i = 0; i < instances.length; i++) {
@@ -49,6 +50,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 				if (mouseInXform) break;
 				
 				//Workaround
+				gGuiBase.Core.selectedGameObject = instances[i];
 				var selectObject = new SelectionObject(xform.getXPos(), xform.getYPos(), xform.getWidth(), xform.getHeight());
 				selectObject.update();
 				mouseInXform = mousePosOnTopLeftCorner(selectObject, xform, mouseX, mouseY)
@@ -61,6 +63,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 				if (mouseInXform) break;
 				
 			}
+			gGuiBase.Core.selectedGameObject = selectedGameObject; //Workaround
 			
 			if (mouseInXform) {
 				gGuiBase.Core.selectInstanceDetails(instances[i].mID);
