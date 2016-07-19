@@ -26,23 +26,25 @@ gGuiBase.SaveLoadSupport = (function() {
 	});
 	
 	$('#menuRun').click(function() {
-		// gGuiBase.Core.gRunning = !gGuiBase.Core.gRunning;
-		// if (gGuiBase.Core.gRunning) {
-		// 	// Back up game state
-		// 	fileSave(true);
-        //
-		// 	$('#menuRun').css('background-color', 'grey');
-		// 	gGuiBase.Core.emptyDetailsTab();
-		// 	gGuiBase.Core.selectedGameObject = null;
-		// } else {
-		// 	// Load the backed-up game state
-		// 	gGuiBase.SaveLoadSupport.fileOpen(true);
-        //
-		// 	$('#menuRun').css('background-color', 'white');
-		// }
-		var textName = "assets/minion_sprite.png";
-		// gGuiBase.SceneSupport.selectScene(0);
-		gGuiBase.Core.addTextureObject(textName);
+		gGuiBase.Core.gRunning = !gGuiBase.Core.gRunning;
+		if (gGuiBase.Core.gRunning) {
+			// Back up game state
+			fileSave(true);
+
+			$('#menuRun').css('background-color', 'grey');
+			gGuiBase.Core.emptyDetailsTab();
+			gGuiBase.Core.selectedGameObject = null;
+		} else {
+			// Load the backed-up game state
+			gGuiBase.SaveLoadSupport.fileOpen(true);
+
+			$('#menuRun').css('background-color', 'white');
+		}
+		$('input[type=file]').change(function () {
+			var filePath=$('#fileUpload').val();
+			console.log(filePath);
+			console.log(document.getElementById("fileUpload").files[0]);
+		});
 	});
 		
 	var fileOpen = function(backup) {
@@ -50,7 +52,6 @@ gGuiBase.SaveLoadSupport = (function() {
 		// https://stuk.github.io/jszip/documentation/api_jszip.html
 		// Also, here is the FileReader API:
 		// https://developer.mozilla.org/en-US/docs/Web/API/FileReader
-		
 		var input;
 		if (backup) {
 			input = gGuiBase.Core.gBackup;

@@ -14,8 +14,6 @@ $( document ).ready(function() {
 	var sceneContent = new ScenesContent("ScenesContent");
 	scenesTab.addContent(sceneContent);
 	
-	
-	
 	var camerasTab = new GuiPanelTab("Cameras");
 	var cameraContent = new CamerasContent("CameraContent");
 	bottomPanel.addTab(camerasTab);
@@ -39,8 +37,8 @@ $( document ).ready(function() {
 	objectsTab.addContent(objectsTabContent);
 	
 	var texturesTab = new GuiPanelTab("Textures");
-	//var texturesTabContent = new GuiTabContent("TexturesContent");
-	//texturesTab.addContent(texturesTabContent);
+	var texturesTabContent = new AddTextureContent("TexturesContent");
+	texturesTab.addContent(texturesTabContent);
 	leftPanel.addTab(texturesTab);
 
 	

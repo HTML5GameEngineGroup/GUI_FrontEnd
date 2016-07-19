@@ -65,7 +65,7 @@ gEngine.Textures = (function () {
         //  5: The data type of the texel data.
         //  6: Texture Data.
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-
+        console.log("processloadedimage - image", image);
         // Creates a mipmap for this texture.
         gl.generateMipmap(gl.TEXTURE_2D);
 
@@ -73,6 +73,7 @@ gEngine.Textures = (function () {
         gl.bindTexture(gl.TEXTURE_2D, null);
 
         var texInfo = new TextureInfo(textureName, image.naturalWidth, image.naturalHeight, textureID);
+        console.log(texInfo);
         gEngine.ResourceMap.asyncLoadCompleted(textureName, texInfo);
     };
 
@@ -88,7 +89,7 @@ gEngine.Textures = (function () {
         if (!(gEngine.ResourceMap.isAssetLoaded(textureName))) {
             // Create new Texture object.
             var img = new Image();
-
+            console.log("loadTexture - img:", img);
             // Update resources in loading counter.
             gEngine.ResourceMap.asyncLoadRequested(textureName);
 

@@ -12,9 +12,7 @@ gGuiBase.Core = (function() {
     var addDefaultObject = function () {
         var newObjID = gGuiBase.ObjectSupport.createDefaultObject();                    // create new gameObj
         //todo: abstract this to a content function call
-        //gGuiBase.View.findWidgetByID("#objectSelectList1").addElement( newObjID );      // add to obj panel
         this.selectDetailsObject( newObjID );                                           // select this object in details
-		//gGuiBase.View.findWidgetByID("#instanceDropdown").addElement( newObjID );		// add object to instance drop
 		updateObjectSelectList();
         gGuiBase.View.refreshAllTabContent();  // refresh panel
     };
@@ -22,8 +20,9 @@ gGuiBase.Core = (function() {
 	var loadTextureObject = function (textName) {
 		// add texture to scene
 		gGuiBase.SceneSupport.gCurrentScene.addTexture(textName);
+		gGuiBase.TextureSupport.addTexture(textName);
+		console.log("TexList:", gGuiBase.TextureSupport.getTexList());
 		gEngine.GameLoop.stop();
-		gGuiBase.SceneSupport.gCurrentScene.loadScene();
 		gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
 		gGuiBase.Core.reinitializeCameraTab();
 	};
@@ -36,7 +35,10 @@ gGuiBase.Core = (function() {
 		var textObj = gGuiBase.ObjectSupport.getGameObjectByID(textObjName);
 		gGuiBase.SceneSupport.gCurrentScene.addInstance(textObj);
 		//update the gui
+		var texList = gGuiBase.TextureSupport.getTexList();
+		gGuiBase.View.findWidgetByID("#texSelectList1").rebuildWithArray( texList )
 		updateObjectSelectList();
+		gGuiBase.View.refreshAllTabContent();  // refresh panel
 	};
 	
 	// gets a list of names of all the objects
