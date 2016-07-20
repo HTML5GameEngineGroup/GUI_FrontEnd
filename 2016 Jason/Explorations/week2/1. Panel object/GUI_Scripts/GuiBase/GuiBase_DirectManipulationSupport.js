@@ -229,11 +229,6 @@ gGuiBase.DirectManipulationSupport = (function() {
 			dx = camera.positionWCX(dx);
 			dy = camera.positionWCY(dy);
 			
-			
-			
-			console.log(dx + " " + dy);
-			
-
 			camera.setWCCenter(dx, dy);
 		}
 		
