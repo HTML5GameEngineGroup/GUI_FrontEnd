@@ -207,6 +207,10 @@ ClientScene.prototype.getCameraList = function() {
     return this.mAllCamera;
 };
 
+ClientScene.prototype.getCameraObjectList = function() {
+	return this.cameraObjects;
+}
+
 ClientScene.prototype.getSceneCamera = function() {
 	//if (this.mAllCamera.length > 0) return this.mAllCamera[0];
 	return this.sceneViewCamera;
