@@ -9,13 +9,13 @@ gGuiBase.SceneSupport = (function() {
     
 	mSceneList.push(gCurrentScene);
     gEngine.View.initializeEngineCore('GLCanvas', gCurrentScene);
-
+	
 	var selectScene = function(index) {
 		gEngine.GameLoop.stop();
 		// gGuiBase.SceneSupport.gCurrentScene.unloadScene();
 		if (index !== null) {
 			gGuiBase.SceneSupport.gCurrentScene = mSceneList[index];
-			gGuiBase.SceneSupport.gCurrentScene.loadScene();
+			//gGuiBase.SceneSupport.gCurrentScene.loadScene();
 			gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
 			gGuiBase.Core.reinitializeCameraTab();
 			gGuiBase.SceneSupport.gCurrentScene.setInitialCameraObject();

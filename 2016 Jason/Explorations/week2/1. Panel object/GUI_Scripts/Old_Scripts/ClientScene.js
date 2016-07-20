@@ -27,6 +27,7 @@ function ClientScene(number) {
 	this.rotationObject = null;
 	this.sceneViewCamera = null;
 	this.cameraObjects = [];
+	this.cameraTexture = null;
 
 }
 gEngine.View.inheritPrototype(ClientScene, Scene);
@@ -41,6 +42,8 @@ ClientScene.prototype.loadScene = function() {
         console.log("calling load texture from scene:", texture);
       gEngine.Textures.loadTexture(texture);
     };
+	
+	gEngine.Textures.loadTexture("assets/cameraicon.png");
 };
 
 
@@ -66,6 +69,8 @@ ClientScene.prototype.unloadScene = function() {
         console.log('calling unload from scene', texture);
         gEngine.Textures.unloadTexture(texture);
     };
+	
+	gEngine.Textures.unloadTexture("assets/cameraicon.png");
 };
 
 ClientScene.prototype.initialize = function() {
@@ -86,8 +91,6 @@ ClientScene.prototype.initialize = function() {
     cam.setBackgroundColor([0.8,0.8,0.8,1]);
     cam.mName = "Camera0";  // Cameras don't have a mName, but we can just add it in like this
     cam.mID = "cameraListItem0";
-	
-	
 	
 	
 	this.sceneViewCamera = new Camera(

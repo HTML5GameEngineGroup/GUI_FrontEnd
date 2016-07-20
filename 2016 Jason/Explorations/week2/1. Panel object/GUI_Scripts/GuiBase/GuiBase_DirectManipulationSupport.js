@@ -185,6 +185,25 @@ gGuiBase.DirectManipulationSupport = (function() {
 			if (draggingLeft) width = -width;
 			if (!draggingTop) height = -height;
 			
+			/*var draggedPoint = null;
+			if (draggingLeft && draggingTop) 
+				draggedPoint = vec2.fromValues(selectObject.topLeftX, selectObject.topLeftY);
+			else if (draggingLeft && !draggingTop)
+				draggedPoint = vec2.fromValues(selectObject.botLeftX, selectObject.botLeftY);
+			else if (!draggingLeft && draggingTop)
+				draggedPoint = vec2.fromValues(selectObject.topRightX, selectObject.topRightY);
+			else 
+				draggedPoint = vec2.fromValues(selectObject.botRightX, selectObject.botRightY);
+			
+			draggedPoint = rotatePoint(x, y, -r, draggedPoint);
+			
+			if (mousePos[0] < draggedPoint[0]) {
+				width = -width;
+			} 
+			if (mousePos[1] < draggedPoint[1]) {
+				height = -height;
+			}*/
+			
 			if (width < 0.25) width = 0.25;
 			if (height < 0.25) height = 0.25;
 			
@@ -310,16 +329,21 @@ gGuiBase.DirectManipulationSupport = (function() {
 		var y = xform.getYPos();
 		var r = xform.getRotationInRad();
 		
-		var topLeft = vec2.fromValues(selectObject.topLeftX - selectObject.boxSize / 2, selectObject.topLeftY + selectObject.boxSize / 2);
-		var topLeftEdge = vec2.fromValues(selectObject.topLeftX + selectObject.boxSize / 2, selectObject.topLeftY - selectObject.boxSize / 2);
+		var topLeft = vec2.fromValues(selectObject.topLeftX, selectObject.topLeftY);
+		//var topLeftEdge = vec2.fromValues(selectObject.topLeftX + selectObject.boxSize / 2, selectObject.topLeftY - selectObject.boxSize / 2);
 		var mousePos = vec2.fromValues(mouseX, mouseY);
+		
+		
 		
 		//Apply inverse rotation to fit the object & mouse position to the x/y axis
 		mousePos = rotatePoint(x, y, -r, mousePos);
 		topLeft = rotatePoint(x, y, -r, topLeft);
+		var topLeftEdge = vec2.fromValues(topLeft[0] - selectObject.boxSize / 2, topLeft[1] + selectObject.boxSize / 2);
+		var topLeftEdge2 = vec2.fromValues(topLeft[0] + selectObject.boxSize / 2, topLeft[1] - selectObject.boxSize / 2);
 
-		if ((mousePos[0] > (topLeft[0])) && (mouseX < (topLeftEdge[0])) &&
-			(mousePos[1] < (topLeft[1])) && (mouseY > (topLeftEdge[1]))) {
+
+		if ((mousePos[0] > (topLeftEdge[0])) && (mousePos[0] < (topLeftEdge2[0])) &&
+			(mousePos[1] < (topLeftEdge[1])) && (mousePos[1] > (topLeftEdge2[1]))) {
 			return true;
 		}
 		return false;
@@ -341,16 +365,19 @@ gGuiBase.DirectManipulationSupport = (function() {
 		var y = xform.getYPos();
 		var r = xform.getRotationInRad();
 		
-		var topRight = vec2.fromValues(selectObject.topRightX - selectObject.boxSize / 2, selectObject.topRightY + selectObject.boxSize / 2);
-		var topRightEdge = vec2.fromValues(selectObject.topRightX + selectObject.boxSize / 2, selectObject.topRightY - selectObject.boxSize / 2);
+		var topRight = vec2.fromValues(selectObject.topRightX, selectObject.topRightY);
+		//var topRightEdge = vec2.fromValues(selectObject.topRightX + selectObject.boxSize / 2, selectObject.topRightY - selectObject.boxSize / 2);
 		var mousePos = vec2.fromValues(mouseX, mouseY);
 		
 		//Apply inverse rotation to fit the object & mouse position to the x/y axis
 		mousePos = rotatePoint(x, y, -r, mousePos);
 		topRight = rotatePoint(x, y, -r, topRight);
+		var topRightEdge = vec2.fromValues(topRight[0] - selectObject.boxSize / 2, topRight[1] + selectObject.boxSize / 2);
+		var topRightEdge2 = vec2.fromValues(topRight[0] + selectObject.boxSize / 2, topRight[1] - selectObject.boxSize / 2);
 
-		if ((mousePos[0] > (topRight[0])) && (mouseX < (topRightEdge[0])) &&
-			(mousePos[1] < (topRight[1])) && (mouseY > (topRightEdge[1]))) {
+
+		if ((mousePos[0] > (topRightEdge[0])) && (mousePos[0] < (topRightEdge2[0])) &&
+			(mousePos[1] < (topRightEdge[1])) && (mousePos[1] > (topRightEdge2[1]))) {
 			return true;
 		}
 		return false;
@@ -371,16 +398,19 @@ gGuiBase.DirectManipulationSupport = (function() {
 		var y = xform.getYPos();
 		var r = xform.getRotationInRad();
 		
-		var botLeft = vec2.fromValues(selectObject.botLeftX - selectObject.boxSize / 2, selectObject.botLeftY + selectObject.boxSize / 2);
-		var botLeftEdge = vec2.fromValues(selectObject.botLeftX + selectObject.boxSize / 2, selectObject.botLeftY - selectObject.boxSize / 2);
+		var botLeft = vec2.fromValues(selectObject.botLeftX, selectObject.botLeftY);
+		//var botLeftEdge = vec2.fromValues(selectObject.botLeftX + selectObject.boxSize / 2, selectObject.botLeftY - selectObject.boxSize / 2);
 		var mousePos = vec2.fromValues(mouseX, mouseY);
 		
 		//Apply inverse rotation to fit the object & mouse position to the x/y axis
 		mousePos = rotatePoint(x, y, -r, mousePos);
 		botLeft = rotatePoint(x, y, -r, botLeft);
+		var botLeftEdge = vec2.fromValues(botLeft[0] - selectObject.boxSize / 2, botLeft[1] + selectObject.boxSize / 2);
+		var botLeftEdge2 = vec2.fromValues(botLeft[0] + selectObject.boxSize / 2, botLeft[1] - selectObject.boxSize / 2);
 
-		if ((mousePos[0] > (botLeft[0])) && (mouseX < (botLeftEdge[0])) &&
-			(mousePos[1] < (botLeft[1])) && (mouseY > (botLeftEdge[1]))) {
+
+		if ((mousePos[0] > (botLeftEdge[0])) && (mousePos[0] < (botLeftEdge2[0])) &&
+			(mousePos[1] < (botLeftEdge[1])) && (mousePos[1] > (botLeftEdge2[1]))) {
 			return true;
 		}
 		return false;
@@ -401,16 +431,18 @@ gGuiBase.DirectManipulationSupport = (function() {
 		var y = xform.getYPos();
 		var r = xform.getRotationInRad();
 		
-		var botRight = vec2.fromValues(selectObject.botRightX - selectObject.boxSize / 2, selectObject.botRightY + selectObject.boxSize / 2);
-		var botRightEdge = vec2.fromValues(selectObject.botRightX + selectObject.boxSize / 2, selectObject.botRightY - selectObject.boxSize / 2);
+		var botRight = vec2.fromValues(selectObject.botRightX, selectObject.botRightY);
+		//var botRightEdge = vec2.fromValues(selectObject.botRightX + selectObject.boxSize / 2, selectObject.botRightY - selectObject.boxSize / 2);
 		var mousePos = vec2.fromValues(mouseX, mouseY);
 		
 		//Apply inverse rotation to fit the object & mouse position to the x/y axis
 		mousePos = rotatePoint(x, y, -r, mousePos);
 		botRight = rotatePoint(x, y, -r, botRight);
+		var botRightEdge = vec2.fromValues(botRight[0] - selectObject.boxSize / 2, botRight[1] + selectObject.boxSize / 2);
+		var botRightEdge2 = vec2.fromValues(botRight[0] + selectObject.boxSize / 2, botRight[1] - selectObject.boxSize / 2);
 
-		if ((mousePos[0] > (botRight[0])) && (mouseX < (botRightEdge[0])) &&
-			(mousePos[1] < (botRight[1])) && (mouseY > (botRightEdge[1]))) {
+		if ((mousePos[0] > (botRightEdge[0])) && (mousePos[0] < (botRightEdge2[0])) &&
+			(mousePos[1] < (botRightEdge[1])) && (mousePos[1] > (botRightEdge2[1]))) {
 			return true;
 		}
 		return false;
