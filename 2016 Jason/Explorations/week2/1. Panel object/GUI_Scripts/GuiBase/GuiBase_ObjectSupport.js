@@ -120,7 +120,14 @@ gGuiBase.ObjectSupport = (function() {
     
     var cloneGO = function ( gameObject ) {
         var newGO;
-        eval('newGO = new ' + gameObject.mName + '(new Renderable());');
+        console.log("type of renderable in clone:", typeof(gameObject.getRenderable()));
+        console.log(gameObject.getRenderable().mTexture);
+        var texture = gameObject.getRenderable().mTexture;
+        if (texture) {
+            eval('newGO = new ' + gameObject.mName + '(new TextureRenderable("' + texture + '"));');
+        } else {
+            eval('newGO = new ' + gameObject.mName + '(new Renderable());');
+        }
         // Make a default xform
         this.copyTransform(newGO, gameObject);
         var rend = newGO.getRenderable();
@@ -132,12 +139,12 @@ gGuiBase.ObjectSupport = (function() {
     var copyTransform = function ( targetGO, sourceGO ) {
         var targetTransform = targetGO.getXform();                                             // set default transform
         var gameObjectTransform = sourceGO.getXform();
-        targetTransform.cloneTo(gameObjectTransform);
-        // targetTransform.setXPos(gameObjectTransform.X);
-        // targetTransform.setYPos(gameObjectTransform.getYPos());
-        // targetTransform.setWidth(gameObjectTransform.getWidth());
-        // targetTransform.setHeight(gameObjectTransform.getHeight());
-        // targetTransform.setRotationInDegree(gameObjectTransform.getRotationInDegree());
+        // targetTransform.cloneTo(gameObjectTransform);
+        targetTransform.setXPos(gameObjectTransform.getXPos());
+        targetTransform.setYPos(gameObjectTransform.getYPos());
+        targetTransform.setWidth(gameObjectTransform.getWidth());
+        targetTransform.setHeight(gameObjectTransform.getHeight());
+        targetTransform.setRotationInDegree(gameObjectTransform.getRotationInDegree());
     };
     
     // names are id, names must be unique

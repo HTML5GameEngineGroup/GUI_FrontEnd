@@ -49,9 +49,10 @@ gGuiBase.SaveLoadSupport = (function() {
 		// });
 
 		//TESTING TEXTURE SWAP
-		gGuiBase.Core.loadTextureObject('assets/wall.png');
-		var gameObjectName = gGuiBase.ObjectSupport.createDefaultObject();
-		gGuiBase.TextureSupport.addTextureToGameObject(gameObjectName, 'assets/wall.png');
+		var texName = 'assets/wall.png';
+		gGuiBase.Core.loadTextureObject(texName);
+		var gameObjectName = gGuiBase.Core.addTextureObject(texName);
+		// gGuiBase.TextureSupport.addTextureToGameObject(gameObjectName, 'assets/wall.png');
 	});
 		
 	var fileOpen = function(backup) {
