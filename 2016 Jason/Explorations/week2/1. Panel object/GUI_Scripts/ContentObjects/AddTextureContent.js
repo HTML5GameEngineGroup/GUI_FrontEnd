@@ -69,7 +69,7 @@ AddTextureContent.prototype.buttonOnClick = function() {
     console.log($('#texNameInput').val());
     var texName = $('#texNameInput').val();
     // var texName = "assets/minion_sprite.png";
-    gGuiBase.Core.addTextureObject(texName);
+    gGuiBase.Core.loadTextureObject(texName);
 };
 
 // this function handles the left click event on an object in the object tab

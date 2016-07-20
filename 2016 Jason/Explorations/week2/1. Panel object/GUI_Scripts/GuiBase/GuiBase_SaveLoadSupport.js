@@ -50,7 +50,7 @@ gGuiBase.SaveLoadSupport = (function() {
 
 		//TESTING TEXTURE SWAP
 		var texName = 'assets/wall.png';
-		gGuiBase.Core.loadTextureObject(texName);
+		// gGuiBase.Core.loadTextureObject(texName);
 		var gameObjectName = gGuiBase.Core.addTextureObject(texName);
 		// gGuiBase.TextureSupport.addTextureToGameObject(gameObjectName, 'assets/wall.png');
 	});
