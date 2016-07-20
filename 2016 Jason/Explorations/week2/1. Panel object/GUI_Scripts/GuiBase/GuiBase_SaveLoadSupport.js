@@ -26,25 +26,32 @@ gGuiBase.SaveLoadSupport = (function() {
 	});
 	
 	$('#menuRun').click(function() {
-		gGuiBase.Core.gRunning = !gGuiBase.Core.gRunning;
-		if (gGuiBase.Core.gRunning) {
-			// Back up game state
-			fileSave(true);
+		// gGuiBase.Core.gRunning = !gGuiBase.Core.gRunning;
+		// if (gGuiBase.Core.gRunning) {
+		// 	// Back up game state
+		// 	fileSave(true);
+        //
+		// 	$('#menuRun').css('background-color', 'grey');
+		// 	gGuiBase.Core.emptyDetailsTab();
+		// 	gGuiBase.Core.selectedGameObject = null;
+		// } else {
+		// 	// Load the backed-up game state
+		// 	gGuiBase.SaveLoadSupport.fileOpen(true);
+        //
+		// 	$('#menuRun').css('background-color', 'white');
+		// }
 
-			$('#menuRun').css('background-color', 'grey');
-			gGuiBase.Core.emptyDetailsTab();
-			gGuiBase.Core.selectedGameObject = null;
-		} else {
-			// Load the backed-up game state
-			gGuiBase.SaveLoadSupport.fileOpen(true);
+		// TESTING INPUT FROM FILE
+		// $('input[type=file]').change(function () {
+		// 	var filePath=$('#fileUpload').val();
+		// 	console.log(filePath);
+		// 	console.log(document.getElementById("fileUpload").files[0]);
+		// });
 
-			$('#menuRun').css('background-color', 'white');
-		}
-		$('input[type=file]').change(function () {
-			var filePath=$('#fileUpload').val();
-			console.log(filePath);
-			console.log(document.getElementById("fileUpload").files[0]);
-		});
+		//TESTING TEXTURE SWAP
+		gGuiBase.Core.loadTextureObject('assets/wall.png');
+		var gameObjectName = gGuiBase.ObjectSupport.createDefaultObject();
+		gGuiBase.TextureSupport.addTextureToGameObject(gameObjectName, 'assets/wall.png');
 	});
 		
 	var fileOpen = function(backup) {

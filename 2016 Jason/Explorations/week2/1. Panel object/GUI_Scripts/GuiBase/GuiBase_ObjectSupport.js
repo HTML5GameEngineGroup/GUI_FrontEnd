@@ -43,7 +43,7 @@ gGuiBase.ObjectSupport = (function() {
         newGO.mID = name;
         newGO.mName = name;                                                    // object class name
         mGO[newGO.mName] = newGO;                                               // add to map
-        mGOCode[newGO.mName] = this.getDefaultCodeGO(newGO.mName);                // add code to code map
+        mGOCode[newGO.mName] = code;                // add code to code map
         return newGO.mName;
     };
 
@@ -82,10 +82,7 @@ gGuiBase.ObjectSupport = (function() {
         return newGO.mName;
     };
     
-    // texture must be already added to texture support!
-    var addTextureToGO = function(GOName, textureName) {
-        var GO = getGameObjectByID(GOName);
-    };
+   
 	
 	var deleteObject = function(objName) {
 		
@@ -133,13 +130,14 @@ gGuiBase.ObjectSupport = (function() {
     };
     
     var copyTransform = function ( targetGO, sourceGO ) {
-        var xf = targetGO.getXform();                                             // set default transform
-        var GOXf = sourceGO.getXform();
-        xf.setXPos(GOXf.getXPos());
-        xf.setYPos(GOXf.getYPos());
-        xf.setWidth(GOXf.getWidth());
-        xf.setHeight(GOXf.getHeight());
-        xf.setRotationInDegree(GOXf.getRotationInDegree());
+        var targetTransform = targetGO.getXform();                                             // set default transform
+        var gameObjectTransform = sourceGO.getXform();
+        targetTransform.cloneTo(gameObjectTransform);
+        // targetTransform.setXPos(gameObjectTransform.X);
+        // targetTransform.setYPos(gameObjectTransform.getYPos());
+        // targetTransform.setWidth(gameObjectTransform.getWidth());
+        // targetTransform.setHeight(gameObjectTransform.getHeight());
+        // targetTransform.setRotationInDegree(gameObjectTransform.getRotationInDegree());
     };
     
     // names are id, names must be unique

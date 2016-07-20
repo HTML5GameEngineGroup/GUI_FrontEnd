@@ -12,6 +12,22 @@ gGuiBase.TextureSupport = (function() {
         gAllTextures[texName] = true;
     };
 
+    // texture must be already added to texture support!
+    var addTextureToGameObject = function(GameObjectName, textureName) {
+        // create texture
+        var newTextureRenderable = new TextureRenderable(textureName);
+        // get object
+        var gameObject = gGuiBase.ObjectSupport.getGameObjectByID(GameObjectName);
+        // copy transform from object to new texture
+        var newTextureTransform = newTextureRenderable.getXform();
+        var gameObjectTransform = gameObject.getXform();
+        gameObjectTransform.cloneTo(newTextureTransform);
+        // gGuiBase.ObjectSupport.copyTransform(newTextureTransform, gameObjectTransform);
+
+        var gameObjectRenderable = gameObject.getRenderable();
+        gameObjectRenderable = newTextureRenderable;
+    };
+
     var removeTexture = function ( texName ) {
         delete gAllTextures[texName];
     };
@@ -26,6 +42,7 @@ gGuiBase.TextureSupport = (function() {
 
     var mPublic = {
         gAllTextures: gAllTextures,
+        addTextureToGameObject: addTextureToGameObject,
         addTexture: addTexture,
         removeTexture: removeTexture,
         getTexList: getTexList
