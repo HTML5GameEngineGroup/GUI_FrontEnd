@@ -28,17 +28,17 @@ gGuiBase.SaveLoadSupport = (function() {
 	$('#menuRun').click(function() {
 		// gGuiBase.Core.gRunning = !gGuiBase.Core.gRunning;
 		// if (gGuiBase.Core.gRunning) {
-		// 	// Back up game state
-		// 	fileSave(true);
-        //
-		// 	$('#menuRun').css('background-color', 'grey');
-		// 	gGuiBase.Core.emptyDetailsTab();
-		// 	gGuiBase.Core.selectedGameObject = null;
+			//Back up game state
+			// fileSave(true);
+        
+			// $('#menuRun').css('background-color', 'grey');
+			// gGuiBase.Core.emptyDetailsTab();
+			// gGuiBase.Core.selectedGameObject = null;
 		// } else {
-		// 	// Load the backed-up game state
-		// 	gGuiBase.SaveLoadSupport.fileOpen(true);
-        //
-		// 	$('#menuRun').css('background-color', 'white');
+			//Load the backed-up game state
+			// gGuiBase.SaveLoadSupport.fileOpen(true);
+        
+			// $('#menuRun').css('background-color', 'white');
 		// }
 
 		// TESTING INPUT FROM FILE
@@ -360,10 +360,10 @@ gGuiBase.SaveLoadSupport = (function() {
 						var idx = gGuiBase.SceneSupport.getSceneIndex(sceneName);
 						gGuiBase.SceneSupport.selectScene(idx);
 						gGuiBase.SceneSupport.gCurrentScene.mAllCamera = [];
+						gGuiBase.SceneSupport.gCurrentScene.cameraObjects = [];
 			
 						while (typeof(data[i]) !== "undefined") {
-							
-							// Note: new cameras are automatically added to mAllCamera
+					
 							var cam = new Camera(
 								vec2.fromValues(data[i + 2][0], data[i + 2][1]),    // position of the camera
 								data[i + 3],                                        // width of camera

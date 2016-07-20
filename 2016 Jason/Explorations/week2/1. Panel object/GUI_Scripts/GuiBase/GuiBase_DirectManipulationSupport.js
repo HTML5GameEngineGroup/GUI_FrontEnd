@@ -587,7 +587,8 @@ gGuiBase.DirectManipulationSupport = (function() {
 	
     var mPublic = {
        mouseInBound: mouseInBound,
-	   rotatePoint: rotatePoint
+	   rotatePoint: rotatePoint,
+	   currentCameraObject: currentCameraObject
     };
     return mPublic;
 }());

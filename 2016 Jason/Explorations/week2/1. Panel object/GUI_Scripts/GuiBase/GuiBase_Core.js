@@ -190,10 +190,17 @@ gGuiBase.Core = (function() {
 		gGuiBase.InstanceSupport.clearInstances();
 		gGuiBase.CameraSupport.clearCameras();
 		var sceneList = gGuiBase.SceneSupport.getSceneList();
+		for (var i = 0; i < sceneList.length; i++) {
+			sceneList[i].clearCameraObjectList();
+		}
+		
+		
 		sceneList.splice(0, sceneList.length);
 		
 		var selectedGameObject = null;
 		var selectedCamera = null;
+		
+		gGuiBase.DirectManipulationSupport.currentCameraObject = null;
 		
 		gEngine.GameLoop.stop();
 		gGuiBase.SceneSupport.runBlankScene();
