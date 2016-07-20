@@ -171,7 +171,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 				draggingCorner = true;
 				draggingTop = false;
 				draggingLeft = false;
-			} else if (mousePosInTransform(xform, mouseX, mouseY)) { //Otherwise, drag without resizing
+			} else { //Otherwise, drag without resizing
 				xform.setXPos(mouseX);
 				xform.setYPos(mouseY);
 				
@@ -198,7 +198,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 				} else if (currentCameraObject.mouseOnRightBox(mouseX, mouseY)) {
 					draggingCameraEdge = true;
 					draggingRightCamera = true;
-				} else if (mouseInCameraObject(currentCameraObject, mouseX, mouseY)) {
+				} else {
 					currentCameraObject.cameraRef.setWCCenter(mouseX, mouseY);
 				}
 				
@@ -217,7 +217,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 			var dx = (mouseX - prevX) + cameraCenter[0];
 			var dy = (mouseY - prevY) + cameraCenter[1];
 			
-			/*var mouseXPixel = gEngine.Input.getMousePosX();
+			var mouseXPixel = gEngine.Input.getMousePosX();
 			var mouseYPixel = gEngine.Input.getMousePosY();
 			
 			var cameraPositionPixel = vec3.fromValues(cameraCenter[0], cameraCenter[1], 0);
@@ -232,9 +232,9 @@ gGuiBase.DirectManipulationSupport = (function() {
 			
 			
 			console.log(dx + " " + dy);
-			*/
+			
 
-			//camera.setWCCenter(dx, dy);
+			camera.setWCCenter(dx, dy);
 		}
 		
 		//If we're dragging a corner and not the main body of the object instance
