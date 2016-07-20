@@ -81,6 +81,11 @@ gGuiBase.ObjectSupport = (function() {
 
         return newGO.mName;
     };
+    
+    // texture must be already added to texture support!
+    var addTextureToGO = function(GOName, textureName) {
+        var GO = getGameObjectByID(GOName);
+    };
 	
 	var deleteObject = function(objName) {
 		
@@ -95,7 +100,6 @@ gGuiBase.ObjectSupport = (function() {
 		gGuiBase.InstanceSupport.deleteInstancesWithName(objName); //Delete instances containing the object name
 		gGuiBase.Core.updateObjectSelectList();
 		gGuiBase.Core.updateInstanceSelectList();
-		
 		gGuiBase.View.refreshAllTabContent();		
 	};
 	

@@ -19,7 +19,6 @@ gGuiBase.Core = (function() {
 
 	var loadTextureObject = function (textName) {
 		// add texture to scene
-		gGuiBase.SceneSupport.gCurrentScene.addTexture(textName);
 		gGuiBase.TextureSupport.addTexture(textName);
 		console.log("TexList:", gGuiBase.TextureSupport.getTexList());
 		gEngine.GameLoop.stop();
@@ -36,7 +35,7 @@ gGuiBase.Core = (function() {
 		gGuiBase.SceneSupport.gCurrentScene.addInstance(textObj);
 		//update the gui
 		var texList = gGuiBase.TextureSupport.getTexList();
-		gGuiBase.View.findWidgetByID("#texSelectList1").rebuildWithArray( texList )
+		gGuiBase.View.findWidgetByID("#texSelectList1").rebuildWithArray( texList );
 		updateObjectSelectList();
 		gGuiBase.View.refreshAllTabContent();  // refresh panel
 	};

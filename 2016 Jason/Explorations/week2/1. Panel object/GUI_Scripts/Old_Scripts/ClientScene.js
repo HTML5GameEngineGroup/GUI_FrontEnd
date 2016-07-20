@@ -37,7 +37,7 @@ ClientScene.prototype.loadScene = function() {
    // gEngine.AudioClips.loadAudio(this.kCue);
     //gEngine.TextFileLoader.loadTextFile(this.kSceneFile, gEngine.TextFileLoader.eTextFileType.eTextFile);
     // gEngine.Textures.loadTexture("assets/minion_sprite.png");
-    for (var texture in this.mAllTextures) {
+    for (var texture in gGuiBase.TextureSupport.gAllTextures) {
         console.log("calling load texture from scene:", texture);
       gEngine.Textures.loadTexture(texture);
     };
@@ -188,14 +188,6 @@ ClientScene.prototype.update = function() {
 		this.rotationObject.update()
 	}
 	
-};
-
-ClientScene.prototype.addTexture = function(texture) {
-    this.mAllTextures[texture] = texture;
-};
-
-ClientScene.prototype.removeTexture = function(texture) {
-    delete this.mAllTextures[texture];
 };
 
 ClientScene.prototype.addInstance = function(inst) {
