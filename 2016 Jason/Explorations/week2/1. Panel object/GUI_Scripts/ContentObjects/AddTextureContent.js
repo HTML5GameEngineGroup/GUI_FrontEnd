@@ -36,27 +36,20 @@ AddTextureContent.prototype.initializeEventHandling = function () {
         delegate: ".objectListMenu",
         menu: [
             {title: "Details", cmd: "details", uiIcon: "ui-icon-info"},
-            {title: "Edit code", cmd: "edit", uiIcon: "ui-icon-pencil"},
-            {title: "Instantiate to scene", cmd: "instantiate", uiIcon: "ui-icon-arrowthick-1-e"},
+            {title: "Create GameObject", cmd: "create", uiIcon: "ui-icon-arrowthick-1-e"},
             {title: "Delete", cmd: "delete", uiIcon: "ui-icon-closethick"},
         ],
         select: function(event, ui) {
-            var GOName = ui.target.text();
+            var texName = ui.target.text();
             switch (ui.cmd) {
                 case 'details':
-                    gGuiBase.Core.selectDetailsObject(GOName);
+                    alert('to be implemented');
                     break;
-                case 'edit':
-                    console.log(ui.target.text());
-                    gGuiBase.EditorSupport.createFloatingEditor(GOName);
-                    break;
-                case 'instantiate':
-                    gGuiBase.Core.addInstanceWithName(GOName);
+                case 'create':
+                    gGuiBase.TextureSupport.addTextureObject(texName);
                     break;
                 case 'delete':
-                    if (confirm("Warning: This will delete all instances of " + GOName + ".\n\Delete anyways?")) { // Evalutes to true and perform an action if OK is pressed, otherwise do nothing
-                        gGuiBase.ObjectSupport.deleteObject(GOName);
-                    }
+                    alert('to be implemented');
                     break;
             }
         }
@@ -69,7 +62,7 @@ AddTextureContent.prototype.buttonOnClick = function() {
     console.log($('#texNameInput').val());
     var texName = $('#texNameInput').val();
     // var texName = "assets/minion_sprite.png";
-    gGuiBase.Core.loadTextureObject(texName);
+    gGuiBase.TextureSupport.addTexture(texName);
 };
 
 // this function handles the left click event on an object in the object tab

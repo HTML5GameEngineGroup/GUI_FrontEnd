@@ -8,8 +8,22 @@ gGuiBase.TextureSupport = (function() {
     
     var gAllTextures = {};
 
+    // adds texture to panel
     var addTexture = function ( texName ) {
         gAllTextures[texName] = true;
+        loadTexturesToScene();
+        var texList = gGuiBase.TextureSupport.getTexList();
+        gGuiBase.View.findWidgetByID("#texSelectList1").rebuildWithArray( texList );
+        gGuiBase.View.refreshAllTabContent();  // refresh panel
+    };
+
+    // loads the texture into the engine via the scene
+    var loadTexturesToScene = function () {
+        // add texture to scene
+        gEngine.GameLoop.stop();
+        gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
+        gGuiBase.Core.reinitializeCameraTab();
+        //update the gui
     };
 
     // texture must be already added to texture support!
@@ -28,6 +42,18 @@ gGuiBase.TextureSupport = (function() {
         gameObjectRenderable = newTextureRenderable;
     };
 
+    // adds gameobject with texture to gameobject panel
+    var addTextureObject = function (textName) {
+        // create texture object
+        var textObjName = gGuiBase.ObjectSupport.createDefaultTextObject(textName);
+        // add it to scene
+        var textObj = gGuiBase.ObjectSupport.getGameObjectByID(textObjName);
+
+        gGuiBase.Core.updateObjectSelectList();
+        gGuiBase.View.refreshAllTabContent();  // refresh panel
+    };
+
+    
     var removeTexture = function ( texName ) {
         delete gAllTextures[texName];
     };
@@ -43,7 +69,9 @@ gGuiBase.TextureSupport = (function() {
     var mPublic = {
         gAllTextures: gAllTextures,
         addTextureToGameObject: addTextureToGameObject,
+        addTextureObject: addTextureObject,
         addTexture: addTexture,
+        loadTexturesToScene: loadTexturesToScene,
         removeTexture: removeTexture,
         getTexList: getTexList
     };
