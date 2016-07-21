@@ -112,6 +112,11 @@ ClientScene.prototype.initialize = function() {
 	gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
 	
     this.isInitialized = true;
+    // Update view with new cameras and scene
+    gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
+    // 
+    gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
+    gGuiBase.View.refreshAllTabContent();
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
