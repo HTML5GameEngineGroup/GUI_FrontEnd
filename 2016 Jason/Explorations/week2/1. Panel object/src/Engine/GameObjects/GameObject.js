@@ -112,6 +112,9 @@ GameObject.prototype.getCurrentFrontDir = function () { return this.mCurrentFron
  * @memberOf GameObject
  */
 GameObject.prototype.getRenderable = function () { return this.mRenderComponent; };
+GameObject.prototype.setRenderable = function (renderable) { this.mRenderComponent = renderable; };
+
+
 
 /**
  * Set the Physics Component for the GameObject

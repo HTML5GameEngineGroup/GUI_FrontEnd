@@ -140,11 +140,15 @@ gGuiBase.ObjectSupport = (function() {
         var targetTransform = targetGO.getXform();                                             // set default transform
         var gameObjectTransform = sourceGO.getXform();
         // targetTransform.cloneTo(gameObjectTransform);
-        targetTransform.setXPos(gameObjectTransform.getXPos());
-        targetTransform.setYPos(gameObjectTransform.getYPos());
-        targetTransform.setWidth(gameObjectTransform.getWidth());
-        targetTransform.setHeight(gameObjectTransform.getHeight());
-        targetTransform.setRotationInDegree(gameObjectTransform.getRotationInDegree());
+        copyTransformOnTransforms(targetTransform, gameObjectTransform);
+    };
+
+    var copyTransformOnTransforms = function ( targetXf, sourceXf) {
+        targetXf.setXPos(sourceXf.getXPos());
+        targetXf.setYPos(sourceXf.getYPos());
+        targetXf.setWidth(sourceXf.getWidth());
+        targetXf.setHeight(sourceXf.getHeight());
+        targetXf.setRotationInDegree(sourceXf.getRotationInDegree());
     };
     
     // names are id, names must be unique
@@ -253,6 +257,7 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
 		deleteObject: deleteObject,
         checkForNameConflict: checkForNameConflict,
         copyTransform: copyTransform,
+        copyTransformOnTransforms: copyTransformOnTransforms,
 		replaceInMap: replaceInMap,
         cloneGO: cloneGO,
         getObjectList: getObjectList,

@@ -12,6 +12,7 @@ gGuiBase.TextureSupport = (function() {
     var addTexture = function ( texName ) {
         gAllTextures[texName] = true;
         loadTexturesToScene();
+        // refresh texturelist in view
         var texList = gGuiBase.TextureSupport.getTexList();
         gGuiBase.View.findWidgetByID("#texSelectList1").rebuildWithArray( texList );
         gGuiBase.View.refreshAllTabContent();  // refresh panel
@@ -29,17 +30,17 @@ gGuiBase.TextureSupport = (function() {
     // texture must be already added to texture support!
     var addTextureToGameObject = function(GameObjectName, textureName) {
         // create texture
-        var newTextureRenderable = new TextureRenderable(textureName);
+        var newTex = new TextureRenderable(textureName);
         // get object
         var gameObject = gGuiBase.ObjectSupport.getGameObjectByID(GameObjectName);
+        console.log(gameObject);
         // copy transform from object to new texture
-        var newTextureTransform = newTextureRenderable.getXform();
+        var newTextureTransform = newTex.getXform();
         var gameObjectTransform = gameObject.getXform();
-        gameObjectTransform.cloneTo(newTextureTransform);
-        // gGuiBase.ObjectSupport.copyTransform(newTextureTransform, gameObjectTransform);
+        gGuiBase.ObjectSupport.copyTransformOnTransforms(newTextureTransform, gameObjectTransform);
 
-        var gameObjectRenderable = gameObject.getRenderable();
-        gameObjectRenderable = newTextureRenderable;
+        gameObject.setRenderable(newTex);
+        console.log(gameObject);
     };
 
     // adds gameobject with texture to gameobject panel
