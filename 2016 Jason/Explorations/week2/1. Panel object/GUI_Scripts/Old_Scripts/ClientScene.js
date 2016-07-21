@@ -38,12 +38,17 @@ ClientScene.prototype.loadScene = function() {
    // gEngine.AudioClips.loadAudio(this.kCue);
     //gEngine.TextFileLoader.loadTextFile(this.kSceneFile, gEngine.TextFileLoader.eTextFileType.eTextFile);
     // gEngine.Textures.loadTexture("assets/minion_sprite.png");
+	
+	//If it hasn't already been loaded, load it
+	if (!(gEngine.ResourceMap.isAssetLoaded("assets/cameraicon.png")))
+		gEngine.Textures.loadTexture("assets/cameraicon.png");
+
     for (var texture in gGuiBase.TextureSupport.gAllTextures) {
         console.log("calling load texture from scene:", texture);
       gEngine.Textures.loadTexture(texture);
     };
 	
-	gEngine.Textures.loadTexture("assets/cameraicon.png");
+	
 };
 
 
@@ -70,7 +75,7 @@ ClientScene.prototype.unloadScene = function() {
         gEngine.Textures.unloadTexture(texture);
     };
 	
-	gEngine.Textures.unloadTexture("assets/cameraicon.png");
+	//gEngine.Textures.unloadTexture("assets/cameraicon.png");
 };
 
 ClientScene.prototype.initialize = function() {
@@ -101,8 +106,7 @@ ClientScene.prototype.initialize = function() {
 	this.sceneViewCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
 	this.sceneViewCamera.mName = "SceneCam"; 
     this.sceneViewCamera.mID = "SceneViewCamera";
-	
-	
+
     var cameraObject = new CameraObject(cam);
 	this.cameraObjects.push(cameraObject);
 	gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);

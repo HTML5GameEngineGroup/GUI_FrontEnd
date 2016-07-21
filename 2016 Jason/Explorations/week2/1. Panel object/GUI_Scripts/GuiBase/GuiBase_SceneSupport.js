@@ -18,7 +18,7 @@ gGuiBase.SceneSupport = (function() {
 			//gGuiBase.SceneSupport.gCurrentScene.loadScene();
 			gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
 			gGuiBase.Core.reinitializeCameraTab();
-			gGuiBase.SceneSupport.gCurrentScene.setInitialCameraObject();
+			//gGuiBase.SceneSupport.gCurrentScene.setInitialCameraObject();
 			
 		} else {
 			this.runBlankScene();
@@ -99,9 +99,9 @@ gGuiBase.SceneSupport = (function() {
 		gEngine.GameLoop.stop();
 		if (name !== null) {
 			gGuiBase.SceneSupport.gCurrentScene = getSceneByName(name);
-			gGuiBase.Core.reinitializeCameraTab();
-			gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
 			
+			gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
+			gGuiBase.Core.reinitializeCameraTab();
 		} else {
 			runBlankScene();
 		}

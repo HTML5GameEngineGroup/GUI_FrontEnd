@@ -63,10 +63,11 @@ gGuiBase.Core = (function() {
 
 	// ************* SCENE SUPPORT ****************
 	var initializeInitialScene = function() {
-		// gGuiBase.SceneSupport.gCurrentScene.initialize();
-		gEngine.Core.startScene(gGuiBase.SceneSupport.gCurrentScene);
+		//gGuiBase.SceneSupport.gCurrentScene.initialize();
+		
+		//gEngine.Core.startScene(gGuiBase.SceneSupport.gCurrentScene);
 		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
-		// gGuiBase.SceneSupport.selectScene(0);
+		// 
 		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
 		gGuiBase.View.refreshAllTabContent();
 	};
