@@ -47,7 +47,7 @@ gGuiBase.Core = (function() {
         var detailsTab = gGuiBase.View.findTabByID("#Details");
 		detailsTab.clearContent();
 		var detailsTransform = new TransformContent("TransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
-		var detailsColorTexture = new ColorTextureContent("ColorTextureContent", gGuiBase.View.CONTENT_STYLE, "Texture");
+		var detailsColorTexture = new ColorTextureContent("ColorTextureContent", gGuiBase.View.CONTENT_STYLE, "Color");
 
 		var gameObject = gGuiBase.ObjectSupport.getGameObjectByID( objName );           // get gameObj
 		gGuiBase.Core.selectedGameObject = gameObject;

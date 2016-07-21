@@ -43,6 +43,21 @@ gGuiBase.TextureSupport = (function() {
         console.log(gameObject);
     };
 
+    var removeTextureFromGameObject = function(GameObjectName) {
+        //todo: set colors to old colors
+        var rend = new Renderable();
+        // get object
+        var gameObject = gGuiBase.ObjectSupport.getGameObjectByID(GameObjectName);
+        console.log(gameObject);
+        // copy transform from object to new texture
+        var newTextureTransform = rend.getXform();
+        var gameObjectTransform = gameObject.getXform();
+        gGuiBase.ObjectSupport.copyTransformOnTransforms(newTextureTransform, gameObjectTransform);
+
+        gameObject.setRenderable(rend);
+        console.log(gameObject);
+    };
+
     // adds gameobject with texture to gameobject panel
     var addTextureObject = function (textName) {
         // create texture object
@@ -70,6 +85,7 @@ gGuiBase.TextureSupport = (function() {
     var mPublic = {
         gAllTextures: gAllTextures,
         addTextureToGameObject: addTextureToGameObject,
+        removeTextureFromGameObject: removeTextureFromGameObject,
         addTextureObject: addTextureObject,
         addTexture: addTexture,
         loadTexturesToScene: loadTexturesToScene,

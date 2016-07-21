@@ -4,7 +4,7 @@ function ColorTextureContent(tabContentID, style, title) {
 	this.colorField = null;
 	this.textureText = null;
 	this.textureDropDown = null;
-	
+
 	GuiTabContent.call(this, tabContentID, style, title);
 }
 
@@ -19,15 +19,16 @@ ColorTextureContent.prototype.initialize = function () {
 	this.colorField = new TextField("colorTextField", textFieldStyle, "...");
 	this.textureText = new Text("textureText", textStyle, "Texture");
 	
-	var textureArray = ["1", "2", "3"];
-	this.textureDropDown = new DropdownList("textureDropDown", textFieldStyle, textureArray);
-	
-	
-	
+	var textureNames = gGuiBase.TextureSupport.getTexList();
+	textureNames.unshift("None");
+	console.log("texnames", textureNames);
+	console.log(gGuiBase.TextureSupport.getTexList());
+	this.textureDropDown = new DropdownList("textureDropDown", textFieldStyle, textureNames);
 	this.widgetList.push(this.colorText);
 	this.widgetList.push(this.colorField);
 	this.widgetList.push(this.textureText);
 	this.widgetList.push(this.textureDropDown);
+	if (gGuiBase.Core.selectedGameObject) this.setDropdownToSelectedGO();
 };
 
 ColorTextureContent.prototype.initializeEventHandling = function () {
@@ -53,7 +54,33 @@ ColorTextureContent.prototype.onFocusOut = function(textField) {
 
 ColorTextureContent.prototype.onListSelect = function(value) {
 	console.log("Value is" + value);
+	var gameObjectName = gGuiBase.Core.selectedGameObject.mName;
+	var colorTextureContent = gGuiBase.View.findTabContentByID("#ColorTextureContent");
+	var textureName = colorTextureContent.getDropdownTexName();
+	console.log("texname = ", textureName);
+	if (textureName == "None") {
+		gGuiBase.TextureSupport.removeTextureFromGameObject(gameObjectName);
+	} else {
+		gGuiBase.TextureSupport.addTextureToGameObject(gameObjectName, textureName);
+	}
 };
 
+ColorTextureContent.prototype.getDropdownTexName = function() {
+	return this.textureDropDown.getSelectedListItem();
+};
 
-
+ColorTextureContent.prototype.setDropdownToSelectedGO = function() {
+	var renderable = gGuiBase.Core.selectedGameObject.getRenderable();
+	// console.log(selectedGameObject);
+	// console.log("isntance of:", selectedGameObject.getRenderable() instanceof TextureRenderable);
+	console.log('instance of:', renderable instanceof TextureRenderable);
+	// var texture = gGuiBase.Core.selectedGameObject.getRenderable().getTexture();
+	console.log(renderable);
+	if (renderable instanceof TextureRenderable) {
+		var texName = renderable.getTexture();
+		console.log('texName:', texName);
+		$('#textureDropDown').val(texName);
+	} else {
+		$('#textureDropDown').val("None");
+	}
+};
