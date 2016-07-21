@@ -63,7 +63,7 @@ gGuiBase.Core = (function() {
 
 	// ************* SCENE SUPPORT ****************
 	var initializeInitialScene = function() {
-		//gGuiBase.SceneSupport.gCurrentScene.initialize();
+		gGuiBase.SceneSupport.gCurrentScene.initialize();
 		
 		//gEngine.Core.startScene(gGuiBase.SceneSupport.gCurrentScene);
 		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());

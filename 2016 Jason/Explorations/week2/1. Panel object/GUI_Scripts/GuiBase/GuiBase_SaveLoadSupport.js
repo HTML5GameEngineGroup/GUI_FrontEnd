@@ -210,15 +210,15 @@ gGuiBase.SaveLoadSupport = (function() {
 			
 			for (j = 0; j < camList.length; j++) {
 				var cam = camList[j];
-			
-				cameraData[0 + (j+1 * 6)] = cam.mName;
-				cameraData[1 + (j+1 * 6)] = cam.mID;
-				cameraData[2 + (j+1 * 6)] = cam.getWCCenter();  // [x, y]
-				cameraData[3 + (j+1 * 6)] = cam.getWCWidth();
-				cameraData[4 + (j+1 * 6)] = cam.getViewport();  // [x, y, w, h]
-				cameraData[5 + (j+1 * 6)] = cam.getBackgroundColor();
+				cameraData[0 + ((j+1) * 6)] = cam.mName;
+				cameraData[1 + ((j+1) * 6)] = cam.mID;
+				cameraData[2 + ((j+1) * 6)] = cam.getWCCenter();  // [x, y]
+				cameraData[3 + ((j+1) * 6)] = cam.getWCWidth();
+				cameraData[4 + ((j+1) * 6)] = cam.getViewport();  // [x, y, w, h]
+				cameraData[5 + ((j+1) * 6)] = cam.getBackgroundColor();
 				
 			}
+
 			sceneFolder.file("cameras.json", JSON.stringify(cameraData));
 			
 			// Finally, do it for the instances (all instances in one JSON file)
@@ -363,7 +363,6 @@ gGuiBase.SaveLoadSupport = (function() {
 						gGuiBase.SceneSupport.gCurrentScene.cameraObjects = [];
 			
 						while (typeof(data[i]) !== "undefined") {
-					
 							var cam = new Camera(
 								vec2.fromValues(data[i + 2][0], data[i + 2][1]),    // position of the camera
 								data[i + 3],                                        // width of camera
