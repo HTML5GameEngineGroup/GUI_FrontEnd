@@ -60,6 +60,7 @@ gGuiBase.SaveLoadSupport = (function() {
 		// https://stuk.github.io/jszip/documentation/api_jszip.html
 		// Also, here is the FileReader API:
 		// https://developer.mozilla.org/en-US/docs/Web/API/FileReader
+		//todo Must load textures prior to loading any objects!
 		var input;
 		if (backup) {
 			input = gGuiBase.Core.gBackup;
@@ -163,11 +164,17 @@ gGuiBase.SaveLoadSupport = (function() {
 			var obj = objectList[i];
 			var objCode = gGuiBase.ObjectSupport.getGameObjectCodeByID(obj.mName);
 			var xf = obj.getXform();
-			
+			var rend = obj.getRenderable();
+			var texture = rend.mTexture;
+
 			objectData[0] = obj.mID;
 			objectData[1] = objCode; //Code
-			//objectData[2] = obj[2]; // type
-			
+			if(texture) {				//save texture data
+				objectData[2] = texture;
+			} else {
+				objectData[2] = "None";
+			}
+			console.log("indata:",objectData[2]);
 			objectData[3] = xf.getXPos();
 			objectData[4] = xf.getYPos();
 			objectData[5] = xf.getWidth();
@@ -175,7 +182,6 @@ gGuiBase.SaveLoadSupport = (function() {
 			objectData[7] = xf.getRotationInDegree();
 			objectData[8] = obj.getRenderable().getColor();
 				// TODO: Do it for texture
-			
 			objects.file(obj.mName + ".json", JSON.stringify(objectData));
 		}
 		
@@ -300,7 +306,16 @@ gGuiBase.SaveLoadSupport = (function() {
 				// Put code in system so it can recognize it before making objects
 				eval(data[1]);
 				var className = relativePath.substring(0, relativePath.lastIndexOf(".")); // Just get rid of .json
-				eval("obj = new " + className + "(new Renderable());");
+				var texture = data[2];
+				console.log('outdata texture', texture);
+				if (texture == "None") {
+					eval("obj = new " + className + "(new Renderable());");
+				} else {
+					//!todo check <- may need to load the texture into the scene first
+					console.log('ADD TEXTURE HERE');
+					gGuiBase.TextureSupport.addTexture(texture);
+					eval("obj = new " + className + "(new TextureRenderable(" + texture + "));");
+				}
 				//var entry = [obj, data[1], data[2]];
 				obj.mID = data[0];
 				obj.mName = className;
@@ -325,7 +340,6 @@ gGuiBase.SaveLoadSupport = (function() {
 
 	var loadScenes = function(files, callback) {
 		// Scenes (scenes, cameras, and instances)
-		var count = 0;
 		files.folder("Scenes").forEach(function(relativePath, file) {
 
 			var currentScene;
@@ -391,7 +405,11 @@ gGuiBase.SaveLoadSupport = (function() {
 						while (typeof(data[i]) !== "undefined") {
 							var inst;
 							if (window[data[0]].prototype instanceof GameObject) {
-								eval("inst = new " + data[i + 0] + "(new Renderable())"); // Requires Objects to have been fully processed before this
+								// eval("inst = new " + data[i + 0] + "(new Renderable())"); // Requires Objects to have been fully processed before this
+								// copy gameObject (this will give correct renderable);
+								var gameObject = gGuiBase.ObjectSupport.getGameObjectByID(data[i + 0]);
+								inst = gGuiBase.ObjectSupport.cloneGO(gameObject);
+								// set xf
 								var xf = inst.getXform();
 								xf.setXPos(data[i + 2]);
 								xf.setYPos(data[i + 3]);

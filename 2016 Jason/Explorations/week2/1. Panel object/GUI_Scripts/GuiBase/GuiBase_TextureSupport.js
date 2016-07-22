@@ -9,7 +9,10 @@ gGuiBase.TextureSupport = (function() {
     var gAllTextures = {};
     // adds texture to panel
     var addTexture = function ( texName ) {
+        // if added already return
+        if(gAllTextures[texName] || texName == "") return;
         gAllTextures[texName] = true;
+        console.log('currentscene:', gGuiBase.SceneSupport.gCurrentScene);
         loadTexturesToScene();
         // refresh texturelist in view
         var texList = gGuiBase.TextureSupport.getTexList();
