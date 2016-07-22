@@ -58,8 +58,11 @@ gGuiBase.Core = (function() {
 
 		//var transformContent = gGuiBase.View.findTabContentByID("#TransformContent");
 		//transformContent.updateFields(gameObject);
-        gGuiBase.View.refreshAllTabContent();                                           // refresh panel
-    };
+		// set the texture in details
+
+		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
+		gGuiBase.View.findTabContentByID('#ColorTextureContent').setDropdownToSelectedGO();
+	};
 
 	// ************* SCENE SUPPORT ****************
 	var initializeInitialScene = function() {
