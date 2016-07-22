@@ -164,6 +164,7 @@ gGuiBase.Core = (function() {
 		detailsTab.addContent(detailsColorTexture);
 
 		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
+		gGuiBase.View.findTabContentByID('#ColorTextureContent').setDropdownToSelectedGO();
 	};
 	
 	var replaceObjectNameInCode = function(code, oldName, newName) {
