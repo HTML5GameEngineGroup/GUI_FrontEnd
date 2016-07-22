@@ -21,14 +21,12 @@ ColorTextureContent.prototype.initialize = function () {
 	
 	var textureNames = gGuiBase.TextureSupport.getTexList();
 	textureNames.unshift("None");
-	console.log("texnames", textureNames);
-	console.log(gGuiBase.TextureSupport.getTexList());
 	this.textureDropDown = new DropdownList("textureDropDown", textFieldStyle, textureNames);
 	this.widgetList.push(this.colorText);
 	this.widgetList.push(this.colorField);
 	this.widgetList.push(this.textureText);
 	this.widgetList.push(this.textureDropDown);
-	if (gGuiBase.Core.selectedGameObject) this.setDropdownToSelectedGO();
+	// if (gGuiBase.Core.selectedGameObject) this.setDropdownToSelectedGO();
 };
 
 ColorTextureContent.prototype.initializeEventHandling = function () {
@@ -53,11 +51,10 @@ ColorTextureContent.prototype.onFocusOut = function(textField) {
 };
 
 ColorTextureContent.prototype.onListSelect = function(value) {
-	console.log("Value is" + value);
 	var gameObjectName = gGuiBase.Core.selectedGameObject.mName;
 	var colorTextureContent = gGuiBase.View.findTabContentByID("#ColorTextureContent");
 	var textureName = colorTextureContent.getDropdownTexName();
-	console.log("texname = ", textureName);
+	console.log("selecting this texture:", textureName);
 	if (textureName == "None") {
 		gGuiBase.TextureSupport.removeTextureFromGameObject(gameObjectName);
 	} else {

@@ -7,7 +7,6 @@ var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been
 gGuiBase.TextureSupport = (function() {
     
     var gAllTextures = {};
-
     // adds texture to panel
     var addTexture = function ( texName ) {
         gAllTextures[texName] = true;
@@ -28,37 +27,57 @@ gGuiBase.TextureSupport = (function() {
     };
 
     // texture must be already added to texture support!
-    var addTextureToGameObject = function(GameObjectName, textureName) {
+    var addTextureToGameObject = function(gameObjectName, textureName) {
         // create texture
         var newTex = new TextureRenderable(textureName);
         // get object
-        var gameObject = gGuiBase.ObjectSupport.getGameObjectByID(GameObjectName);
-        console.log(gameObject);
-        // copy transform from object to new texture
-        var newTextureTransform = newTex.getXform();
-        var gameObjectTransform = gameObject.getXform();
-        gGuiBase.ObjectSupport.copyTransformOnTransforms(newTextureTransform, gameObjectTransform);
-
-        gameObject.setRenderable(newTex);
-        console.log(gameObject);
+        var gameObject = gGuiBase.ObjectSupport.getGameObjectByID(gameObjectName);
+        this.setRenderableForGameObject(gameObject, newTex);
+        this.setRenderableForAllInstancesOfObject(gameObjectName, textureName);
     };
 
-    var removeTextureFromGameObject = function(GameObjectName) {
+    var removeTextureFromGameObject = function(gameObjectName) {
         //todo: set colors to old colors
         var rend = new Renderable();
         // get object
-        var gameObject = gGuiBase.ObjectSupport.getGameObjectByID(GameObjectName);
-        console.log(gameObject);
+        var gameObject = gGuiBase.ObjectSupport.getGameObjectByID(gameObjectName);
         // copy transform from object to new texture
-        var newTextureTransform = rend.getXform();
-        var gameObjectTransform = gameObject.getXform();
-        gGuiBase.ObjectSupport.copyTransformOnTransforms(newTextureTransform, gameObjectTransform);
+        this.setRenderableForGameObject(gameObject, rend);
+        this.setRenderableForAllInstancesOfObject(gameObjectName, "None");
 
-        gameObject.setRenderable(rend);
+    };
+
+    var setRenderableForGameObject = function (gameObject, newRenderable) {
+        var newTextureTransform = newRenderable.getXform();
+        var gameObjectTransform = gameObject.getXform();
+        console.log(gameObject);
+        gGuiBase.ObjectSupport.copyTransformOnTransforms(newTextureTransform, gameObjectTransform);
+        gameObject.setRenderable(newRenderable);
         console.log(gameObject);
     };
 
-    // adds gameobject with texture to gameobject panel
+    // replaces all instances of gameObjects renderable with the texture named textureName (None = no texture);
+    //todo does not replace old color right now
+    var setRenderableForAllInstancesOfObject = function (gameObjectName, textureName) {
+        var instanceNames = gGuiBase.InstanceSupport.getInstanceList();
+        for (var i in instanceNames) {
+            var instanceName = instanceNames[i];
+            // get the instance so you can manipulate it
+            var inst = gGuiBase.InstanceSupport.getInstanceByID(instanceName);
+            if (inst.mName == gameObjectName) {
+                // assign appropriate renderable
+                var rend;
+                if (textureName == "None") {
+                    rend = new Renderable();
+                } else {
+                    rend = new TextureRenderable(textureName);
+                }
+                this.setRenderableForGameObject(inst, rend);
+            }
+        }
+    } ;
+
+    // adds new gameobject to scene and to the GUI with texture texName
     var addTextureObject = function (textName) {
         // create texture object
         var textObjName = gGuiBase.ObjectSupport.createDefaultTextObject(textName);
@@ -86,6 +105,8 @@ gGuiBase.TextureSupport = (function() {
         gAllTextures: gAllTextures,
         addTextureToGameObject: addTextureToGameObject,
         removeTextureFromGameObject: removeTextureFromGameObject,
+        setRenderableForGameObject: setRenderableForGameObject,
+        setRenderableForAllInstancesOfObject: setRenderableForAllInstancesOfObject,
         addTextureObject: addTextureObject,
         addTexture: addTexture,
         loadTexturesToScene: loadTexturesToScene,

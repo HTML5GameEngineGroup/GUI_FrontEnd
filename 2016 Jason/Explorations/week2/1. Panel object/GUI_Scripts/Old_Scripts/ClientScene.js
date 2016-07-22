@@ -112,7 +112,7 @@ ClientScene.prototype.initialize = function() {
 	gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
 	
     this.isInitialized = true;
-    // Update view with new cameras and scene
+    // Update view with new cameras and scenef
     gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
     // 
     gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());

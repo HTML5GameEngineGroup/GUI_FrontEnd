@@ -16,6 +16,7 @@ gGuiBase.InstanceSupport = (function() {
         // get object and clone it
         var GO = gGuiBase.ObjectSupport.getGameObjectByID( objName );
         var inst = gGuiBase.ObjectSupport.cloneGO( GO );
+		inst.mName = objName;
         inst.mID = this.getUniqueID( objName );
 
 		gGuiBase.SceneSupport.gCurrentScene.addInstance(inst);
