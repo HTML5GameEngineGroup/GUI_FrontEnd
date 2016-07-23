@@ -48,6 +48,7 @@ gEngine.Textures = (function () {
      * @returns {void}
      */
     var _processLoadedImage = function (textureName, image) {
+
         var gl = gEngine.View.getGL();
 
         // Generate a texture reference to the webGL context
@@ -71,7 +72,9 @@ gEngine.Textures = (function () {
         // Tells WebGL that we are done manipulating data at the mGL.TEXTURE_2D target.
         gl.bindTexture(gl.TEXTURE_2D, null);
 
+		
         var texInfo = new TextureInfo(textureName, image.naturalWidth, image.naturalHeight, textureID);
+		
         gEngine.ResourceMap.asyncLoadCompleted(textureName, texInfo);
     };
 
@@ -99,6 +102,24 @@ gEngine.Textures = (function () {
             gEngine.ResourceMap.incAssetRefCount(textureName);
         }
     };
+	
+	var loadTextureFromFile = function(targetDivName, callback) {
+		// Create new Texture object.
+		var img = new Image();
+		var texName = document.getElementById(targetDivName).value;
+		var fr = new FileReader();
+		fr.onload = function() {
+			gEngine.ResourceMap.asyncLoadRequested(texName);
+			img.src = fr.result;
+		}
+		
+		img.onload = function() {
+			_processLoadedImage(texName, img);
+			callback(texName);
+		}
+		
+		fr.readAsDataURL(document.getElementById("TextureInput").files[0]);
+	};
 
     var loadSingleTexture = function (textureName, callBack) {
         if (!(gEngine.ResourceMap.isAssetLoaded(textureName))) {
@@ -238,6 +259,7 @@ gEngine.Textures = (function () {
     // not be accessable.
     var mPublic = {
         loadTexture: loadTexture,
+		loadTextureFromFile, loadTextureFromFile,
         loadSingleTexture: loadSingleTexture,
         unloadTexture: unloadTexture,
         activateTexture: activateTexture,

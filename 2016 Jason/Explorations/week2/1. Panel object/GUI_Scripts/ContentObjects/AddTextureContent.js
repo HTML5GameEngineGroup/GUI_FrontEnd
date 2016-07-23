@@ -1,4 +1,5 @@
 function AddTextureContent(tabContentID, style, title) {
+	this.fileInputButton = null;
     this.texNameInput = null;
     this.texAddButton = null;
     this.texSelectList = null;
@@ -11,6 +12,10 @@ function AddTextureContent(tabContentID, style, title) {
 gGuiBase.View.inheritPrototype(AddTextureContent, GuiTabContent);
 
 AddTextureContent.prototype.initialize = function () {
+	
+	this.fileInputButton = new FileInputButton("TextureInput", GuiTabContent.NO_STYLE, "Add texture");
+	this.widgetList.push(this.fileInputButton);
+	
     // var textStyle = 'margin-left: 10px; margin-top: 4px';
     var textFieldStyle = 'width: 90%; margin-left: 10px';
     this.texNameInputID = "texNameInput";
@@ -27,6 +32,7 @@ AddTextureContent.prototype.initialize = function () {
 
 // connects the eventHandlers to their specific methods
 AddTextureContent.prototype.initializeEventHandling = function () {
+	this.fileInputButton.setOnFileSelect(this.onFileSelect);
     this.texAddButton.setOnClick(this.buttonOnClick);
     this.texSelectList.setOnSelect(this.selectObject);
 
@@ -63,6 +69,7 @@ AddTextureContent.prototype.buttonOnClick = function() {
     var texName = $('#texNameInput').val();
     // var texName = "assets/minion_sprite.png";
     gGuiBase.TextureSupport.addTexture(texName);
+	
 };
 
 // this function handles the left click event on an object in the object tab
@@ -76,6 +83,10 @@ AddTextureContent.prototype.selectObject = function( ui ) {
 // these are global
 AddTextureContent.prototype.onTextFieldFocusOut = function() {
     alert("focus out");
+};
+
+AddTextureContent.prototype.onFileSelect = function() {
+	gEngine.Textures.loadTextureFromFile("TextureInput", gGuiBase.TextureSupport.addTexture);
 };
 
 
