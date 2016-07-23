@@ -71,10 +71,10 @@ gEngine.Textures = (function () {
 
         // Tells WebGL that we are done manipulating data at the mGL.TEXTURE_2D target.
         gl.bindTexture(gl.TEXTURE_2D, null);
-
+		gGuiBase.TextureSupport.addTextureToImageMap(textureName, image);
 		
         var texInfo = new TextureInfo(textureName, image.naturalWidth, image.naturalHeight, textureID);
-		
+		//console.log(image);
         gEngine.ResourceMap.asyncLoadCompleted(textureName, texInfo);
     };
 
@@ -104,21 +104,44 @@ gEngine.Textures = (function () {
     };
 	
 	var loadTextureFromFile = function(targetDivName, callback) {
-		// Create new Texture object.
-		var img = new Image();
 		var texName = document.getElementById(targetDivName).value;
-		var fr = new FileReader();
-		fr.onload = function() {
-			gEngine.ResourceMap.asyncLoadRequested(texName);
-			img.src = fr.result;
+		if (!(gEngine.ResourceMap.isAssetLoaded(texName))) {
+			// Create new Texture object.
+			var img = new Image();
+			
+			var fr = new FileReader();
+			fr.onload = function() {
+				gEngine.ResourceMap.asyncLoadRequested(texName);
+				img.src = fr.result;
+			}
+			
+			img.onload = function() {
+				_processLoadedImage(texName, img);
+				callback(texName);
+			}
+			
+			fr.readAsDataURL(document.getElementById(targetDivName).files[0]);
+		} else {
+			gEngine.ResourceMap.incAssetRefCount(texName);
 		}
+	};
+	
+	var loadTextureFromImageSrc = function(textureName, imgString, callback) {
 		
-		img.onload = function() {
-			_processLoadedImage(texName, img);
-			callback(texName);
+		if (!(gEngine.ResourceMap.isAssetLoaded(textureName))) {
+			// Create new Texture object.
+			var img = new Image();
+			gEngine.ResourceMap.asyncLoadRequested(textureName);
+			img.src = imgString;
+			
+			img.onload = function() {
+				_processLoadedImage(textureName, img);
+				callback(textureName);
+			}
+			
+		} else {
+			gEngine.ResourceMap.incAssetRefCount(textureName);
 		}
-		
-		fr.readAsDataURL(document.getElementById("TextureInput").files[0]);
 	};
 
     var loadSingleTexture = function (textureName, callBack) {
@@ -259,7 +282,8 @@ gEngine.Textures = (function () {
     // not be accessable.
     var mPublic = {
         loadTexture: loadTexture,
-		loadTextureFromFile, loadTextureFromFile,
+		loadTextureFromFile: loadTextureFromFile,
+		loadTextureFromImageSrc, loadTextureFromImageSrc,
         loadSingleTexture: loadSingleTexture,
         unloadTexture: unloadTexture,
         activateTexture: activateTexture,

@@ -7,6 +7,8 @@ var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been
 gGuiBase.TextureSupport = (function() {
     
     var gAllTextures = {};
+	var gImageMap = {};
+	
     // adds texture to panel
     var addTexture = function ( texName ) {
         // if added already return
@@ -19,6 +21,14 @@ gGuiBase.TextureSupport = (function() {
         gGuiBase.View.findWidgetByID("#texSelectList1").rebuildWithArray( texList );
         gGuiBase.View.refreshAllTabContent();  // refresh panel
     };
+	
+	var addTextureToImageMap = function(texName, img) {
+		gImageMap[texName] = img;
+	};
+	
+	var getImage = function(texName) {
+		return gImageMap[texName];
+	};
 
     // loads the texture into the engine via the scene
     var loadTexturesToScene = function () {
@@ -104,8 +114,11 @@ gGuiBase.TextureSupport = (function() {
         return texList;
     };
 
+
     var mPublic = {
         gAllTextures: gAllTextures,
+		addTextureToImageMap: addTextureToImageMap,
+		getImage: getImage,
         addTextureToGameObject: addTextureToGameObject,
         removeTextureFromGameObject: removeTextureFromGameObject,
         setRenderableForGameObject: setRenderableForGameObject,
@@ -114,7 +127,7 @@ gGuiBase.TextureSupport = (function() {
         addTexture: addTexture,
         loadTexturesToScene: loadTexturesToScene,
         removeTexture: removeTexture,
-        getTexList: getTexList
+        getTexList: getTexList,
     };
     return mPublic;
 }());

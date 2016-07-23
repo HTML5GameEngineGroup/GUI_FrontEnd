@@ -69,15 +69,15 @@ AddTextureContent.prototype.buttonOnClick = function() {
     var texName = $('#texNameInput').val();
     // var texName = "assets/minion_sprite.png";
     gGuiBase.TextureSupport.addTexture(texName);
-	
+	console.log(window);
 };
 
 // this function handles the left click event on an object in the object tab
 // populates the details tab with the object information
 AddTextureContent.prototype.selectObject = function( ui ) {
     // get objectName/objectID
-    var selectedObjectName = ui["selected"]["id"];
-    gGuiBase.Core.selectDetailsObject( selectedObjectName );
+    var selectedTextureName = ui["selected"]["id"];
+    //gGuiBase.Core.selectDetailsObject( selectedObjectName );
 };
 
 // these are global
@@ -87,6 +87,7 @@ AddTextureContent.prototype.onTextFieldFocusOut = function() {
 
 AddTextureContent.prototype.onFileSelect = function() {
 	gEngine.Textures.loadTextureFromFile("TextureInput", gGuiBase.TextureSupport.addTexture);
+	
 };
 
 

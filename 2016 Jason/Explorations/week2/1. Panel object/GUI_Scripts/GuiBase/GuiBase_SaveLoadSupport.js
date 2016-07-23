@@ -134,6 +134,7 @@ gGuiBase.SaveLoadSupport = (function() {
 		// Clears the current file by replacing itself with a fresh file input component (e.g. a clone)
 		// This allows for same-file loading, where "onchange" would normally not activate on the same file
 		$("#menuFileOpenInput").replaceWith($("#menuFileOpenInput").val('').clone(true));
+
 	};
 	
 	var fileSave = function(backup) {
@@ -166,7 +167,7 @@ gGuiBase.SaveLoadSupport = (function() {
 			var xf = obj.getXform();
 			var rend = obj.getRenderable();
 			var texture = rend.mTexture;
-
+			
 			objectData[0] = obj.mID;
 			objectData[1] = objCode; //Code
 			if(texture) {				//save texture data
@@ -259,7 +260,22 @@ gGuiBase.SaveLoadSupport = (function() {
 			sceneFolder.file("instances.json", JSON.stringify(instanceData));
 		}
 		
-		// TODO: Textures too
+		// Textures
+		var i;
+		var textureList = gGuiBase.TextureSupport.getTexList();
+		for (i = 0; i < textureList.length; i++) {
+			var textureData = {};
+			var textureName = textureList[i];
+			var textureInfo = gEngine.ResourceMap.retrieveAsset(textureName);
+			var textureImage = gGuiBase.TextureSupport.getImage(textureName);
+			
+			textureData[0] = textureInfo.mName;
+			textureData[1] = textureImage.naturalWidth;
+			textureData[2] = textureImage.naturalHeight;
+			textureData[3] = textureImage.src;
+				// TODO: Do it for texture
+			textures.file(textureInfo.mName + ".json", JSON.stringify(textureData));
+		}
 		
 		if (backup) {
 			gGuiBase.Core.gBackup = files;
@@ -291,11 +307,50 @@ gGuiBase.SaveLoadSupport = (function() {
 	};
 
 	var loadTextures = function(files, callback) {
-		// TODO (see other similar functions)
-		callback();
+		var textureNames = [];
+		
+		//Get the number of files we need to load
+		var numOutstandingLoads = 0;
+		files.folder("Textures").forEach(function(relativePath, file) {
+			numOutstandingLoads++;
+		});
+		
+		//If there are no files, load the scenes
+		if (numOutstandingLoads === 0) {
+			callback();
+		}
+		
+		
+		files.folder("Textures").forEach(function(relativePath, file) {
+
+			// Read the ZipObject item as a JSON file, and then store the information where it belongs
+			files.file(file.name).async("string").then(function success(content) {
+				
+				var data = JSON.parse(content);
+				var textureName = data[0];
+				var imageSrc = data[3];
+				
+				textureNames.push(data[0]);
+				
+
+				gEngine.Textures.loadTextureFromImageSrc(textureName, imageSrc, gGuiBase.TextureSupport.addTexture);
+			
+				//Are all the loads done? If so, callback.
+				while (true) {
+					if (gEngine.ResourceMap.isAssetLoaded(textureName)) {
+						numOutstandingLoads--;
+						if (numOutstandingLoads === 0) callback();
+						break;
+					}
+				}
+			}, function error(error) {
+				throw "There were issues with loading your file.\n\nErrors:\n" + error;
+			});
+		});
 	};
 
 	var loadObjects = function(files, callback) {
+	
 		files.folder("Objects").forEach(function(relativePath, file) {
 
 			// Read the ZipObject item as a JSON file, and then store the information where it belongs
@@ -307,16 +362,18 @@ gGuiBase.SaveLoadSupport = (function() {
 				eval(data[1]);
 				var className = relativePath.substring(0, relativePath.lastIndexOf(".")); // Just get rid of .json
 				var texture = data[2];
-				console.log('outdata texture', texture);
+
 				if (texture == "None") {
 					eval("obj = new " + className + "(new Renderable());");
 				} else {
 					//!todo check <- may need to load the texture into the scene first
-					console.log('ADD TEXTURE HERE');
-					gGuiBase.TextureSupport.addTexture(texture);
-					eval("obj = new " + className + "(new TextureRenderable(" + texture + "));");
+	
+					//gGuiBase.TextureSupport.addTexture(texture);
+					eval('obj = new ' + className + '(new TextureRenderable("' + texture + '"));');
+					console.log("Hello");
 				}
 				//var entry = [obj, data[1], data[2]];
+				
 				obj.mID = data[0];
 				obj.mName = className;
 
@@ -327,9 +384,10 @@ gGuiBase.SaveLoadSupport = (function() {
 				xf.setHeight(data[6]);
 				xf.setRotationInDegree(data[7]);
 				obj.getRenderable().setColor(data[8]);
-
+				
 				gGuiBase.ObjectSupport.setGameObjectByID(obj.mName, obj);
 				gGuiBase.ObjectSupport.setGameObjectCodeByID(obj.mName, data[1]);
+				
 				gGuiBase.Core.updateObjectSelectList();
 			}, function error(error) {
 				throw "There were issues with loading your file.\n\nErrors:\n" + error;
@@ -432,6 +490,7 @@ gGuiBase.SaveLoadSupport = (function() {
 						}
 						// should be done adding instances refresh instances!
 						gGuiBase.Core.updateInstanceSelectList();
+	
 						// gGuiBase.View.refreshAllTabContent()
 					} else if (relativePath.endsWith(".json")) {
 						// Unless the user inserted a .json, this is the scene file
