@@ -18,7 +18,10 @@ gGuiBase.TextureSupport = (function() {
         loadTexturesToScene();
         // refresh texturelist in view
         var texList = gGuiBase.TextureSupport.getTexList();
-        gGuiBase.View.findWidgetByID("#texSelectList1").rebuildWithArray( texList );
+		
+		var imageList = gGuiBase.TextureSupport.getImageList();
+        //gGuiBase.View.findWidgetByID("#texSelectList1").rebuildWithArray( texList );
+		gGuiBase.View.findWidgetByID("#TextureSelectList").rebuildWithArray( imageList );
         gGuiBase.View.refreshAllTabContent();  // refresh panel
     };
 	
@@ -29,6 +32,8 @@ gGuiBase.TextureSupport = (function() {
 	var getImage = function(texName) {
 		return gImageMap[texName];
 	};
+	
+	
 
     // loads the texture into the engine via the scene
     var loadTexturesToScene = function () {
@@ -63,10 +68,10 @@ gGuiBase.TextureSupport = (function() {
     var setRenderableForGameObject = function (gameObject, newRenderable) {
         var newTextureTransform = newRenderable.getXform();
         var gameObjectTransform = gameObject.getXform();
-        console.log(gameObject);
+        //console.log(gameObject);
         gGuiBase.ObjectSupport.copyTransformOnTransforms(newTextureTransform, gameObjectTransform);
         gameObject.setRenderable(newRenderable);
-        console.log(gameObject);
+        //console.log(gameObject);
     };
 
     // replaces all instances of gameObjects renderable with the texture named textureName (None = no texture);
@@ -113,12 +118,31 @@ gGuiBase.TextureSupport = (function() {
         }
         return texList;
     };
+	
+	var getImageList = function() {
+		var imageList = [];
+		for (var imageName in gImageMap) {
+			if (gAllTextures[imageName] !== undefined)
+				imageList.push(gImageMap[imageName].src);
+		}
+		return imageList;
+	};
+	
+	var getImageName = function(imageSrc) {
+		for (var imageName in gImageMap) {
+			if (imageSrc === gImageMap[imageName].src)
+				return imageName;
+		}
+		return "None";
+	}
 
 
     var mPublic = {
         gAllTextures: gAllTextures,
 		addTextureToImageMap: addTextureToImageMap,
 		getImage: getImage,
+		getImageList: getImageList,
+		getImageName: getImageName,
         addTextureToGameObject: addTextureToGameObject,
         removeTextureFromGameObject: removeTextureFromGameObject,
         setRenderableForGameObject: setRenderableForGameObject,
