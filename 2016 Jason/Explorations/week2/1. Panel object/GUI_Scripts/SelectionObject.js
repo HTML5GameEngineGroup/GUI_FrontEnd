@@ -2,7 +2,7 @@
 function SelectionObject(x, y, w, h) {
 	var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
 	var camW = camera.getWCWidth();
-	this.boxSize = camW / 50 * 0.5;
+	this.boxSize = camW / 50 * 0.75;
 	
 	this.mTopLine = new LineRenderable((x-w/2), (y+h/2), (x+w/2), (y+h/2));
 	this.mTopLine.setColor([1, 1, 1, 1]);
@@ -78,7 +78,6 @@ SelectionObject.prototype.update = function() {
 	var r = xform.getRotationInRad();
 	
 	var radius = Math.sqrt((w/2)*(w/2) + (h/2)*(h/2));
-	var piOverFour = Math.PI/4;
 
 	var angleToTopRight = Math.atan2(h/2, w/2)
 	var angleToTopLeft = Math.PI - angleToTopRight;
@@ -88,7 +87,7 @@ SelectionObject.prototype.update = function() {
 	
 	var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
 	var camW = camera.getWCWidth();
-	this.boxSize = camW / 50 * 0.5;
+	this.boxSize = camW / 50 * 0.75;
 	
 	//Treating the square as a circle, find the four corner points
 	this.topLeftX = Math.cos(r + (angleToTopLeft)) * radius + x;
@@ -103,19 +102,6 @@ SelectionObject.prototype.update = function() {
 	this.botRightX = Math.cos(r + (angleToBotRight)) * radius + x;
 	this.botRightY = Math.sin(r + (angleToBotRight)) * radius + y;
 	
-	
-	/*this.mTopLine.setFirstVertex((x-w/2), (y+h/2));
-	this.mTopLine.setSecondVertex((x+w/2), (y+h/2));
-
-	this.mLeftLine.setFirstVertex((x-w/2), (y+h/2));
-	this.mLeftLine.setSecondVertex((x-w/2), (y-h/2));
-	
-	this.mRightLine.setFirstVertex((x+w/2), (y+h/2));
-	this.mRightLine.setSecondVertex((x+w/2), (y-h/2));
-	
-	this.mBotLine.setFirstVertex((x-w/2), (y-h/2));
-	this.mBotLine.setSecondVertex((x+w/2), (y-h/2));*/
-	
 	this.mTopLine.setFirstVertex(this.topRightX, this.topRightY);
 	this.mTopLine.setSecondVertex(this.topLeftX, this.topLeftY);
 
@@ -129,36 +115,67 @@ SelectionObject.prototype.update = function() {
 	this.mBotLine.setSecondVertex(this.botRightX, this.botRightY);
 	
 	var xform = this.mTL.getXform();
-	//xform.setXPos((x-w/2) + boxSize/2);
-	//xform.setYPos((y+h/2) - boxSize/2);
 	xform.setXPos(this.topLeftX);
 	xform.setYPos(this.topLeftY);
 	xform.setWidth(this.boxSize);
 	xform.setHeight(this.boxSize);
 	
-	
-	
 	var xform = this.mBL.getXform();
-	//xform.setXPos((x-w/2) + boxSize/2);
-	//xform.setYPos((y-h/2) + boxSize/2);
 	xform.setXPos(this.botLeftX);
 	xform.setYPos(this.botLeftY);
 	xform.setWidth(this.boxSize);
 	xform.setHeight(this.boxSize);
 	
 	var xform = this.mTR.getXform();
-	//xform.setXPos((x+w/2) - boxSize/2);
-	//xform.setYPos((y+h/2) - boxSize/2);
 	xform.setXPos(this.topRightX);
 	xform.setYPos(this.topRightY);
 	xform.setWidth(this.boxSize);
 	xform.setHeight(this.boxSize);
 
 	var xform = this.mBR.getXform();
-	//xform.setXPos((x+w/2) - boxSize/2);
-	//xform.setYPos((y-h/2) + boxSize/2);
 	xform.setXPos(this.botRightX);
 	xform.setYPos(this.botRightY);
 	xform.setWidth(this.boxSize);
 	xform.setHeight(this.boxSize);
+
 };
+
+SelectionObject.prototype.mousePosOnBottomRightCorner = function(xform, mouseX, mouseY) {
+	return this.mousePosOnCorner(this.botRightX, this.botRightY, xform, mouseX, mouseY);
+};
+
+SelectionObject.prototype.mousePosOnBottomLeftCorner = function(xform, mouseX, mouseY) {
+	return this.mousePosOnCorner(this.botLeftX, this.botLeftY, xform, mouseX, mouseY);
+};
+
+SelectionObject.prototype.mousePosOnTopLeftCorner = function(xform, mouseX, mouseY) {
+	return this.mousePosOnCorner(this.topLeftX, this.topLeftY, xform, mouseX, mouseY);
+};
+
+SelectionObject.prototype.mousePosOnTopRightCorner = function(xform, mouseX, mouseY) {
+	return this.mousePosOnCorner(this.topRightX, this.topRightY, xform, mouseX, mouseY);
+};
+
+SelectionObject.prototype.mousePosOnCorner = function(selectObjectX, selectObjectY, xform, mouseX, mouseY) {
+
+	var x = xform.getXPos();
+	var y = xform.getYPos();
+	var r = xform.getRotationInRad();
+
+	var point = vec2.fromValues(selectObjectX, selectObjectY);
+	var mousePos = vec2.fromValues(mouseX, mouseY);
+	
+	//Apply inverse rotation to fit the object & mouse position to the x/y axis
+	mousePos = gGuiBase.DirectManipulationSupport.rotatePoint(x, y, -r, mousePos);
+	point = gGuiBase.DirectManipulationSupport.rotatePoint(x, y, -r, point);
+	var edge = vec2.fromValues(point[0] - this.boxSize, point[1] + this.boxSize);
+	var edge2 = vec2.fromValues(point[0] + this.boxSize, point[1] - this.boxSize);
+
+	
+	if ((mousePos[0] > (edge[0])) && (mousePos[0] < (edge2[0])) &&
+		(mousePos[1] < (edge[1])) && (mousePos[1] > (edge2[1]))) {
+		return true;
+	}
+	return false;
+};
+
