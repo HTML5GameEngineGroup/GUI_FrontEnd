@@ -40,8 +40,7 @@ ClientScene.prototype.loadScene = function() {
     // gEngine.Textures.loadTexture("assets/minion_sprite.png");
 	
 	//If it hasn't already been loaded, load it
-	if (!(gEngine.ResourceMap.isAssetLoaded("assets/cameraicon.png")))
-		gEngine.Textures.loadTexture("assets/cameraicon.png");
+	// if (!(gEngine.ResourceMap.isAssetLoaded("assets/cameraicon.png")))
 
     for (var texture in gGuiBase.TextureSupport.gAllTextures) {
         console.log("calling load texture from scene:", texture);

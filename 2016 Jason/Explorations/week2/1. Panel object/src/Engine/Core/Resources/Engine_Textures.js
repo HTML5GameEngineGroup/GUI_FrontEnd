@@ -104,7 +104,11 @@ gEngine.Textures = (function () {
     };
 	
 	var loadTextureFromFile = function(targetDivName, callback) {
-		var texName = document.getElementById(targetDivName).value;
+        console.log("loadTexture from file");
+        var texName = document.getElementById(targetDivName).value;
+        console.log("texName:", texName);
+        var index = texName.lastIndexOf('\\');
+        if (index != -1) texName = texName.slice(index + 1);
 		if (!(gEngine.ResourceMap.isAssetLoaded(texName))) {
 			// Create new Texture object.
 			var img = new Image();
@@ -127,7 +131,7 @@ gEngine.Textures = (function () {
 	};
 	
 	var loadTextureFromImageSrc = function(textureName, imgString, callback) {
-		
+		console.log("loadTexture from Imagesrc");
 		if (!(gEngine.ResourceMap.isAssetLoaded(textureName))) {
 			// Create new Texture object.
 			var img = new Image();
@@ -283,7 +287,7 @@ gEngine.Textures = (function () {
     var mPublic = {
         loadTexture: loadTexture,
 		loadTextureFromFile: loadTextureFromFile,
-		loadTextureFromImageSrc, loadTextureFromImageSrc,
+        loadTextureFromImageSrc: loadTextureFromImageSrc,
         loadSingleTexture: loadSingleTexture,
         unloadTexture: unloadTexture,
         activateTexture: activateTexture,
