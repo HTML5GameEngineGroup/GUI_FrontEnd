@@ -222,7 +222,8 @@ gGuiBase.SaveLoadSupport = (function() {
 				cameraData[4 + ((j+1) * 7)] = cam.getViewport();  // [x, y, w, h]
 				cameraData[5 + ((j+1) * 7)] = cam.getBackgroundColor();
 				cameraData[6 + ((j+1) * 7)] = gGuiBase.CameraSupport.getCameraCodeByName(cam.mName);
-				
+				console.log("saving camera code here");
+				console.log(cameraData[6 + ((j+1) * 7)]);
 			}
 
 			sceneFolder.file("cameras.json", JSON.stringify(cameraData));
@@ -327,7 +328,6 @@ gGuiBase.SaveLoadSupport = (function() {
 				var imageSrc = data[3];
 				
 				textureNames.push(data[0]);
-				
 
 				gEngine.Textures.loadTextureFromImageSrc(textureName, imageSrc, gGuiBase.TextureSupport.addTexture);
 			
@@ -474,7 +474,6 @@ gGuiBase.SaveLoadSupport = (function() {
 								gGuiBase.CameraSupport.setCameraByName(name, cam);
 								console.log(cam);
 							}
-						
 							i += 7;
 						}
 						// Select the first scene when this process is done

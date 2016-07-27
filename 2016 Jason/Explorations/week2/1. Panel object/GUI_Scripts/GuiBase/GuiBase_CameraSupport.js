@@ -191,14 +191,14 @@ gGuiBase.CameraSupport = (function() {
 	};
 
 	var getCameraCodeByName = function ( className ) {
-		console.log(mCameraCode);
+		console.log('getCode: ', mCameraCode[className]);
 		return mCameraCode[className];
 	};
 
 	// code is a string representation of the class
 	// class name is the mName of the camera
 	var setCameraCodeByName = function ( className, code ) {
-		console.log("set camera code", className, code);
+		console.log("set camera code:", className, ", ", code);
 		mCameraCode[className] = code;
 	};
 
