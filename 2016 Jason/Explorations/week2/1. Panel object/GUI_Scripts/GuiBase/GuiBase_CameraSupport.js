@@ -81,8 +81,9 @@ gGuiBase.CameraSupport = (function() {
 
 			cameras.splice(0, cameras.length);
 			cameras = [];
-
 		}
+		mCamera = {};
+		mCameraCode = {};
 	};
 	
 	var getCameraListNames = function() {
@@ -196,7 +197,13 @@ gGuiBase.CameraSupport = (function() {
 	// code is a string representation of the class
 	// class name is the mName of the camera
 	var setCameraCodeByName = function ( className, code ) {
+		console.log("set camera code", className, code);
 		mCameraCode[className] = code;
+	};
+
+	var setCameraByName = function (className, cam) {
+		console.log('set camera', className, cam);
+		mCamera[className] = cam;
 	};
 
     var mPublic = {
@@ -213,7 +220,8 @@ gGuiBase.CameraSupport = (function() {
 		getDefaultCodeCam: getDefaultCodeCam,
 		getCameraByName: getCameraByName,
 		getCameraCodeByName: getCameraCodeByName,
-		setCameraCodeByName: setCameraCodeByName
+		setCameraCodeByName: setCameraCodeByName,
+		setCameraByName: setCameraByName
     };
     return mPublic;
 }());
