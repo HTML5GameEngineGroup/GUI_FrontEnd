@@ -63,6 +63,15 @@ Interpolate.prototype.updateInterpolation = function () {
     }
 };
 
+/**
+ * Get the interpolation's configuration (stiffness & duration)
+ * @memberOf Interpolate
+ * @returns vec2 (stiffness, duration)
+ */
+Interpolate.prototype.getConfig = function() {
+	return vec2.fromValues(this.mRate, this.mCycles);
+};
+
 // 
 /**
  * Set stiffness and duration
