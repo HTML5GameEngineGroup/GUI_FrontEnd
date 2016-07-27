@@ -94,7 +94,7 @@ ClientScene.prototype.initialize = function() {
 	this.sceneViewCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
 	this.sceneViewCamera.mName = "SceneCam"; 
     this.sceneViewCamera.mID = "SceneViewCamera";
-	this.sceneViewCamera.configInterpolation(1, 0.25);
+	//this.sceneViewCamera.configInterpolation(1, 0.25);
 
     // scene view camera must be created prior to creating a camera object!
     var cam = gGuiBase.CameraSupport.createDefaultCamera();
@@ -172,7 +172,11 @@ ClientScene.prototype.update = function() {
                 }
             }
         }
-    }
+    } else {
+		for (i = 0; i < this.mAllCamera.length; i++) {
+			Camera.prototype.update.call(this.mAllCamera[i]);
+        }
+	}
 	
 	if (this.selectObject !== null && gGuiBase.Core.selectedGameObject !== null) {
 		this.selectObject.update()
