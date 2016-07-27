@@ -5,6 +5,7 @@
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.TextureSupport = (function() {
+    //todo add ability to remove textures
     
     var gAllTextures = {};
 	var gImageMap = {};

@@ -3,7 +3,10 @@ var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been
 
 gGuiBase.CameraSupport = (function() {
 	var mSelectedCamera = null;
-	
+	var cameraID = 1;
+	var mCam = {};
+	var mCamCode = {};
+
 	var getCameraByName = function(name) {
 		var result = null;
 		var cameraList = getCameraList();
@@ -17,30 +20,30 @@ gGuiBase.CameraSupport = (function() {
 		return result;
 	};
 	
-	var createDefaultCamera = function() {
-		var cam = new Camera(
-			vec2.fromValues(20,60), // position of the camera
-			50,                     // width of camera
-			[0,0,640,480]           // viewport (orgX, orgY, width, height)
-			);
-		cam.setBackgroundColor([0.8, 0.8, 0.8, 1.0]);
-		var name = "Camera" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID;
-
-		while (checkForNameConflict(name)) {
-			gGuiBase.SceneSupport.gCurrentScene.mNextCameraID++;
-			name = "Camera" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID;
-		}
-		cam.mName = name;
-		cam.mID = "cameraListItem" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID; // This is still unique despite the check (doesn't need to be updated to the next cam id)
-		gGuiBase.SceneSupport.gCurrentScene.mNextCameraID++;
-		
-		
-		//console.log(gEngine.DefaultResources.getConstColorShader())
-		var cameraObject = new CameraObject(cam);
-		gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
-		gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
-		return cam;
-	};
+	// var createDefaultCamera = function() {
+	// 	var cam = new Camera(
+	// 		vec2.fromValues(20,60), // position of the camera
+	// 		50,                     // width of camera
+	// 		[0,0,640,480]           // viewport (orgX, orgY, width, height)
+	// 		);
+	// 	cam.setBackgroundColor([0.8, 0.8, 0.8, 1.0]);
+	// 	var name = "Camera" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID;
+    //
+	// 	while (checkForNameConflict(name)) {
+	// 		gGuiBase.SceneSupport.gCurrentScene.mNextCameraID++;
+	// 		name = "Camera" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID;
+	// 	}
+	// 	cam.mName = name;
+	// 	cam.mID = "cameraListItem" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID; // This is still unique despite the check (doesn't need to be updated to the next cam id)
+	// 	gGuiBase.SceneSupport.gCurrentScene.mNextCameraID++;
+	//
+	//
+	// 	//console.log(gEngine.DefaultResources.getConstColorShader())
+	// 	var cameraObject = new CameraObject(cam);
+	// 	gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
+	// 	gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
+	// 	return cam;
+	// };
 	
 	var deleteCamera = function(cameraName) {
 		
@@ -109,42 +112,28 @@ gGuiBase.CameraSupport = (function() {
 	};
 
 	var getDefaultCodeCam = function( name ) {
-		return 'window["' + name + '"] = function(wcCenter, wcWidth, viewportArray, bound) {' +
-			'// WC and viewport position and size' +
+		return 'window["' + name + '"] = function(wcCenter, wcWidth, viewportArray) {' +
 			'this.mCameraState = new CameraState(wcCenter, wcWidth);' +
 			'this.mCameraShake = null;' +
-
-			'this.mViewport = [];  // [x, y, width, height]' +
+			'this.mViewport = [];' +
 			'this.mViewportBound = 0;' +
 			'if (bound !== undefined) {' +
 				'this.mViewportBound = bound;' +
 			'}' +
-			'this.mScissorBound = [];  // use for bounds' +
+			'this.mScissorBound = [];' +
 			'this.setViewport(viewportArray, this.mViewportBound);' +
 			'this.mNearPlane = 0;' +
 			'this.mFarPlane = 1000;' +
-
-			'this.kCameraZ = 10;  // This is for illumination computation' +
-
-			'// transformation matrices' +
+			'this.kCameraZ = 10;' +
 			'this.mViewMatrix = mat4.create();' +
 			'this.mProjMatrix = mat4.create();' +
 			'this.mVPMatrix = mat4.create();' +
-
-			'// background color' +
-			'this.mBgColor = [0.8, 0.8, 0.8, 1]; // RGB and Alpha' +
-
-			'// per-rendering cached information' +
-			'// needed for computing transforms for shaders' +
-			'// updated each time in SetupViewProjection()' +
+			'this.mBgColor = [0.8, 0.8, 0.8, 1];' +
 			'this.mRenderCache = new PerRenderCache();' +
-
 			'this.mEnable=true;' +
 		'};' +
 		'gEngine.View.inheritPrototype(window["' + name + '"], window["Camera"]);' +
-
 		name + '.prototype.update = function () {' +
-			'// this code is only necessary for built in camera methods such as shake' +
 			'if (this.mCameraShake !== null) {' +
 				'if (this.mCameraShake.shakeDone()) {' +
 					'this.mCameraShake = null;' +
@@ -157,15 +146,59 @@ gGuiBase.CameraSupport = (function() {
 		'};';
 	};
 
+	var createDefaultCamera = function() {
+		// default camera values
+		var wcCenter = vec2.fromValues(20,60);   // position of the camera
+		var wcWidth = 50;                        // width of camera
+		var viewportArray = [0,0,640,480];       // viewport (orgX, orgY, width, height)
+		var bound = undefined;
+
+		// create new default name
+		var name = "Camera" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID;
+		while (checkForNameConflict(name)) {
+			gGuiBase.SceneSupport.gCurrentScene.mNextCameraID++;
+			name = "Camera" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID;
+		}
+
+		// will be overwritten probably not needed
+		window[name] = function(wcCenter, wcWidth, viewportArray, bound) {
+			Camera.call(this, wcCenter, wcWidth, viewportArray, bound);
+		};
+		gEngine.View.inheritPrototype(window[name], window["Camera"]);
+
+		var code = this.getDefaultCodeCam(name);
+		// Add code to window
+		eval(code);
+		// create a instance of this Camera
+		var cam;
+		eval('cam = new ' + name + '(wcCenter, wcWidth, viewportArray, bound);');
+
+		console.log(cam);
+		cam.mID = "cameraListItem" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID; // This is still unique despite the check (doesn't need to be updated to the next cam id)
+		cam.mName = name;
+		cam.setBackgroundColor([0.8, 0.8, 0.8, 1.0]);
+		console.log(cam);
+
+			var cameraObject = new CameraObject(cam);
+		gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
+		gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
+		// mCam[cam.mName] = cam;               // add to map
+		// mCamCode[cam.mName] = code;            // add code to code map
+		return cam;
+	};
+
     var mPublic = {
 		//selectCamera: selectCamera,
 		getCameraList: getCameraList,
 		checkForNameConflict: checkForNameConflict,
-		createDefaultCamera: createDefaultCamera,
+		// createDefaultCamera: createDefaultCamera,
 		getCameraListNames: getCameraListNames,
 		getCameraByName: getCameraByName,
 		deleteCamera: deleteCamera,
-		clearCameras: clearCameras
+		clearCameras: clearCameras,
+
+		createDefaultCamera: createDefaultCamera,
+		getDefaultCodeCam: getDefaultCodeCam
     };
     return mPublic;
 }());

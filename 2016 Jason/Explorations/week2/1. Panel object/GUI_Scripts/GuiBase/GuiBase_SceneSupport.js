@@ -12,6 +12,7 @@ gGuiBase.SceneSupport = (function() {
 	
 	var selectScene = function(index) {
 		gEngine.GameLoop.stop();
+		//todo unload textures
 		// gGuiBase.SceneSupport.gCurrentScene.unloadScene();
 		if (index !== null) {
 			gGuiBase.SceneSupport.gCurrentScene = mSceneList[index];
