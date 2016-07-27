@@ -16,7 +16,7 @@ function ClientScene(number) {
     Scene.call(this);
     this.mName = "Scene" + number;
     this.mID = "sceneListItem" + number;
-    this.mNextCameraID = 1; // Due to the starting camera being 0
+    this.mNextCameraID = 0; // Due to the starting camera being 0
     this.mAllCamera = [];
     this.mInstanceList = [];
     this.mAllUpdateSet = new GameObjectSet();
@@ -88,15 +88,15 @@ ClientScene.prototype.initialize = function() {
 
     // Add this camera
     //todo this first camera must be made by camerasupport in order to support editing
-    var cam = new Camera(
-        vec2.fromValues(20,60),   // position of the camera
-        50,                        // width of camera
-        [0,0,640,480]        // viewport (orgX, orgY, width, height)
-        );
-    cam.setBackgroundColor([0.8,0.8,0.8,1]);
-    cam.mName = "Camera0";  // Cameras don't have a mName, but we can just add it in like this
-    cam.mID = "cameraListItem0";
-	
+    // var cam = new Camera(
+    //     vec2.fromValues(20,60),   // position of the camera
+    //     50,                        // width of camera
+    //     [0,0,640,480]        // viewport (orgX, orgY, width, height)
+    //     );
+    // cam.setBackgroundColor([0.8,0.8,0.8,1]);
+    // cam.mName = "Camera0";  // Cameras don't have a mName, but we can just add it in like this
+    // cam.mID = "cameraListItem0";
+
 	
 	this.sceneViewCamera = new Camera(
 			vec2.fromValues(20,60), // position of the camera
@@ -107,9 +107,11 @@ ClientScene.prototype.initialize = function() {
 	this.sceneViewCamera.mName = "SceneCam"; 
     this.sceneViewCamera.mID = "SceneViewCamera";
 
-    var cameraObject = new CameraObject(cam);
-	this.cameraObjects.push(cameraObject);
-	gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
+    // scene view camera must be created prior to creating a camera object!
+    var cam = gGuiBase.CameraSupport.createDefaultCamera();
+    // var cameraObject = new CameraObject(cam);
+	// this.cameraObjects.push(cameraObject);
+	// gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
 	
     this.isInitialized = true;
     // Update view with new cameras and scenef
