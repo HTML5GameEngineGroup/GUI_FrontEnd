@@ -36,12 +36,17 @@ CamerasContent.prototype.initializeEventHandling = function () {
 		delegate: ".cameraListMenu",
 		menu: [
 			{title: "Details", cmd: "details", uiIcon: "ui-icon-info"},
-			{title: "Delete", cmd: "delete", uiIcon: "ui-icon-closethick"},
-			],
+			{title: "Edit code", cmd: "edit", uiIcon: "ui-icon-pencil"},
+			{title: "Delete", cmd: "delete", uiIcon: "ui-icon-closethick"}
+		],
 		select: function(event, ui) {
 			switch (ui.cmd) {
 				case 'details':
 					gGuiBase.Core.selectDetailsCamera(ui.target.text());
+					break;
+				case 'edit':
+					console.log(ui.target.text());
+					gGuiBase.EditorSupport.createFloatingEditor(ui.target.text());
 					break;
 				case 'delete':
                     gGuiBase.CameraSupport.deleteCamera(ui.target.text());

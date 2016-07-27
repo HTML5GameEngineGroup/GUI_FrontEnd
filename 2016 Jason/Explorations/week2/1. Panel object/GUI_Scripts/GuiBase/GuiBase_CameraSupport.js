@@ -3,6 +3,8 @@ var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been
 
 gGuiBase.CameraSupport = (function() {
 	var mSelectedCamera = null;
+	var mCamera = {};
+	var mCameraCode = {};
 
 	var getCameraByName = function(name) {
 		var result = null;
@@ -108,38 +110,38 @@ gGuiBase.CameraSupport = (function() {
 	};
 
 	var getDefaultCodeCam = function( name ) {
-		return 'window["' + name + '"] = function(wcCenter, wcWidth, viewportArray) {' +
-			'this.mCameraState = new CameraState(wcCenter, wcWidth);' +
-			'this.mCameraShake = null;' +
-			'this.mViewport = [];' +
-			'this.mViewportBound = 0;' +
-			'if (bound !== undefined) {' +
-				'this.mViewportBound = bound;' +
-			'}' +
-			'this.mScissorBound = [];' +
-			'this.setViewport(viewportArray, this.mViewportBound);' +
-			'this.mNearPlane = 0;' +
-			'this.mFarPlane = 1000;' +
-			'this.kCameraZ = 10;' +
-			'this.mViewMatrix = mat4.create();' +
-			'this.mProjMatrix = mat4.create();' +
-			'this.mVPMatrix = mat4.create();' +
-			'this.mBgColor = [0.8, 0.8, 0.8, 1];' +
-			'this.mRenderCache = new PerRenderCache();' +
-			'this.mEnable=true;' +
-		'};' +
-		'gEngine.View.inheritPrototype(window["' + name + '"], window["Camera"]);' +
-		name + '.prototype.update = function () {' +
-			'if (this.mCameraShake !== null) {' +
-				'if (this.mCameraShake.shakeDone()) {' +
-					'this.mCameraShake = null;' +
-				'} else {' +
-					'this.mCameraShake.setRefCenter(this.getWCCenter());' +
-					'this.mCameraShake.updateShakeState();' +
-				'}' +
-			'}' +
-			'this.mCameraState.updateCameraState();' +
-		'};';
+		return 'window["' + name + '"] = function(wcCenter, wcWidth, viewportArray) {\n' +
+		'	this.mCameraState = new CameraState(wcCenter, wcWidth);\n' +
+		'	this.mCameraShake = null;\n' +
+		'	this.mViewport = [];\n' +
+		'	this.mViewportBound = 0;\n' +
+		'	if (bound !== undefined) {\n' +
+		'		this.mViewportBound = bound;\n' +
+		'	}\n' +
+		'	this.mScissorBound = [];\n' +
+		'	this.setViewport(viewportArray, this.mViewportBound);\n' +
+		'	this.mNearPlane = 0;\n' +
+		'	this.mFarPlane = 1000;\n' +
+		'	this.kCameraZ = 10;\n' +
+		'	this.mViewMatrix = mat4.create();\n' +
+		'	this.mProjMatrix = mat4.create();\n' +
+		'	this.mVPMatrix = mat4.create();\n' +
+		'	this.mBgColor = [0.8, 0.8, 0.8, 1];\n' +
+		'	this.mRenderCache = new PerRenderCache();\n' +
+		'	this.mEnable=true;\n' +
+		'};\n' +
+		'gEngine.View.inheritPrototype(window["' + name + '"], window["Camera"]);\n\n' +
+		name + '.prototype.update = function () {\n' +
+		'if (this.mCameraShake !== null) {\n' +
+		'	if (this.mCameraShake.shakeDone()) {\n' +
+		'		this.mCameraShake = null;\n' +
+		'	} else {\n' +
+		'		this.mCameraShake.setRefCenter(this.getWCCenter());\n' +
+		'		this.mCameraShake.updateShakeState();\n' +
+		'	}\n' +
+		'}\n' +
+		'	this.mCameraState.updateCameraState();\n' +
+		'};\n';
 	};
 
 	var createDefaultCamera = function() {
@@ -176,7 +178,25 @@ gGuiBase.CameraSupport = (function() {
 		var cameraObject = new CameraObject(cam);
 		gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
 		gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
+
+		mCamera[cam.mName] = cam;
+		mCameraCode[cam.mName] = code;
 		return cam;
+	};
+
+	var getCameraByName = function ( className ) {
+		return mCamera[className];
+	};
+
+	var getCameraCodeByName = function ( className ) {
+		console.log(mCameraCode);
+		return mCameraCode[className];
+	};
+
+	// code is a string representation of the class
+	// class name is the mName of the camera
+	var setCameraCodeByName = function ( className, code ) {
+		mCameraCode[className] = code;
 	};
 
     var mPublic = {
@@ -190,7 +210,10 @@ gGuiBase.CameraSupport = (function() {
 		clearCameras: clearCameras,
 
 		createDefaultCamera: createDefaultCamera,
-		getDefaultCodeCam: getDefaultCodeCam
+		getDefaultCodeCam: getDefaultCodeCam,
+		getCameraByName: getCameraByName,
+		getCameraCodeByName: getCameraCodeByName,
+		setCameraCodeByName: setCameraCodeByName
     };
     return mPublic;
 }());

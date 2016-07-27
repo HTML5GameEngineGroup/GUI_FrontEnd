@@ -7,22 +7,21 @@ gGuiBase.EditorSupport = (function() {
     var EDITOR_OFFSETS = [30, 192, 95];
     var DETAILS_OBJECTS_OFFSETS = [150, 75, 120];
     
-    var createFloatingEditor = function( GOName ) {
-        console.log(GOName);
-        var GO = gGuiBase.ObjectSupport.getGameObjectByID(GOName);
+    var createFloatingEditor = function( selectedName ) {
+        console.log(selectedName);
         var indexToAdd = gZIndex;
         var editorName = "floatingEditor" + indexToAdd;
 
         // Hash map used for making checking if the editor is already opened, and if so, make the right editor appear on top
-        if (typeof(gEditorMap[GO.mID]) !== "undefined") {
+        if (typeof(gEditorMap[selectedName]) !== "undefined") {
             // Already opened!  Just make it appear on top so the user can find it.
             gZIndex++;
-            $('#' + gEditorMap[GO.mID]).css('z-index', gZIndex); // Just use gZIndex to track the highest z-index value we can use
+            $('#' + gEditorMap[selectedName]).css('z-index', gZIndex); // Just use gZIndex to track the highest z-index value we can use
             gZIndex++;
             return;
         } else {
             // New hash
-            gEditorMap[GO.mID] = editorName;
+            gEditorMap[selectedName] = editorName;
         }
 
         var headerName = "codeHeader" + indexToAdd;
@@ -32,10 +31,10 @@ gGuiBase.EditorSupport = (function() {
         var cancelName = "codeCancel" + indexToAdd;
         var navBottomName = "navBarBottom" + indexToAdd;
         var objName = "";
-        if (typeof(GO.mName) === 'undefined' || GO.mName === "") {
+        if (typeof(selectedName) === 'undefined' || selectedName === "") {
             objName = "Unnamed object";
         } else {
-            objName = GO.mName;
+            objName = selectedName;
         }
 
         // Make the code editor as a new div in the document body
@@ -61,7 +60,14 @@ gGuiBase.EditorSupport = (function() {
         codeEditor.append('<ul class="floating-panel-body" id="' + bodyName + '"></ul>');
 
         // Create a separate area within the panel for the editor
-        var code = gGuiBase.ObjectSupport.getGameObjectCodeByID(GO.mName);
+        console.log(typeof(window[selectedName]));
+
+        var isGameObject = true;
+        var code = gGuiBase.ObjectSupport.getGameObjectCodeByID(selectedName);
+        if (code == undefined) {
+            code = gGuiBase.CameraSupport.getCameraCodeByName(selectedName);
+            isGameObject = false;
+        }
 
         var editorArea = $('#' + bodyName);
         var editorDiv = $('<div id="' + aceName + '">' + code + '</div>');
@@ -96,56 +102,109 @@ gGuiBase.EditorSupport = (function() {
             var result = editor.getValue();
 
             // First set the code for the object only (so it's saved and the user can come back to it)
-            gGuiBase.ObjectSupport.setGameObjectCodeByID(GO.mID, result);
+            // todo If else different functionality if its an object or a camera
+            if (isGameObject) {
+                gGuiBase.ObjectSupport.setGameObjectCodeByID(selectedName, result);
 
-            var msg = "";
+                var msg = "";
+                try {
+                    // Puts code into system
+                    eval(result);
 
-            try {
-                // Puts code into system
-                eval(result);
-
-                // ******************** start here ***************************
-                var i;
-                var objs = gGuiBase.ObjectSupport.getObjectList();
-                var objCode = gGuiBase.ObjectSupport.getObjectCodeList();
-                for (i = 0; i < objs.length; i++) {
-                    if (objs[i].mName === GO.mName) {
-                        eval(objCode[i]);
-                    }
-                }
-
-                var sceneList = gGuiBase.SceneSupport.getSceneList();
-                for (var j = 0; j < sceneList.length; j++) {
-
-                    // First update all instances with the new name and class
-                    var instances = sceneList[j].getInstanceList();
-                    for (i = 0; i < instances.length; i++) {
-                        var name = instances[i].mName;
-                        if (name === GO.mName) {
-                            var instID = instances[i].mID;
-                            // Each instance needs to be re-created exactly as the old one, but as a new class
-                            // They also need their name value modified
-                            var rend = instances[i].getRenderable();
-                            var xf = instances[i].getXform();
-                            var newInstance;
-                            eval("newInstance = new " + name + "(rend);");
-                            newInstance.mID = instances[i].mID;
-                            newInstance.mName = instances[i].mName;
-                            var newXf = newInstance.getXform();
-                            newXf = xf;
-                            instances[i] = newInstance;
+                    // ******************** start here ***************************
+                    var i;
+                    var objs = gGuiBase.ObjectSupport.getObjectList();
+                    var objCode = gGuiBase.ObjectSupport.getObjectCodeList();
+                    for (i = 0; i < objs.length; i++) {
+                        if (objs[i].mName === selectedName) {
+                            eval(objCode[i]);
                         }
                     }
+
+                    var sceneList = gGuiBase.SceneSupport.getSceneList();
+                    for (var j = 0; j < sceneList.length; j++) {
+
+                        // First update all instances with the new name and class
+                        var instances = sceneList[j].getInstanceList();
+                        for (i = 0; i < instances.length; i++) {
+                            var name = instances[i].mName;
+                            if (name === selectedName) {
+                                var instID = instances[i].mID;
+                                // Each instance needs to be re-created exactly as the old one, but as a new class
+                                // They also need their name value modified
+                                var rend = instances[i].getRenderable();
+                                var xf = instances[i].getXform();
+                                var newInstance;
+                                eval("newInstance = new " + name + "(rend);");
+                                newInstance.mID = instances[i].mID;
+                                newInstance.mName = instances[i].mName;
+                                var newXf = newInstance.getXform();
+                                newXf = xf;
+                                instances[i] = newInstance;
+                            }
+                        }
+                    }
+                    // ************** end here *****************
+                    msg = "Code saved!";
+                } catch (error) {
+                    msg = "Your code contains an error.  Please review.\n\n" + error;
                 }
-                // ************** end here *****************
-                msg = "Code saved!";
-            } catch (error) {
-                msg = "Your code contains an error.  Please review.\n\n" + error;
+            } else {
+                // Process camera code changes
+                gGuiBase.CameraSupport.setCameraCodeByName(selectedName, result);
+                var msg = "";
+                try {
+                    // Puts code into system
+                    eval(result);
+
+                    // this evals twice?
+                    // // ******************** start here ***************************
+                    // var i;
+                    // var objs = gGuiBase.ObjectSupport.getObjectList();
+                    // var objCode = gGuiBase.ObjectSupport.getObjectCodeList();
+                    // for (i = 0; i < objs.length; i++) {
+                    //     if (objs[i].mName === selectedName) {
+                    //         eval(objCode[i]);
+                    //     }
+                    // }
+
+
+                    var sceneList = gGuiBase.SceneSupport.getSceneList();
+                    for (var j = 0; j < sceneList.length; j++) {
+
+                        // First update all instances with the new name and class
+                        var instances = sceneList[j].getCameraList();
+                        for (i = 0; i < instances.length; i++) {
+                            var name = instances[i].mName;
+                            if (name === selectedName) {
+                                // Each instance needs to be re-created exactly as the old one, but as a new class
+                                // They also need their name value modified
+                                var center = instances[i].getWCCenter();
+                                var width = instances[i].getWCWidth();
+                                var viewport = instances[i].getViewport();
+                                var bgColor = instances[i].getBackgroundColor();
+                                var bound = undefined;
+                                var newInstance;
+                                eval("newInstance = new " + name + "(center, width, viewport, bound);");
+                                newInstance.mID = instances[i].mID;
+                                newInstance.mName = instances[i].mName;
+                                // newInstance.setWCCenter(center);
+                                // newInstance.setWidth(width);
+                                newInstance.setBackgroundColor(bgColor);
+                                instances[i] = newInstance;
+                            }
+                        }
+                    }
+                    // ************** end here *****************
+                    msg = "Code saved!";
+                } catch (error) {
+                    msg = "Your code contains an error.  Please review.\n\n" + error;
+                }
             }
 
             // Remove the editor
             codeEditor.remove();
-            delete gEditorMap[GO.mID];
+            delete gEditorMap[selectedName];
             alert(msg);
         });
         
@@ -153,7 +212,7 @@ gGuiBase.EditorSupport = (function() {
         $('#' + cancelName).click(function() {
             // Remove the editor
             codeEditor.remove();
-            delete gEditorMap[GO.mID];
+            delete gEditorMap[selectedName];
         });
     };
 
