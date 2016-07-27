@@ -476,11 +476,26 @@ gGuiBase.DirectManipulationSupport = (function() {
 		preventInteraction = prevent;
 	};
 	
+	var resetInteraction = function() {
+		preventInteraction = false;
+		selected = null;
+		draggingTopCamera = false;
+		draggingBotCamera = false;
+		draggingLeftCamera = false;
+		draggingRightCamera = false;
+		
+		draggingTop = false;
+		draggingLeft = false;
+		
+		state = InteractionState.NONE;
+	}
+	
     var mPublic = {
        mouseInBound: mouseInBound,
 	   rotatePoint: rotatePoint,
 	   //currentCameraObject: currentCameraObject,
-	   setPreventInteraction: setPreventInteraction
+	   setPreventInteraction: setPreventInteraction,
+	   resetInteraction: resetInteraction
     };
     return mPublic;
 }());

@@ -14,6 +14,7 @@ gGuiBase.SaveLoadSupport = (function() {
 		
 		gGuiBase.View.refreshAllTabContent();
 		gGuiBase.Core.reinitializeTabs();
+		gGuiBase.DirectManipulationSupport.resetInteraction();
 	});
 	
 	$('#menuFileOpen').click(function(event) {
@@ -40,6 +41,8 @@ gGuiBase.SaveLoadSupport = (function() {
 
 			$('#menuRun').css('background-color', 'white');
 		}
+		
+		gGuiBase.DirectManipulationSupport.resetInteraction();
 
 		// TESTING INPUT FROM FILE
 		// $('input[type=file]').change(function () {
@@ -206,6 +209,7 @@ gGuiBase.SaveLoadSupport = (function() {
 			var cameraData = {};
 			
 			var sceneViewCamera = scene.getSceneCamera();
+			console.log(sceneViewCamera);
 			cameraData[0] = sceneViewCamera.mName;
 			cameraData[1] = sceneViewCamera.mID;
 			cameraData[2] = sceneViewCamera.getWCCenter();  // [x, y]
@@ -429,9 +433,9 @@ gGuiBase.SaveLoadSupport = (function() {
 						gGuiBase.SceneSupport.gCurrentScene.mAllCamera = [];
 						gGuiBase.SceneSupport.gCurrentScene.cameraObjects = [];
 
-
+						console.log(data);
 						while (typeof(data[i]) !== "undefined") {
-
+							console.log("got here");
 							if (data[i+1] === "SceneViewCamera") {
 								console.log(' adding scene camera here');
 								var name = data[i];
@@ -441,10 +445,13 @@ gGuiBase.SaveLoadSupport = (function() {
 									data[i + 4]                                         // viewport (orgX, orgY, width, height));
 								);
 								cam.setBackgroundColor(data[i + 5]);
+								cam.mName = name;
+								cam.mID = data[i+1];
 								console.log(cam);
 								gGuiBase.SceneSupport.gCurrentScene.setSceneCamera(cam);
 							} else {
 								console.log('adding camera here');
+								console.log(data[i]);
 								var name = data[i];
 								var wcCenter = vec2.fromValues(data[i + 2][0], data[i + 2][1]);
 								var wcWidth = data[i + 3];
@@ -465,7 +472,7 @@ gGuiBase.SaveLoadSupport = (function() {
 								cam.mName = name;
 								cam.mID = data[i + 1];
 								// console.log(data[i + 6]);
-								// console.log(cam);
+						
 								var cameraObject = new CameraObject(cam);
 								console.log('adding camera to data structures here');
 								gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
