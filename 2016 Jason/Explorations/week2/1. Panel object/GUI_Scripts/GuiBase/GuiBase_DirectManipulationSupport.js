@@ -239,7 +239,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 		var width = dx * 2;
 		
 		if (draggingTopCamera || draggingBotCamera) {
-			width = dy * 2;
+			width = dy * (selected.cameraRef.getWCWidth() / selected.cameraRef.getWCHeight()) * 2;
 		}
 		
 		if (draggingLeftCamera || draggingBotCamera) width = -width;
