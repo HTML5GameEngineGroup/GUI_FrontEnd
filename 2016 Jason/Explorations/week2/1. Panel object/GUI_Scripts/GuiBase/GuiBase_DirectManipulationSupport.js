@@ -45,7 +45,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 	var handleMouseInput = function() {
 		if (!preventInteraction) {
 			//Get the camera
-			var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
+			camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
 			if (camera === undefined || camera === null) return;
 			
 			//Get mouse position in world space
@@ -94,6 +94,9 @@ gGuiBase.DirectManipulationSupport = (function() {
 						state = InteractionState.OBJECT_DRAG;
 					} else { //Not working with the current selected object -- select new object
 						trySelect();
+						if (selected === null) { //No object, so drag the scene camera
+							state = InteractionState.SCENECAMERA_DRAG;
+						}
 					}
 				//Camera is selected, so check for interactions
 				} else if (selected !== null && selected instanceof CameraObject) {
@@ -113,11 +116,17 @@ gGuiBase.DirectManipulationSupport = (function() {
 						state = InteractionState.CAMERA_DRAG;
 					} else { //Not working with the current selected object -- select new object
 						trySelect();
+						if (selected === null) { //No object, so drag the scene camera
+							state = InteractionState.SCENECAMERA_DRAG;
+						}
 					}
 				} else { //Nothing selected -- try to select
 					//Only try to select on initial click
 					if (prevMouseDownState === false) {
 						trySelect();
+						if (selected === null) { //No object, so drag the scene camera
+							state = InteractionState.SCENECAMERA_DRAG;
+						}
 					}	
 				}
 			}
@@ -133,6 +142,8 @@ gGuiBase.DirectManipulationSupport = (function() {
 				dragCamera();
 			} else if (state === InteractionState.CAMERA_DRAG_CORNER) {
 				dragCameraEdge();
+			} else if (state === InteractionState.SCENECAMERA_DRAG) {
+				dragSceneCamera();
 			}
 			
 			//Record the current state of the mouse before the next call of this function
@@ -150,9 +161,9 @@ gGuiBase.DirectManipulationSupport = (function() {
 		if (camera === undefined || camera === null) return;
 		
 		if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
-			camera.zoomBy(0.5);
+			camera.zoomBy(0.9);
 		} else if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Down)) {
-			camera.zoomBy(1.5);
+			camera.zoomBy(1.1);
 		}
 	};
 	
@@ -249,6 +260,26 @@ gGuiBase.DirectManipulationSupport = (function() {
 		xform.setRotationInDegree(angleInDegree);
 		
 		refreshGameObjectTransform();
+	};
+	
+	var dragSceneCamera = function() {
+		var cameraCenter = camera.getWCCenter();
+		var dx = (mouseX - prevX) + cameraCenter[0];
+		var dy = (mouseY - prevY) + cameraCenter[1];
+		
+		var mouseXPixel = gEngine.Input.getMousePosX();
+		var mouseYPixel = gEngine.Input.getMousePosY();
+		
+		var cameraPositionPixel = vec3.fromValues(cameraCenter[0], cameraCenter[1], 0);
+		cameraPositionPixel = camera.wcPosToPixel(cameraPositionPixel);
+		
+		var dx = (mouseXPixel - prevXPixel) * 3 + cameraPositionPixel[0];
+		var dy = (mouseYPixel - prevYPixel) * 3 + cameraPositionPixel[1];
+		
+		dx = camera.positionWCX(dx);
+		dy = camera.positionWCY(dy);
+		
+		camera.setWCCenter(dx, dy);
 	};
 	
 	//Selects gameobject or camera

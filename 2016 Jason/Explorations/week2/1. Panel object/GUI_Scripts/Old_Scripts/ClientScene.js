@@ -18,6 +18,7 @@ function ClientScene(number) {
     this.mID = "sceneListItem" + number;
     this.mNextCameraID = 0; // Due to the starting camera being 0
     this.mAllCamera = [];
+	this.mAllCameraInterpConfig = [];
     this.mInstanceList = [];
     this.mAllUpdateSet = new GameObjectSet();
     this.isInitialized = false;
@@ -93,6 +94,7 @@ ClientScene.prototype.initialize = function() {
 	this.sceneViewCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
 	this.sceneViewCamera.mName = "SceneCam"; 
     this.sceneViewCamera.mID = "SceneViewCamera";
+	this.sceneViewCamera.configInterpolation(1, 0.25);
 
     // scene view camera must be created prior to creating a camera object!
     var cam = gGuiBase.CameraSupport.createDefaultCamera();
