@@ -155,17 +155,11 @@ ClientScene.prototype.draw = function() {
 // anything from this function!
 ClientScene.prototype.update = function() {
     var i;
-    for (i = 0; i < this.mAllCamera.length; i++) {
-        this.mAllCamera[i].update();
-    }
-	
-	for (i = 0; i < this.cameraObjects.length; i++) {
-		this.cameraObjects[i].update();
-	}
-	
-	this.sceneViewCamera.update();
     
     if (gGuiBase.Core.gRunning) {
+        for (i = 0; i < this.mAllCamera.length; i++) {
+            this.mAllCamera[i].update();
+        }
         for (i = 0; i < this.mInstanceList.length; i++) {
             if (this.mInstanceList[i] instanceof GameObject) {
                 if (this.mInstanceList[i].mDestroy) { // uses this variable to destroy from external pointer
@@ -181,11 +175,14 @@ ClientScene.prototype.update = function() {
 	if (this.selectObject !== null && gGuiBase.Core.selectedGameObject !== null) {
 		this.selectObject.update()
 	}
-	
 	if (this.rotationObject !== null && gGuiBase.Core.selectedGameObject !== null) {
 		this.rotationObject.update()
 	}
-	
+
+    for (i = 0; i < this.cameraObjects.length; i++) {
+        this.cameraObjects[i].update();
+    }
+    this.sceneViewCamera.update();
 };
 
 ClientScene.prototype.addInstance = function(inst) {
