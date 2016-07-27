@@ -9,7 +9,21 @@ var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been
 gGuiBase.DirectManipulationSupport = (function() {
 	
 	var camera = null; //Camera that we're using to manipulate the instances
+	var mouseX = 0;
+	var mouseY = 0;
 	
+	var InteractionState = Object.freeze({
+		NONE: 0,
+		OBJECT_DRAG: 1,
+		CAMERA_DRAG: 2,
+		OBJECT_DRAG_CORNER: 3,
+		CAMERA_DRAG_CORNER: 4,
+		SCENECAMERA_DRAG: 5,
+		OBJECT_DRAG_ROTATE: 6
+	});
+	
+	var state = InteractionState.NONE;
+	var selected = null; //The selected gameobject or camera
 	
 	//Keep track of some variables so we know if we're dragging
 	var prevMouseDownState = false;
@@ -17,23 +31,16 @@ gGuiBase.DirectManipulationSupport = (function() {
 	var prevY = 0;
 	var prevXPixel = 0;
 	var prevYPixel = 0;
-	var objectSelected = false;
-	var cameraSelected = false;
-	var currentCameraObject = null;
-	
+
 	var preventInteraction = false;
-	//Booleans to determine if we're dragging a corner and which one
-	var draggingCorner = false;
+
 	var draggingTop = false;
 	var draggingLeft = false;
-	var draggingRotate = false;
-	var draggingCamera = false;
-	
+
 	var draggingTopCamera = false;
 	var draggingBotCamera = false;
 	var draggingLeftCamera = false;
 	var draggingRightCamera = false;
-	var draggingCameraEdge = false;
 	
 	var handleMouseInput = function() {
 		if (!preventInteraction) {
@@ -42,273 +49,90 @@ gGuiBase.DirectManipulationSupport = (function() {
 			if (camera === undefined || camera === null) return;
 			
 			//Get mouse position in world space
-			var mouseX = camera.mouseWCX();
-			var mouseY = camera.mouseWCY();
+			mouseX = camera.mouseWCX();
+			mouseY = camera.mouseWCY();
 			
-			//If left mouse is down and we're not dragging anything
-			if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && !objectSelected && !cameraSelected) {
+			//Mouse released, so clear the interaction state
+			if (!gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && prevMouseDownState) {
+				state = InteractionState.NONE;
+				//Reset some bools as well
+				draggingTopCamera = false;
+				draggingBotCamera = false;
+				draggingLeftCamera = false;
+				draggingRightCamera = false;
 				
-				//Get instances to determine if the mouse is in a gameobject
-				var instances = gGuiBase.SceneSupport.gCurrentScene.getInstanceList();
-				var selectedGameObject = gGuiBase.Core.selectedGameObject;
-				var mouseInXform = false;
-				var i = 0;
-				for (i = 0; i < instances.length; i++) {
-					var xform = instances[i].getXform();
-					mouseInXform = mousePosInTransform(xform, mouseX, mouseY);
-					if (mouseInXform) break;
-					mouseInXform = mousePosOnRotationSquare(xform, mouseX, mouseY);
-					if (mouseInXform) break;
-					
-					//Workaround
-					gGuiBase.Core.selectedGameObject = instances[i];
-					var selectObject = new SelectionObject(xform.getXPos(), xform.getYPos(), xform.getWidth(), xform.getHeight());
-					selectObject.update();
-					mouseInXform = selectObject.mousePosOnTopLeftCorner(xform, mouseX, mouseY)
-					if (mouseInXform) break;
-					mouseInXform = selectObject.mousePosOnTopRightCorner(xform, mouseX, mouseY)
-					if (mouseInXform) break;
-					mouseInXform = selectObject.mousePosOnBottomLeftCorner(xform, mouseX, mouseY)
-					if (mouseInXform) break;
-					mouseInXform = selectObject.mousePosOnBottomRightCorner(xform, mouseX, mouseY)
-					if (mouseInXform) break;
-					
-				}
-				gGuiBase.Core.selectedGameObject = selectedGameObject; //Workaround
-				
-				var mouseInCameraIcon = false;
-				var cameras = gGuiBase.SceneSupport.gCurrentScene.getCameraObjectList();
-				var j = 0;
-				for (j = 0; j < cameras.length; j++) {
-					mouseInCameraIcon = mouseInCameraObject(cameras[j], mouseX, mouseY);
-					if (mouseInCameraIcon) break;
-					
-					if (cameras[j] === currentCameraObject) {
-						mouseInCameraIcon = cameras[j].mouseOnTopBox(mouseX, mouseY);
-						if (mouseInCameraIcon) break;
-						mouseInCameraIcon = cameras[j].mouseOnBotBox(mouseX, mouseY);
-						if (mouseInCameraIcon) break;
-						mouseInCameraIcon = cameras[j].mouseOnLeftBox(mouseX, mouseY);
-						if (mouseInCameraIcon) break;
-						mouseInCameraIcon = cameras[j].mouseOnRightBox(mouseX, mouseY);
-						if (mouseInCameraIcon) break;
-					}
-				}
-				
-				
-				if (mouseInCameraIcon) {
-					if (currentCameraObject !== null) { 
-						currentCameraObject.toggleDrawBorder(false);
-						currentCameraObject = null;
-					}
-					gGuiBase.Core.selectDetailsCamera(cameras[j].cameraRef.mName);
-					currentCameraObject = cameras[j];
-					cameraSelected = true;
-					
-					cameras[j].toggleDrawBorder(true);
-					
-				} else if (mouseInXform) {
-					gGuiBase.Core.selectInstanceDetails(instances[i].mID);
-					objectSelected = true;
-					
-					var selectObject = gGuiBase.SceneSupport.gCurrentScene.getSelectObject();
+				draggingTop = false;
+				draggingLeft = false;
+			}
+			
+			//Set state based on where the user has pressed
+			if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && state === InteractionState.NONE) {
+				//Gameobject is selected, so check for interactions
+				if (selected !== null && selected instanceof GameObject) {
 					var xform = gGuiBase.Core.selectedGameObject.getXform();
-					selectObject = new SelectionObject(xform.getXPos(), xform.getYPos(), xform.getWidth(), xform.getHeight());
+					var selectObject = gGuiBase.SceneSupport.gCurrentScene.getSelectObject();
+					if (mousePosOnRotationSquare(xform, mouseX, mouseY)) {
+						state = InteractionState.OBJECT_DRAG_ROTATE;
 					
-					gGuiBase.SceneSupport.gCurrentScene.setSelectObject(selectObject);
-					
-					var rotationObject = gGuiBase.SceneSupport.gCurrentScene.getRotationObject();
-					rotationObject = new RotationObject(xform.getXPos(), xform.getYPos(), xform.getWidth(), xform.getHeight(), xform.getRotationInRad());
-					
-					gGuiBase.SceneSupport.gCurrentScene.setRotationObject(rotationObject);
-				
-				} else { //Clicked on empty
-					gGuiBase.Core.selectedGameObject = null;
-					gGuiBase.Core.selectedCamera = null;
-					if (currentCameraObject !== null) { 
-						currentCameraObject.toggleDrawBorder(false);
-						currentCameraObject = null;
+					} else if (selectObject.mousePosOnTopLeftCorner(xform, mouseX, mouseY)) {
+						state = InteractionState.OBJECT_DRAG_CORNER;
+						draggingLeft = true;
+						draggingTop = true;
+					} else if (selectObject.mousePosOnTopRightCorner(xform, mouseX, mouseY)) {
+						state = InteractionState.OBJECT_DRAG_CORNER;
+						draggingTop = true;
+						draggingLeft = false;
+					} else if (selectObject.mousePosOnBottomLeftCorner(xform, mouseX, mouseY)) {
+						state = InteractionState.OBJECT_DRAG_CORNER;
+						draggingTop = false;
+						draggingLeft = true;
+					} else if (selectObject.mousePosOnBottomRightCorner(xform, mouseX, mouseY)) {
+						state = InteractionState.OBJECT_DRAG_CORNER;
+						draggingTop = false;
+						draggingLeft = false;
+					} else if (mousePosInTransform(xform, mouseX, mouseY)) { //Otherwise, drag without resizing
+						state = InteractionState.OBJECT_DRAG;
+					} else { //Not working with the current selected object -- select new object
+						trySelect();
 					}
-					gGuiBase.Core.emptyDetailsTab();
-				}
-			}
-			
-			//Left mouse released -- reset some bools
-			if (prevMouseDownState && (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) == false) && (objectSelected || cameraSelected)) {
-				//if (objectSelected) {
-					objectSelected = false;
-					cameraSelected = false;
-					draggingCorner = false;
-					draggingRotate = false;
-					draggingCamera = false;
-					draggingCameraEdge = false;
-					draggingLeftCamera = false;
-					draggingRightCamera = false;
-					draggingTopCamera = false;
-					draggingBotCamera = false;
-				//} 
-			}
-
-			//Drag
-			if(gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && (prevX !== mouseX || prevY !== mouseY) && (objectSelected) && !draggingCorner && !draggingRotate && !draggingCamera) {
-
-				var xform = gGuiBase.Core.selectedGameObject.getXform();
-				var selectObject = gGuiBase.SceneSupport.gCurrentScene.getSelectObject();
-				//Set bools to determine how dragging corner should be handled
-				if (mousePosOnRotationSquare(xform, mouseX, mouseY)) {
-					draggingRotate = true;
-				
-				} else if (selectObject.mousePosOnTopLeftCorner(xform, mouseX, mouseY)) {
-					draggingCorner = true;
-					draggingLeft = true;
-					draggingTop = true;
-				} else if (selectObject.mousePosOnTopRightCorner(xform, mouseX, mouseY)) {
-					draggingCorner = true;
-					draggingTop = true;
-					draggingLeft = false;
-				} else if (selectObject.mousePosOnBottomLeftCorner(xform, mouseX, mouseY)) {
-					draggingCorner = true;
-					draggingTop = false;
-					draggingLeft = true;
-				} else if (selectObject.mousePosOnBottomRightCorner(xform, mouseX, mouseY)) {
-					draggingCorner = true;
-					draggingTop = false;
-					draggingLeft = false;
-				} else { //Otherwise, drag without resizing
-					xform.setXPos(mouseX);
-					xform.setYPos(mouseY);
-					
-				}
-				
-				
-				//Update the transform details
-				var detailsTab = gGuiBase.View.findTabByID("#Details");
-				var detailsTransform = detailsTab.getContentObject("#TransformContent");
-				detailsTransform.updateFields(gGuiBase.Core.selectedGameObject);
-				detailsTab.refreshSpecificContent("#TransformContent");
-
-			} else if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && (prevX !== mouseX || prevY !== mouseY) && cameraSelected && !draggingCamera && !draggingCameraEdge) {
-				if (currentCameraObject !== null) {
-					if (currentCameraObject.mouseOnTopBox(mouseX, mouseY)) {
-						draggingCameraEdge = true;
+				//Camera is selected, so check for interactions
+				} else if (selected !== null && selected instanceof CameraObject) {
+					if (selected.mouseOnTopBox(mouseX, mouseY)) {
+						state = InteractionState.CAMERA_DRAG_CORNER;
 						draggingTopCamera = true;
-					} else if (currentCameraObject.mouseOnBotBox(mouseX, mouseY)) {
-						draggingCameraEdge = true;
+					} else if (selected.mouseOnBotBox(mouseX, mouseY)) {
+						state = InteractionState.CAMERA_DRAG_CORNER;
 						draggingBotCamera = true;
-					} else if (currentCameraObject.mouseOnLeftBox(mouseX, mouseY)) {
-						draggingCameraEdge = true;
+					} else if (selected.mouseOnLeftBox(mouseX, mouseY)) {
+						state = InteractionState.CAMERA_DRAG_CORNER;
 						draggingLeftCamera = true;
-					} else if (currentCameraObject.mouseOnRightBox(mouseX, mouseY)) {
-						draggingCameraEdge = true;
+					} else if (selected.mouseOnRightBox(mouseX, mouseY)) {
+						state = InteractionState.CAMERA_DRAG_CORNER;
 						draggingRightCamera = true;
-					} else {
-						currentCameraObject.cameraRef.setWCCenter(mouseX, mouseY);
+					} else if (mouseInCameraObject(selected, mouseX, mouseY)){
+						state = InteractionState.CAMERA_DRAG;
+					} else { //Not working with the current selected object -- select new object
+						trySelect();
 					}
-					
-					var detailsTab = gGuiBase.View.findTabByID("#Details");
-					var detailsTransform = detailsTab.getContentObject("#CameraTransformContent");
-					detailsTransform.updateFields(currentCameraObject.cameraRef);
-					detailsTab.refreshSpecificContent("#CameraTransformContent");
+				} else { //Nothing selected -- try to select
+					//Only try to select on initial click
+					if (prevMouseDownState === false) {
+						trySelect();
+					}	
 				}
-				
-			//Drag the camera
-			} else if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && (prevX !== mouseX || prevY !== mouseY) && !draggingCorner && !draggingRotate) {
-				draggingCamera = true;
-				//Not dragging fast enough
-				/*var cameraCenter = camera.getWCCenter();
-				
-				var dx = (mouseX - prevX) + cameraCenter[0];
-				var dy = (mouseY - prevY) + cameraCenter[1];
-				
-				var mouseXPixel = gEngine.Input.getMousePosX();
-				var mouseYPixel = gEngine.Input.getMousePosY();
-				
-				var cameraPositionPixel = vec3.fromValues(cameraCenter[0], cameraCenter[1], 0);
-				cameraPositionPixel = camera.wcPosToPixel(cameraPositionPixel);
-				
-				var dx = (mouseXPixel - prevXPixel) * 3 + cameraPositionPixel[0];
-				var dy = (mouseYPixel - prevYPixel) * 3 + cameraPositionPixel[1];
-				
-				dx = camera.positionWCX(dx);
-				dy = camera.positionWCY(dy);
-				
-				camera.setWCCenter(dx, dy);*/
 			}
-			
-			//If we're dragging a corner and not the main body of the object instance
-			if (draggingCorner) {
-				var xform = gGuiBase.Core.selectedGameObject.getXform();
-				var selectObject = gGuiBase.SceneSupport.gCurrentScene.getSelectObject();
-				
-				var x = xform.getXPos();
-				var y = xform.getYPos();
-				var w = xform.getWidth();
-				var h = xform.getHeight();
-				var r = xform.getRotationInRad();
-				
-				var mousePos = vec2.fromValues(mouseX, mouseY);
-				
-				//Apply inverse rotation to fit the object & mouse position to the x/y axis
-				mousePos = rotatePoint(x, y, -r, mousePos);
-				
-				var dx = mousePos[0] - x;
-				var dy = mousePos[1] - y;
-				
-				var width = dx * 2;
-				var height = dy * 2;
-				
-				if (draggingLeft) width = -width;
-				if (!draggingTop) height = -height;
-				
-				if (width < 0.25) width = 0.25;
-				if (height < 0.25) height = 0.25;
-				
-				xform.setWidth(width);
-				xform.setHeight(height);
-		
-				var detailsTab = gGuiBase.View.findTabByID("#Details");
-				var detailsTransform = detailsTab.getContentObject("#TransformContent");
-				detailsTransform.updateFields(gGuiBase.Core.selectedGameObject);
-				detailsTab.refreshSpecificContent("#TransformContent");
-			} else if (draggingRotate) {
-				var xform = gGuiBase.Core.selectedGameObject.getXform();
-				var dx = mouseX - xform.getXPos();
-				var dy = mouseY - xform.getYPos();
-				
-				var angle = Math.atan2(dy, dx);
-				var angleInDegree = angle * 180 / Math.PI;
-			
-				if (angleInDegree < 0) { //Don't use negative degree because the slider is 0-360
-					angleInDegree += 360;
-				}
-				xform.setRotationInDegree(angleInDegree);
-				
-				var detailsTab = gGuiBase.View.findTabByID("#Details");
-				var detailsTransform = detailsTab.getContentObject("#TransformContent");
-				detailsTransform.updateFields(gGuiBase.Core.selectedGameObject);
-				detailsTab.refreshSpecificContent("#TransformContent");
-			} else if (draggingCameraEdge) {
-				var cameraCenter = currentCameraObject.cameraRef.getWCCenter();
-				var dx = mouseX - cameraCenter[0];
-				var dy = mouseY - cameraCenter[1];
-				
-				var width = dx * 2;
-				
-				if (draggingTopCamera || draggingBotCamera) {
-					width = dy * 2;
-				}
-				
-				if (draggingLeftCamera || draggingBotCamera) width = -width;
-				
-				if (width < 0) width = 0;
-				
-				currentCameraObject.cameraRef.setWCWidth(width);
-				
-				var detailsTab = gGuiBase.View.findTabByID("#Details");
-				var detailsTransform = detailsTab.getContentObject("#CameraTransformContent");
-				detailsTransform.updateFields(currentCameraObject.cameraRef);
-				detailsTab.refreshSpecificContent("#CameraTransformContent");
-				
+
+			//Handle state
+			if (state === InteractionState.OBJECT_DRAG) {
+				dragObject();
+			} else if (state === InteractionState.OBJECT_DRAG_CORNER) {
+				dragObjectCorner();
+			} else if (state === InteractionState.OBJECT_DRAG_ROTATE) {
+				dragObjectRotate();
+			} else if (state === InteractionState.CAMERA_DRAG) {
+				dragCamera();
+			} else if (state === InteractionState.CAMERA_DRAG_CORNER) {
+				dragCameraEdge();
 			}
 			
 			//Record the current state of the mouse before the next call of this function
@@ -332,12 +156,217 @@ gGuiBase.DirectManipulationSupport = (function() {
 		}
 	};
 	
+	//Call keyboard input every 10ms
 	setInterval(handleKeyboardInput, 10);
 	
 	//Call the above function when mouse events happen
 	window.addEventListener('mousedown', handleMouseInput);
     window.addEventListener('mouseup', handleMouseInput);
     window.addEventListener('mousemove', handleMouseInput);
+	
+	//Handle object drag state
+	var dragObject = function() {
+		var xform = gGuiBase.Core.selectedGameObject.getXform();
+		var selectObject = gGuiBase.SceneSupport.gCurrentScene.getSelectObject();
+		xform.setXPos(mouseX);
+		xform.setYPos(mouseY);
+		refreshGameObjectTransform();	
+	};
+	
+	//Handle camera drag state
+	var dragCamera = function() {
+		selected.cameraRef.setWCCenter(mouseX, mouseY);
+		refreshCameraTransform();
+	};
+	
+	//Handle object corner drag state (resizing)
+	var dragObjectCorner = function() {
+		var xform = gGuiBase.Core.selectedGameObject.getXform();
+		var selectObject = gGuiBase.SceneSupport.gCurrentScene.getSelectObject();
+		
+		var x = xform.getXPos();
+		var y = xform.getYPos();
+		var w = xform.getWidth();
+		var h = xform.getHeight();
+		var r = xform.getRotationInRad();
+		
+		var mousePos = vec2.fromValues(mouseX, mouseY);
+		
+		//Apply inverse rotation to fit the object & mouse position to the x/y axis
+		mousePos = rotatePoint(x, y, -r, mousePos);
+		
+		var dx = mousePos[0] - x;
+		var dy = mousePos[1] - y;
+		
+		var width = dx * 2;
+		var height = dy * 2;
+		
+		if (draggingLeft) width = -width;
+		if (!draggingTop) height = -height;
+		
+		if (width < 0.25) width = 0.25;
+		if (height < 0.25) height = 0.25;
+		
+		xform.setWidth(width);
+		xform.setHeight(height);
+		
+		refreshGameObjectTransform();
+				
+	};
+	
+	//Handle camera edge drag (resizing)
+	var dragCameraEdge = function() {
+		var cameraCenter = selected.cameraRef.getWCCenter();
+		var dx = mouseX - cameraCenter[0];
+		var dy = mouseY - cameraCenter[1];
+		
+		var width = dx * 2;
+		
+		if (draggingTopCamera || draggingBotCamera) {
+			width = dy * 2;
+		}
+		
+		if (draggingLeftCamera || draggingBotCamera) width = -width;
+		
+		if (width < 0) width = 0;
+		
+		selected.cameraRef.setWCWidth(width);
+		refreshCameraTransform();
+	};
+	
+	//Handle object rotate
+	var dragObjectRotate = function() {
+		var xform = gGuiBase.Core.selectedGameObject.getXform();
+		var dx = mouseX - xform.getXPos();
+		var dy = mouseY - xform.getYPos();
+		
+		var angle = Math.atan2(dy, dx);
+		var angleInDegree = angle * 180 / Math.PI;
+	
+		if (angleInDegree < 0) { //Don't use negative degree because the slider is 0-360
+			angleInDegree += 360;
+		}
+		xform.setRotationInDegree(angleInDegree);
+		
+		refreshGameObjectTransform();
+	};
+	
+	//Selects gameobject or camera
+	var trySelect = function() {
+		//Try to find an instance
+		var instances = gGuiBase.SceneSupport.gCurrentScene.getInstanceList();
+		var selectedGameObject = gGuiBase.Core.selectedGameObject;
+		var mouseInXform = false;
+		var i = 0;
+		for (i = 0; i < instances.length; i++) {
+			var xform = instances[i].getXform();
+			mouseInXform = mousePosInTransform(xform, mouseX, mouseY);
+			if (mouseInXform) break;
+
+			//Workaround
+			if (selected instanceof GameObject && selected === instances[i]) {
+				mouseInXform = mousePosOnRotationSquare(xform, mouseX, mouseY);
+				if (mouseInXform) break;
+				gGuiBase.Core.selectedGameObject = instances[i];
+				var selectObject = new SelectionObject(xform.getXPos(), xform.getYPos(), xform.getWidth(), xform.getHeight());
+				selectObject.update();
+				mouseInXform = selectObject.mousePosOnTopLeftCorner(xform, mouseX, mouseY)
+				if (mouseInXform) break;
+				mouseInXform = selectObject.mousePosOnTopRightCorner(xform, mouseX, mouseY)
+				if (mouseInXform) break;
+				mouseInXform = selectObject.mousePosOnBottomLeftCorner(xform, mouseX, mouseY)
+				if (mouseInXform) break;
+				mouseInXform = selectObject.mousePosOnBottomRightCorner(xform, mouseX, mouseY)
+				if (mouseInXform) break;
+			}
+			
+		}
+		gGuiBase.Core.selectedGameObject = selectedGameObject; //Workaround
+		
+		//Try to find a camera
+		var mouseInCameraIcon = false;
+		var cameras = gGuiBase.SceneSupport.gCurrentScene.getCameraObjectList();
+		var j = 0;
+		for (j = 0; j < cameras.length; j++) {
+			mouseInCameraIcon = mouseInCameraObject(cameras[j], mouseX, mouseY);
+			if (mouseInCameraIcon) break;
+			
+			if (selected instanceof CameraObject && cameras[j] === selected) {
+				mouseInCameraIcon = cameras[j].mouseOnTopBox(mouseX, mouseY);
+				if (mouseInCameraIcon) break;
+				mouseInCameraIcon = cameras[j].mouseOnBotBox(mouseX, mouseY);
+				if (mouseInCameraIcon) break;
+				mouseInCameraIcon = cameras[j].mouseOnLeftBox(mouseX, mouseY);
+				if (mouseInCameraIcon) break;
+				mouseInCameraIcon = cameras[j].mouseOnRightBox(mouseX, mouseY);
+				if (mouseInCameraIcon) break;
+			}
+		}
+	
+		//If a camera was found
+		if (mouseInCameraIcon) {
+			//If we previously had a gameobject selected, deselect it
+			if (selected instanceof GameObject) {
+				gGuiBase.SceneSupport.gCurrentScene.setSelectObject(null);
+				gGuiBase.SceneSupport.gCurrentScene.setRotationObject(null);
+			}
+			
+			if (selected instanceof CameraObject) {
+				selected.toggleDrawBorder(false);
+			}
+
+			gGuiBase.Core.selectDetailsCamera(cameras[j].cameraRef.mName);
+			selected = cameras[j];
+			
+			cameras[j].toggleDrawBorder(true);
+		
+		//If a gameobject was found
+		} else if (mouseInXform) {
+		
+			if (selected instanceof CameraObject) {
+				selected.toggleDrawBorder(false);
+			}
+			
+			gGuiBase.Core.selectInstanceDetails(instances[i].mID);
+			selected = instances[i];
+			
+			var selectObject = gGuiBase.SceneSupport.gCurrentScene.getSelectObject();
+			var xform = gGuiBase.Core.selectedGameObject.getXform();
+			selectObject = new SelectionObject(xform.getXPos(), xform.getYPos(), xform.getWidth(), xform.getHeight());
+			
+			gGuiBase.SceneSupport.gCurrentScene.setSelectObject(selectObject);
+			
+			var rotationObject = gGuiBase.SceneSupport.gCurrentScene.getRotationObject();
+			rotationObject = new RotationObject(xform.getXPos(), xform.getYPos(), xform.getWidth(), xform.getHeight(), xform.getRotationInRad());
+			
+			gGuiBase.SceneSupport.gCurrentScene.setRotationObject(rotationObject);
+		
+		//If nothing was found, clear
+		} else { //Clicked on empty
+			if (selected instanceof CameraObject) {
+				selected.toggleDrawBorder(false);
+			}
+			gGuiBase.Core.selectedGameObject = null;
+			gGuiBase.Core.selectedCamera = null;
+			selected = null;
+			gGuiBase.Core.emptyDetailsTab();
+		}
+	}
+	
+	var refreshGameObjectTransform = function() {
+		var detailsTab = gGuiBase.View.findTabByID("#Details");
+		var detailsTransform = detailsTab.getContentObject("#TransformContent");
+		detailsTransform.updateFields(gGuiBase.Core.selectedGameObject);
+		detailsTab.refreshSpecificContent("#TransformContent");
+	};
+	
+	var refreshCameraTransform = function() {
+		var detailsTab = gGuiBase.View.findTabByID("#Details");
+		var detailsTransform = detailsTab.getContentObject("#CameraTransformContent");
+		detailsTransform.updateFields(selected.cameraRef);
+		detailsTab.refreshSpecificContent("#CameraTransformContent");
+	}
+	
 	
 	//Checks if the mouse position is within the object transform
 	var mousePosInTransform = function(xform, mouseX, mouseY) {
@@ -379,19 +408,15 @@ gGuiBase.DirectManipulationSupport = (function() {
 		botLeft = rotatePoint(x, y, -r, botLeft);
 		botRight = rotatePoint(x, y, -r, botRight);
 
-		/*if ((mouseX > (transform.getXPos() - transform.getWidth()/2)) && (mouseX < (transform.getXPos() + transform.getWidth()/2)) &&
-			(mouseY > (transform.getYPos() - transform.getHeight()/2)) && (mouseY < (transform.getYPos() + transform.getHeight()/2))) {
-			return true;
-		}*/
 		if ((mousePos[0] > topLeft[0]) && (mousePos[0] < topRight[0]) &&
 			(mousePos[1] > botLeft[1]) && (mousePos[1] < topLeft[1])) {
 			return true;
 		}
-		
-		
+
 		return false;
 	};
 	
+	//Checks if the mouse is within the rotation square of the currently selected object
 	var mousePosOnRotationSquare = function(transform, mouseX, mouseY) {
 		var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
 		var camW = camera.getWCWidth();
@@ -424,8 +449,6 @@ gGuiBase.DirectManipulationSupport = (function() {
 	};
 	
 	var mouseInBound = function (mouseX, mouseY, x, y, width) {
-		
-		
 		if ((mouseX > (x - width / 2)) && (mouseX < (x + width / 2)) &&
 			(mouseY < (y + width / 2)) && (mouseY > (y - width / 2))) {
 			return true;
@@ -451,22 +474,12 @@ gGuiBase.DirectManipulationSupport = (function() {
 	
 	var setPreventInteraction = function(prevent) {
 		preventInteraction = prevent;
-		objectSelected = false;
-		cameraSelected = false;
-		draggingCorner = false;
-		draggingRotate = false;
-		draggingCamera = false;
-		draggingCameraEdge = false;
-		draggingLeftCamera = false;
-		draggingRightCamera = false;
-		draggingTopCamera = false;
-		draggingBotCamera = false;
 	};
 	
     var mPublic = {
        mouseInBound: mouseInBound,
 	   rotatePoint: rotatePoint,
-	   currentCameraObject: currentCameraObject,
+	   //currentCameraObject: currentCameraObject,
 	   setPreventInteraction: setPreventInteraction
     };
     return mPublic;

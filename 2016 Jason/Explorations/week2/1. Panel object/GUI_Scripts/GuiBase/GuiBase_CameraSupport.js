@@ -178,6 +178,7 @@ gGuiBase.CameraSupport = (function() {
 
 		var cameraObject = new CameraObject(cam);
 		gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
+		console.log(cameraObject);
 		gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
 
 		mCamera[cam.mName] = cam;

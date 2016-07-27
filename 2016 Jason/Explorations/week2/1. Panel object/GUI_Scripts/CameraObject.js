@@ -77,15 +77,16 @@ CameraObject.prototype.toggleDrawBorder = function(drawBorder) {
 
 CameraObject.prototype.draw = function(aCamera) {
 	if (this.drawSelection) {
-		this.mTopLine.draw(aCamera);
-		this.mBotLine.draw(aCamera);
-		this.mLeftLine.draw(aCamera);
-		this.mRightLine.draw(aCamera);
 		this.mTopBox.draw(aCamera);
 		this.mBotBox.draw(aCamera);
 		this.mRightBox.draw(aCamera);
 		this.mLeftBox.draw(aCamera);
 	}
+	
+	this.mTopLine.draw(aCamera);
+	this.mBotLine.draw(aCamera);
+	this.mLeftLine.draw(aCamera);
+	this.mRightLine.draw(aCamera);
 	
 	if (this.cameraIcon !== null) {
 		this.cameraIcon.draw(aCamera);
