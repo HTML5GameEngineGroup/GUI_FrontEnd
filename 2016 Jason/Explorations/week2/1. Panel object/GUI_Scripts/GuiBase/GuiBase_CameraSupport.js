@@ -3,9 +3,6 @@ var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been
 
 gGuiBase.CameraSupport = (function() {
 	var mSelectedCamera = null;
-	var cameraID = 1;
-	var mCam = {};
-	var mCamCode = {};
 
 	var getCameraByName = function(name) {
 		var result = null;
@@ -91,7 +88,6 @@ gGuiBase.CameraSupport = (function() {
 		var nameArray = [];
 		var i;
 		for (i = 0; i < cameraList.length; i++) {
-			//console.log(cameraList[i].mName);
 			nameArray.push(cameraList[i].mName);
 		}
 		return nameArray;
@@ -173,17 +169,13 @@ gGuiBase.CameraSupport = (function() {
 		var cam;
 		eval('cam = new ' + name + '(wcCenter, wcWidth, viewportArray, bound);');
 
-		console.log(cam);
 		cam.mID = "cameraListItem" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID; // This is still unique despite the check (doesn't need to be updated to the next cam id)
 		cam.mName = name;
 		cam.setBackgroundColor([0.8, 0.8, 0.8, 1.0]);
-		console.log(cam);
 
-			var cameraObject = new CameraObject(cam);
+		var cameraObject = new CameraObject(cam);
 		gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
 		gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
-		// mCam[cam.mName] = cam;               // add to map
-		// mCamCode[cam.mName] = code;            // add code to code map
 		return cam;
 	};
 
