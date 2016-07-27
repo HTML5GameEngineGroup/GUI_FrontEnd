@@ -102,7 +102,6 @@ gGuiBase.EditorSupport = (function() {
             var result = editor.getValue();
 
             // First set the code for the object only (so it's saved and the user can come back to it)
-            // todo If else different functionality if its an object or a camera
             if (isGameObject) {
                 gGuiBase.ObjectSupport.setGameObjectCodeByID(selectedName, result);
 
@@ -188,8 +187,6 @@ gGuiBase.EditorSupport = (function() {
                                 eval("newInstance = new " + name + "(center, width, viewport, bound);");
                                 newInstance.mID = instances[i].mID;
                                 newInstance.mName = instances[i].mName;
-                                // newInstance.setWCCenter(center);
-                                // newInstance.setWidth(width);
                                 newInstance.setBackgroundColor(bgColor);
                                 instances[i] = newInstance;
                             }

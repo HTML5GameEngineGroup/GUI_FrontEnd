@@ -87,6 +87,7 @@ ClientScene.prototype.initialize = function() {
     Scene.prototype.initialize.call(this);
 
     // Add this camera
+    //todo this first camera must be made by camerasupport in order to support editing
     var cam = new Camera(
         vec2.fromValues(20,60),   // position of the camera
         50,                        // width of camera

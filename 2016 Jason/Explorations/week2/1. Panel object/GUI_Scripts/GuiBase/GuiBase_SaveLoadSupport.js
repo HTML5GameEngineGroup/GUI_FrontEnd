@@ -60,7 +60,6 @@ gGuiBase.SaveLoadSupport = (function() {
 		// https://stuk.github.io/jszip/documentation/api_jszip.html
 		// Also, here is the FileReader API:
 		// https://developer.mozilla.org/en-US/docs/Web/API/FileReader
-		//todo Must load textures prior to loading any objects!
 		var input;
 		if (backup) {
 			input = gGuiBase.Core.gBackup;
@@ -182,7 +181,6 @@ gGuiBase.SaveLoadSupport = (function() {
 			objectData[6] = xf.getHeight();
 			objectData[7] = xf.getRotationInDegree();
 			objectData[8] = obj.getRenderable().getColor();
-				// TODO: Do it for texture
 			objects.file(obj.mName + ".json", JSON.stringify(objectData));
 		}
 		
@@ -245,7 +243,6 @@ gGuiBase.SaveLoadSupport = (function() {
 					instanceData[5 + (j * 8)] = xf.getHeight();
 					instanceData[6 + (j * 8)] = xf.getRotationInDegree();
 					instanceData[7 + (j * 8)] = inst.getRenderable().getColor();
-					// TODO: Do it for texture
 				} else {
 					// Blank placeholders
 					instanceData[2 + (j * 8)] = 0;
@@ -254,7 +251,6 @@ gGuiBase.SaveLoadSupport = (function() {
 					instanceData[5 + (j * 8)] = 0;
 					instanceData[6 + (j * 8)] = 0;
 					instanceData[7 + (j * 8)] = 0;
-					// TODO: Needs one more placeholder if texture is added above
 				}
 			}
 			sceneFolder.file("instances.json", JSON.stringify(instanceData));
@@ -273,7 +269,6 @@ gGuiBase.SaveLoadSupport = (function() {
 			textureData[1] = textureImage.naturalWidth;
 			textureData[2] = textureImage.naturalHeight;
 			textureData[3] = textureImage.src;
-				// TODO: Do it for texture
 			textures.file(textureInfo.mName + ".json", JSON.stringify(textureData));
 		}
 		
@@ -366,7 +361,6 @@ gGuiBase.SaveLoadSupport = (function() {
 				if (texture == "None") {
 					eval("obj = new " + className + "(new Renderable());");
 				} else {
-					//!todo check <- may need to load the texture into the scene first
 	
 					//gGuiBase.TextureSupport.addTexture(texture);
 					eval('obj = new ' + className + '(new TextureRenderable("' + texture + '"));');
