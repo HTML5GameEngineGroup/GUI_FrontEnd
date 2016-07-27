@@ -72,7 +72,6 @@ function Camera(wcCenter, wcWidth, viewportArray, bound) {
 	
 	
     //gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(this);
-
 }
 
 /**
