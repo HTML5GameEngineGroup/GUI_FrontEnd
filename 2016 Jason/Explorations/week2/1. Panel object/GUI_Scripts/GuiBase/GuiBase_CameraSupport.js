@@ -112,36 +112,11 @@ gGuiBase.CameraSupport = (function() {
 
 	var getDefaultCodeCam = function( name ) {
 		return 'window["' + name + '"] = function(wcCenter, wcWidth, viewportArray) {\n' +
-		'	this.mCameraState = new CameraState(wcCenter, wcWidth);\n' +
-		'	this.mCameraShake = null;\n' +
-		'	this.mViewport = [];\n' +
-		'	this.mViewportBound = 0;\n' +
-		'	if (bound !== undefined) {\n' +
-		'		this.mViewportBound = bound;\n' +
-		'	}\n' +
-		'	this.mScissorBound = [];\n' +
-		'	this.setViewport(viewportArray, this.mViewportBound);\n' +
-		'	this.mNearPlane = 0;\n' +
-		'	this.mFarPlane = 1000;\n' +
-		'	this.kCameraZ = 10;\n' +
-		'	this.mViewMatrix = mat4.create();\n' +
-		'	this.mProjMatrix = mat4.create();\n' +
-		'	this.mVPMatrix = mat4.create();\n' +
-		'	this.mBgColor = [0.8, 0.8, 0.8, 1];\n' +
-		'	this.mRenderCache = new PerRenderCache();\n' +
-		'	this.mEnable=true;\n' +
+		'	Camera.call(this, wcCenter, wcWidth, viewportArray)' +
 		'};\n' +
 		'gEngine.View.inheritPrototype(window["' + name + '"], window["Camera"]);\n\n' +
 		name + '.prototype.update = function () {\n' +
-		'if (this.mCameraShake !== null) {\n' +
-		'	if (this.mCameraShake.shakeDone()) {\n' +
-		'		this.mCameraShake = null;\n' +
-		'	} else {\n' +
-		'		this.mCameraShake.setRefCenter(this.getWCCenter());\n' +
-		'		this.mCameraShake.updateShakeState();\n' +
-		'	}\n' +
-		'}\n' +
-		'	this.mCameraState.updateCameraState();\n' +
+		'	Camera.prototype.update.call(this);\n' +
 		'};\n';
 	};
 

@@ -177,7 +177,6 @@ gGuiBase.SaveLoadSupport = (function() {
 			} else {
 				objectData[2] = "None";
 			}
-			console.log("indata:",objectData[2]);
 			objectData[3] = xf.getXPos();
 			objectData[4] = xf.getYPos();
 			objectData[5] = xf.getWidth();
@@ -209,7 +208,6 @@ gGuiBase.SaveLoadSupport = (function() {
 			var cameraData = {};
 			
 			var sceneViewCamera = scene.getSceneCamera();
-			console.log(sceneViewCamera);
 			cameraData[0] = sceneViewCamera.mName;
 			cameraData[1] = sceneViewCamera.mID;
 			cameraData[2] = sceneViewCamera.getWCCenter();  // [x, y]
@@ -226,8 +224,6 @@ gGuiBase.SaveLoadSupport = (function() {
 				cameraData[4 + ((j+1) * 7)] = cam.getViewport();  // [x, y, w, h]
 				cameraData[5 + ((j+1) * 7)] = cam.getBackgroundColor();
 				cameraData[6 + ((j+1) * 7)] = gGuiBase.CameraSupport.getCameraCodeByName(cam.mName);
-				console.log("saving camera code here");
-				console.log(cameraData[6 + ((j+1) * 7)]);
 			}
 
 			sceneFolder.file("cameras.json", JSON.stringify(cameraData));
@@ -369,7 +365,6 @@ gGuiBase.SaveLoadSupport = (function() {
 	
 					//gGuiBase.TextureSupport.addTexture(texture);
 					eval('obj = new ' + className + '(new TextureRenderable("' + texture + '"));');
-					console.log("Hello");
 				}
 				//var entry = [obj, data[1], data[2]];
 				
@@ -433,7 +428,6 @@ gGuiBase.SaveLoadSupport = (function() {
 						gGuiBase.SceneSupport.gCurrentScene.mAllCamera = [];
 						gGuiBase.SceneSupport.gCurrentScene.cameraObjects = [];
 
-						console.log(data);
 						while (typeof(data[i]) !== "undefined") {
 							if (data[i+1] === "SceneViewCamera") {
 								var name = data[i];
@@ -447,36 +441,31 @@ gGuiBase.SaveLoadSupport = (function() {
 								cam.mID = data[i + 1];
 								gGuiBase.SceneSupport.gCurrentScene.setSceneCamera(cam);
 							} else {
-								console.log('adding camera here');
-								console.log(data[i]);
 								var name = data[i];
 								var wcCenter = vec2.fromValues(data[i + 2][0], data[i + 2][1]);
 								var wcWidth = data[i + 3];
 								var viewportArray = data[i + 4];
 								var bound = undefined;
+								// add to window
 								window[name] = function(wcCenter, wcWidth, viewportArray, bound) {
 									Camera.call(this, wcCenter, wcWidth, viewportArray, bound);
 								};
 								gEngine.View.inheritPrototype(window[name], window["Camera"]);
 								var code = data[i + 6];
-								console.log(code);
+								// set to window to code
 								eval(code);
+								// create cam
 								var cam;
 								eval('cam = new ' + name + '(wcCenter, wcWidth, viewportArray, bound);');
-								console.log(cam);
-
 								cam.setBackgroundColor(data[i + 5]);
 								cam.mName = name;
 								cam.mID = data[i + 1];
-								// console.log(data[i + 6]);
-						
+
 								var cameraObject = new CameraObject(cam);
-								console.log('adding camera to data structures here');
 								gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
 								gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
 								gGuiBase.CameraSupport.setCameraCodeByName(name, code);
 								gGuiBase.CameraSupport.setCameraByName(name, cam);
-								console.log(cam);
 							}
 							i += 7;
 						}
