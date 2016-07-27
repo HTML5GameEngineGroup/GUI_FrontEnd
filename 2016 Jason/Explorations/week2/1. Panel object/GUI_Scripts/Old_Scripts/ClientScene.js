@@ -171,11 +171,7 @@ ClientScene.prototype.update = function() {
                 }
             }
         }
-    } else {
-		/*for (i = 0; i < this.mAllCamera.length; i++) {
-			Camera.prototype.update.call(this.mAllCamera[i]);
-        }*/
-	}
+    }
 	
 	if (this.selectObject !== null && gGuiBase.Core.selectedGameObject !== null) {
 		this.selectObject.update()
