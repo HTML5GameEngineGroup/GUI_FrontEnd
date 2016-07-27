@@ -112,7 +112,7 @@ gGuiBase.CameraSupport = (function() {
 
 	var getDefaultCodeCam = function( name ) {
 		return 'window["' + name + '"] = function(wcCenter, wcWidth, viewportArray) {\n' +
-		'	Camera.call(this, wcCenter, wcWidth, viewportArray)' +
+		'	Camera.call(this, wcCenter, wcWidth, viewportArray)\n' +
 		'};\n' +
 		'gEngine.View.inheritPrototype(window["' + name + '"], window["Camera"]);\n\n' +
 		name + '.prototype.update = function () {\n' +
