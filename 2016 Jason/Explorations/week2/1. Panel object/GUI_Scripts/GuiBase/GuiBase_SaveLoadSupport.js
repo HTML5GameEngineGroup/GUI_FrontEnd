@@ -441,6 +441,8 @@ gGuiBase.SaveLoadSupport = (function() {
 									data[i + 4]                                         // viewport (orgX, orgY, width, height));
 								);
 								cam.setBackgroundColor(data[i + 5]);
+								cam.mName = name;
+								cam.mID = data[i + 1];
 								console.log(cam);
 								gGuiBase.SceneSupport.gCurrentScene.setSceneCamera(cam);
 							} else {
