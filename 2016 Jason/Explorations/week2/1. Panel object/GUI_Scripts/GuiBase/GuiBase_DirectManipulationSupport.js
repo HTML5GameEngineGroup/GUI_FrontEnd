@@ -190,8 +190,9 @@ gGuiBase.DirectManipulationSupport = (function() {
 		selected.cameraRef.configInterpolation(1, 0.01);
 		selected.cameraRef.setWCCenter(mouseX, mouseY);
 		refreshCameraTransform();
-		selected.cameraRef.configInterpolation(currentInterpolation[0], currentInterpolation[1]);
 		Camera.prototype.update.call(selected.cameraRef);
+		selected.cameraRef.configInterpolation(currentInterpolation[0], currentInterpolation[1]);
+		
 	};
 	
 	//Handle object corner drag state (resizing)
@@ -249,8 +250,9 @@ gGuiBase.DirectManipulationSupport = (function() {
 		selected.cameraRef.configInterpolation(1, 0.01);
 		selected.cameraRef.setWCWidth(width);
 		refreshCameraTransform();
-		selected.cameraRef.configInterpolation(currentInterpolation[0], currentInterpolation[1]);
 		Camera.prototype.update.call(selected.cameraRef);
+		selected.cameraRef.configInterpolation(currentInterpolation[0], currentInterpolation[1]);
+		
 	};
 	
 	//Handle object rotate
