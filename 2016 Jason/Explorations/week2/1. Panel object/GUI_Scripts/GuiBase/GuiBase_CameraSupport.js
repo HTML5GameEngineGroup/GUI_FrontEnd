@@ -5,44 +5,6 @@ gGuiBase.CameraSupport = (function() {
 	var mSelectedCamera = null;
 	var mCamera = {};
 	var mCameraCode = {};
-
-	var getCameraByName = function(name) {
-		var result = null;
-		var cameraList = getCameraList();
-		var i;
-		for (i = 0; i < cameraList.length; i++) {
-			if (cameraList[i].mName === name) {
-				result = cameraList[i];
-				i = cameraList.length; // Break
-			}
-		}
-		return result;
-	};
-	
-	// var createDefaultCamera = function() {
-	// 	var cam = new Camera(
-	// 		vec2.fromValues(20,60), // position of the camera
-	// 		50,                     // width of camera
-	// 		[0,0,640,480]           // viewport (orgX, orgY, width, height)
-	// 		);
-	// 	cam.setBackgroundColor([0.8, 0.8, 0.8, 1.0]);
-	// 	var name = "Camera" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID;
-    //
-	// 	while (checkForNameConflict(name)) {
-	// 		gGuiBase.SceneSupport.gCurrentScene.mNextCameraID++;
-	// 		name = "Camera" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID;
-	// 	}
-	// 	cam.mName = name;
-	// 	cam.mID = "cameraListItem" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID; // This is still unique despite the check (doesn't need to be updated to the next cam id)
-	// 	gGuiBase.SceneSupport.gCurrentScene.mNextCameraID++;
-	//
-	//
-	// 	//console.log(gEngine.DefaultResources.getConstColorShader())
-	// 	var cameraObject = new CameraObject(cam);
-	// 	gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
-	// 	gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
-	// 	return cam;
-	// };
 	
 	var deleteCamera = function(cameraName) {
 		
@@ -56,6 +18,10 @@ gGuiBase.CameraSupport = (function() {
 		
 		var index = getCameraIndex(cameraName);
 		list.splice(index, 1);
+
+		delete mCamera[cameraName];
+		delete mCameraCode[cameraName];
+		delete window[cameraName];
 		
 		gGuiBase.Core.reinitializeCameraTab();
 		gGuiBase.View.refreshAllTabContent();
@@ -153,7 +119,6 @@ gGuiBase.CameraSupport = (function() {
 
 		var cameraObject = new CameraObject(cam);
 		gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
-		console.log(cameraObject);
 		gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
 
 		mCamera[cam.mName] = cam;
@@ -166,19 +131,16 @@ gGuiBase.CameraSupport = (function() {
 	};
 
 	var getCameraCodeByName = function ( className ) {
-		console.log('getCode: ', mCameraCode[className]);
 		return mCameraCode[className];
 	};
 
 	// code is a string representation of the class
 	// class name is the mName of the camera
 	var setCameraCodeByName = function ( className, code ) {
-		console.log("set camera code:", className, ", ", code);
 		mCameraCode[className] = code;
 	};
 
 	var setCameraByName = function (className, cam) {
-		console.log('set camera', className, cam);
 		mCamera[className] = cam;
 	};
 
@@ -188,7 +150,7 @@ gGuiBase.CameraSupport = (function() {
 		checkForNameConflict: checkForNameConflict,
 		// createDefaultCamera: createDefaultCamera,
 		getCameraListNames: getCameraListNames,
-		getCameraByName: getCameraByName,
+		// getCameraByName: getCameraByName,
 		deleteCamera: deleteCamera,
 		clearCameras: clearCameras,
 

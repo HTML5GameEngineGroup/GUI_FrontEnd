@@ -43,19 +43,6 @@ gGuiBase.SaveLoadSupport = (function() {
 		}
 		
 		gGuiBase.DirectManipulationSupport.resetInteraction();
-
-		// TESTING INPUT FROM FILE
-		// $('input[type=file]').change(function () {
-		// 	var filePath=$('#fileUpload').val();
-		// 	console.log(filePath);
-		// 	console.log(document.getElementById("fileUpload").files[0]);
-		// });
-
-		//TESTING TEXTURE SWAP
-		// var texName = 'assets/wall.png';
-		// gGuiBase.TextureSupport.addTexture(texName);
-		// var gameObjectName = gGuiBase.ObjectSupport.createDefaultObject();
-		// gGuiBase.TextureSupport.addTextureToGameObject(gameObjectName, texName);
 	});
 		
 	var fileOpen = function(backup) {
