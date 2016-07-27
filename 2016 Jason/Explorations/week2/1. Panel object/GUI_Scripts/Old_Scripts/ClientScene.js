@@ -27,8 +27,6 @@ function ClientScene(number) {
 	this.rotationObject = null;
 	this.sceneViewCamera = null;
 	this.cameraObjects = [];
-	this.cameraTexture = null;
-
 }
 gEngine.View.inheritPrototype(ClientScene, Scene);
 
@@ -86,18 +84,7 @@ ClientScene.prototype.initialize = function() {
     
     Scene.prototype.initialize.call(this);
 
-    // Add this camera
-    //todo this first camera must be made by camerasupport in order to support editing
-    // var cam = new Camera(
-    //     vec2.fromValues(20,60),   // position of the camera
-    //     50,                        // width of camera
-    //     [0,0,640,480]        // viewport (orgX, orgY, width, height)
-    //     );
-    // cam.setBackgroundColor([0.8,0.8,0.8,1]);
-    // cam.mName = "Camera0";  // Cameras don't have a mName, but we can just add it in like this
-    // cam.mID = "cameraListItem0";
-
-	
+    // Add scene view camera for editing
 	this.sceneViewCamera = new Camera(
 			vec2.fromValues(20,60), // position of the camera
 			50,                     // width of camera
@@ -109,9 +96,6 @@ ClientScene.prototype.initialize = function() {
 
     // scene view camera must be created prior to creating a camera object!
     var cam = gGuiBase.CameraSupport.createDefaultCamera();
-    // var cameraObject = new CameraObject(cam);
-	// this.cameraObjects.push(cameraObject);
-	// gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
 	
     this.isInitialized = true;
     // Update view with new cameras and scenef
