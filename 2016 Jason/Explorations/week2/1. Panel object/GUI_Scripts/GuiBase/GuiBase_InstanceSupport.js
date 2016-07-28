@@ -18,8 +18,12 @@ gGuiBase.InstanceSupport = (function() {
         var inst = gGuiBase.ObjectSupport.cloneGO( GO );
 		inst.mName = objName;
         inst.mID = this.getUniqueID( objName );
-
+		
+		//Order in layer management
+		inst.mOrderInLayer = mNextInstID;
+		
 		gGuiBase.SceneSupport.gCurrentScene.addInstance(inst);
+		gGuiBase.SceneSupport.gCurrentScene.sortInstanceListByOrder();
         // track new instance by id
         mInst[inst.mID] = inst;
         return inst.mID;

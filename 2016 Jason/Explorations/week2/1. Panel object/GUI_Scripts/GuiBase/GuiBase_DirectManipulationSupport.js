@@ -68,7 +68,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 			//Set state based on where the user has pressed
 			if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left) && state === InteractionState.NONE) {
 				//Gameobject is selected, so check for interactions
-				if (selected !== null && selected instanceof GameObject) {
+				if (gGuiBase.Core.selectedGameObject !== null && selected !== null && selected instanceof GameObject) {
 					var xform = gGuiBase.Core.selectedGameObject.getXform();
 					var selectObject = gGuiBase.SceneSupport.gCurrentScene.getSelectObject();
 					if (mousePosOnRotationSquare(xform, mouseX, mouseY)) {

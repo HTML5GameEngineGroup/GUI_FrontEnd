@@ -246,6 +246,16 @@ ClientScene.prototype.getInstanceNameList = function() {
     return instanceNames;
 };
 
+ClientScene.prototype.sortInstanceListByOrder = function() {
+	this.mInstanceList.sort(function(a, b) {
+		if (a.mOrderInLayer < b.mOrderInLayer) 
+			return -1;
+		if (a.mOrderInLayer > b.mOrderInLayer) 
+			return 1;
+		return 0;
+	});
+};
+
 ClientScene.prototype.getSelectObject = function() {
 	return this.selectObject;
 };

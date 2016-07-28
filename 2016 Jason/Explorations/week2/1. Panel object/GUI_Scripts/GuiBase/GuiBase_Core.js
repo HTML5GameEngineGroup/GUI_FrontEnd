@@ -155,14 +155,16 @@ gGuiBase.Core = (function() {
 		detailsTab.clearContent();
 		var detailsTransform = new TransformContent("TransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
 		var detailsColorTexture = new ColorTextureContent("ColorTextureContent", gGuiBase.View.CONTENT_STYLE, "Texture");
-
+		
 		var inst = gGuiBase.InstanceSupport.getInstanceByID( instanceID );				// get instance
 		
 		gGuiBase.Core.selectedGameObject = inst;										// set to selected so it can update from panel
 		detailsTransform.updateFields( inst );											// give details instance data
-
+		var detailsOrder = new OrderInLayerContent("OrderInLayerContent", gGuiBase.View.CONTENT_STYLE, "Order in layer");
+		
 		detailsTab.addContent(detailsTransform);
 		detailsTab.addContent(detailsColorTexture);
+		detailsTab.addContent(detailsOrder);
 
 		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
 		gGuiBase.View.findTabContentByID('#ColorTextureContent').setDropdownToSelectedGO();
