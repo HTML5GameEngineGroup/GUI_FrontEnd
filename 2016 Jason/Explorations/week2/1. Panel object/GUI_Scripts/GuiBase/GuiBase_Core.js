@@ -104,6 +104,7 @@ gGuiBase.Core = (function() {
 		detailsTab.addContent(detailsTransform);
 		detailsTab.addContent(detailsColor);
 		gGuiBase.View.refreshAllTabContent();
+		detailsTransform.setLayerDropDown(gGuiBase.Core.selectedCamera);
 	};
 	
 	// To be called on scene change
@@ -178,7 +179,7 @@ gGuiBase.Core = (function() {
 			return this.toString();
 		}
 		return this.split(search).join(replace);
-	}
+	};
 	
     var inheritPrototype = function (subClass, superClass) {
         var prototype = Object.create(superClass.prototype);

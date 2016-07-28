@@ -54,7 +54,7 @@ CameraTransformContent.prototype.initialize = function () {
 
 	this.viewportWHText = new Text("viewportWHText", textStyle, "W / H");
 
-	this.layerLabel = new Text("layerLabel", textStyle, "Layer")
+	this.layerLabel = new Text("layerLabel", textStyle, "Layer");
 	this.layerDropDown = new DropdownList("layerDropDown", GuiContentWidget.NO_STYLE, this.layerOptions);
 	
 	this.widgetList.push(this.objectNameText);
@@ -164,4 +164,12 @@ CameraTransformContent.prototype.onLayerSelect = function (layer) {
 	console.log('calling setcameralayer on', cam.mName, ' and layer = ', layer);
 	gGuiBase.SceneSupport.gCurrentScene.setCameraLayer(cam, layer)
 	console.log(gGuiBase.CameraSupport.getCameraList());
+};
+
+CameraTransformContent.prototype.setLayerDropDown = function ( cam ) {
+	var cam = gGuiBase.Core.selectedCamera;
+	console.log('selectedCam is set to:', cam);
+	if (cam) {
+		$('#layerDropDown').val(cam.mLayer);
+	}
 };

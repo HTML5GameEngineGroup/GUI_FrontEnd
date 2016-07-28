@@ -115,7 +115,6 @@ ClientScene.prototype.initialize = function() {
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
 ClientScene.prototype.draw = function() {
-	console.log("draw start");
 	gEngine.View.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
 	 
 	if (!gGuiBase.Core.gRunning) {
@@ -146,7 +145,6 @@ ClientScene.prototype.draw = function() {
                 var cameraIndex;
                 for (cameraIndex = 0; cameraIndex < this.mAllCamera[layerIndex].length; cameraIndex++) {
                     var cam = this.mAllCamera[layerIndex][cameraIndex];
-                    console.log('layer: ', layerIndex);
                     cam.setupViewProjection();
                     var instIndex;
                     for (instIndex = 0; instIndex < this.mInstanceList.length; instIndex++) {
@@ -168,7 +166,6 @@ ClientScene.prototype.draw = function() {
 		// 	}
 		// }
 	}
-    console.log("draw end");
 	//Selection should not be shown if there is no selection object, if the camera does not exist,
 	// if there is no selected gameobject, and if the selected gameobject is an instance
 	
@@ -178,7 +175,6 @@ ClientScene.prototype.draw = function() {
 // anything from this function!
 ClientScene.prototype.update = function() {
     var i;
-    console.log("update start");
     if (gGuiBase.Core.gRunning) {
         // for (i = 0; i < this.mAllCamera.length; i++) {
         //     this.mAllCamera[i].update();
@@ -186,11 +182,9 @@ ClientScene.prototype.update = function() {
         var layerIndex;
         for (layerIndex = this.MIN_CAMERA_LAYER; layerIndex <= this.MAX_CAMERA_LAYER; layerIndex++) {
             if(this.mAllCamera[layerIndex]) {
-                console.log('UPDATING CAMERAS');
                 var cameraIndex;
                 for (cameraIndex = 0; cameraIndex < this.mAllCamera[layerIndex].length; cameraIndex++) {
                     var cam = this.mAllCamera[layerIndex][cameraIndex];
-                    console.log(cam);
                     cam.update();
                 }
             }
@@ -219,7 +213,6 @@ ClientScene.prototype.update = function() {
         this.cameraObjects[i].update();
     }
     this.sceneViewCamera.update();
-    console.log("update end");
 };
 
 ClientScene.prototype.addInstance = function(inst) {
@@ -237,12 +230,9 @@ ClientScene.prototype.addCamera = function(cam) {
 };
 
 ClientScene.prototype.removeCamera = function (cameraName) {
-    console.log('removing this camera:', cameraName);
     var cam = gGuiBase.CameraSupport.getCameraByName(cameraName);
     var cameraList = this.mAllCamera[cam.mLayer];
     for (var i = 0; i < cameraList.length; i++) {
-        console.log('cam mname: ', cam.mName);
-        console.log('cameraname: ', cameraName);
         if (cameraList[i].mName == cameraName) {
             this.mAllCamera[cam.mLayer].splice(i, 1);
             return true;
@@ -262,7 +252,6 @@ ClientScene.prototype.getCameraList = function() {
     var camList = [];
     var layerIndex;
     for (layerIndex = this.MIN_CAMERA_LAYER; layerIndex < this.MAX_CAMERA_LAYER; layerIndex++) {
-        console.log(layerIndex, this.mAllCamera[layerIndex]);
         if(this.mAllCamera[layerIndex]) {
             var cameraIndex;
             for (cameraIndex = 0; cameraIndex < this.mAllCamera[layerIndex].length; cameraIndex++) {
