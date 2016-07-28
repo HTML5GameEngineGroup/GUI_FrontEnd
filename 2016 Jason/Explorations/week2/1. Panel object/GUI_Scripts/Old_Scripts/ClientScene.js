@@ -23,11 +23,7 @@ function ClientScene(number) {
     this.MIN_CAMERA_LAYER = 0;
     this.mAllCamera = [];
     // for (var i = this.MIN_CAMERA_LAYER; i <= this.MAX_CAMERA_LAYER; i++) {
-    //     this.mAllCamera[i] = new Array(1);
-    // }
-    // var i;
-    // for (i = this.MIN_CAMERA_LAYER; i <= this.MAX_CAMERA_LAYER; i++) {
-    //     this.mAllCamera[i] = [];
+    //     this.mAllCamera.push([]);
     // }
     this.mInstanceList = [];
     this.mAllUpdateSet = new GameObjectSet();
@@ -138,12 +134,9 @@ ClientScene.prototype.draw = function() {
 		}
 		
 	} else {
-		
-		var layerIndex;
-        for (layerIndex = this.MAX_CAMERA_LAYER; layerIndex >= this.MIN_CAMERA_LAYER; layerIndex--) {
+        for (var layerIndex = this.MAX_CAMERA_LAYER; layerIndex >= this.MIN_CAMERA_LAYER; layerIndex--) {
             if (this.mAllCamera[layerIndex]) {
-                var cameraIndex;
-                for (cameraIndex = 0; cameraIndex < this.mAllCamera[layerIndex].length; cameraIndex++) {
+                for (var cameraIndex = 0; cameraIndex < this.mAllCamera[layerIndex].length; cameraIndex++) {
                     var cam = this.mAllCamera[layerIndex][cameraIndex];
                     cam.setupViewProjection();
                     var instIndex;
@@ -250,11 +243,9 @@ ClientScene.prototype.setCameraLayer = function ( camera, layer ) {
 ClientScene.prototype.getCameraList = function() {
     // return this.mAllCamera;
     var camList = [];
-    var layerIndex;
-    for (layerIndex = this.MIN_CAMERA_LAYER; layerIndex < this.MAX_CAMERA_LAYER; layerIndex++) {
+    for (var layerIndex = this.MIN_CAMERA_LAYER; layerIndex <= this.MAX_CAMERA_LAYER; layerIndex++) {
         if(this.mAllCamera[layerIndex]) {
-            var cameraIndex;
-            for (cameraIndex = 0; cameraIndex < this.mAllCamera[layerIndex].length; cameraIndex++) {
+            for (var cameraIndex = 0; cameraIndex < this.mAllCamera[layerIndex].length; cameraIndex++) {
                 var cam = this.mAllCamera[layerIndex][cameraIndex];
                 camList.push(cam);
             }
@@ -268,8 +259,7 @@ ClientScene.prototype.getCameraObjectList = function() {
 };
 
 ClientScene.prototype.clearCameraObjectList = function() {
-    var layerIndex;
-    for (layerIndex = this.MIN_CAMERA_LAYER; layerIndex < this.MAX_CAMERA_LAYER; layerIndex++) {
+    for (var layerIndex = this.MIN_CAMERA_LAYER; layerIndex <= this.MAX_CAMERA_LAYER; layerIndex++) {
         if (this.mAllCamera[layerIndex]) {
             this.mAllCamera[layerIndex].splice(0, this.mAllCamera[layerIndex].length);
         }
