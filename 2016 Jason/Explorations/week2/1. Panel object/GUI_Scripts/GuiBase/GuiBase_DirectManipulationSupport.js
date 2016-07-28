@@ -187,7 +187,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 	//Handle camera drag state
 	var dragCamera = function() {
 		var currentInterpolation = selected.cameraRef.mCameraState.mCenter.getConfig();
-		selected.cameraRef.configInterpolation(1, 0.01);
+		selected.cameraRef.configInterpolation(1, 1);
 		selected.cameraRef.setWCCenter(mouseX, mouseY);
 		refreshCameraTransform();
 		Camera.prototype.update.call(selected.cameraRef);

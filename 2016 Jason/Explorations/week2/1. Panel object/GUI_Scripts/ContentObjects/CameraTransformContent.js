@@ -17,7 +17,13 @@ function CameraTransformContent(tabContentID, style, title) {
 	this.viewportWHText = null;
 	this.viewportW = null;
 	this.viewportH = null;
-	
+
+	this.layerLabel = null;
+	this.layerDropDown = null;
+	//todo generate this from camerassupport min max
+	this.layerOptions = [0,1,2,3,4,5];
+	this.layerSetting = 0;
+
 	GuiTabContent.call(this, tabContentID, style, title);
 }
 
@@ -45,6 +51,11 @@ CameraTransformContent.prototype.initialize = function () {
 	this.viewportWHText = new Text("viewportWHText", textStyle, "W / H");
 	this.viewportW = new TextField("viewportW", textFieldStyle, "640");
 	this.viewportH = new TextField("viewportH", textFieldStyle, "480");
+
+	this.viewportWHText = new Text("viewportWHText", textStyle, "W / H");
+
+	this.layerLabel = new Text("layerLabel", textStyle, "Layer")
+	this.layerDropDown = new DropdownList("layerDropDown", GuiContentWidget.NO_STYLE, this.layerOptions);
 	
 	this.widgetList.push(this.objectNameText);
 	this.widgetList.push(this.objectName);
@@ -61,7 +72,8 @@ CameraTransformContent.prototype.initialize = function () {
 	this.widgetList.push(this.viewportWHText);
 	this.widgetList.push(this.viewportW);
 	this.widgetList.push(this.viewportH);
-	
+	this.widgetList.push(this.layerLabel);
+	this.widgetList.push(this.layerDropDown);
 };
 
 CameraTransformContent.prototype.initializeEventHandling = function () {
@@ -73,7 +85,7 @@ CameraTransformContent.prototype.initializeEventHandling = function () {
 	this.viewportY.setOnFocusOut(this.onTextFieldFocusOut);
 	this.viewportW.setOnFocusOut(this.onTextFieldFocusOut);
 	this.viewportH.setOnFocusOut(this.onTextFieldFocusOut);
-
+	this.layerDropDown.setOnSelect(this.onLayerSelect);
 };
 
 CameraTransformContent.prototype.onTextFieldFocusOut = function(textField) {
@@ -131,7 +143,6 @@ CameraTransformContent.prototype.onTextFieldFocusOut = function(textField) {
 };
 
 CameraTransformContent.prototype.updateFields = function( camera ) {
-	
 	this.objectName.setText( camera.mName );
 	var wc = camera.getWCCenter();
 	var vp = camera.getViewport();
@@ -144,8 +155,13 @@ CameraTransformContent.prototype.updateFields = function( camera ) {
 	this.viewportY.setText(vp[1]);
 	this.viewportW.setText(vp[2]);
 	this.viewportH.setText(vp[3]);
-
 };
 
-
-
+CameraTransformContent.prototype.onLayerSelect = function (layer) {
+	layer = Number(layer);
+	var cam = gGuiBase.Core.selectedCamera;
+	console.log('cam = ', cam.mName, 'prev layer = ', cam.mLayer);
+	console.log('calling setcameralayer on', cam.mName, ' and layer = ', layer);
+	gGuiBase.SceneSupport.gCurrentScene.setCameraLayer(cam, layer)
+	console.log(gGuiBase.CameraSupport.getCameraList());
+};

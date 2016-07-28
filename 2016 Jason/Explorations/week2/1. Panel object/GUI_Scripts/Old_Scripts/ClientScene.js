@@ -17,7 +17,18 @@ function ClientScene(number) {
     this.mName = "Scene" + number;
     this.mID = "sceneListItem" + number;
     this.mNextCameraID = 0; // Due to the starting camera being 0
+    // this.mAllCamera = [];
+    // create camera layers
+    this.MAX_CAMERA_LAYER = 5;
+    this.MIN_CAMERA_LAYER = 0;
     this.mAllCamera = [];
+    // for (var i = this.MIN_CAMERA_LAYER; i <= this.MAX_CAMERA_LAYER; i++) {
+    //     this.mAllCamera[i] = new Array(1);
+    // }
+    // var i;
+    // for (i = this.MIN_CAMERA_LAYER; i <= this.MAX_CAMERA_LAYER; i++) {
+    //     this.mAllCamera[i] = [];
+    // }
     this.mInstanceList = [];
     this.mAllUpdateSet = new GameObjectSet();
     this.isInitialized = false;
@@ -41,11 +52,8 @@ ClientScene.prototype.loadScene = function() {
 	// if (!(gEngine.ResourceMap.isAssetLoaded("assets/cameraicon.png")))
 
     for (var texture in gGuiBase.TextureSupport.gAllTextures) {
-        console.log("calling load texture from scene:", texture);
       gEngine.Textures.loadTexture(texture);
-    };
-	
-	
+    }
 };
 
 
@@ -68,7 +76,6 @@ ClientScene.prototype.unloadScene = function() {
     //var nextLevel = new BlueLevel();  // next level to be loaded
     //gEngine.View.startScene(nextLevel);
     for (var texture in this.mAllTextures) {
-        console.log('calling unload from scene', texture);
         gEngine.Textures.unloadTexture(texture);
     };
 	
@@ -78,7 +85,6 @@ ClientScene.prototype.unloadScene = function() {
 ClientScene.prototype.initialize = function() {
     // Do not under any circumstances initialize a scene more than once.  It deletes all the stuff in it.
     if (this.isInitialized) {
-		//console.log('Scene not initialized');
         return;
     }
     
@@ -109,7 +115,7 @@ ClientScene.prototype.initialize = function() {
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
 ClientScene.prototype.draw = function() {
-	
+	console.log("draw start");
 	gEngine.View.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
 	 
 	if (!gGuiBase.Core.gRunning) {
@@ -134,19 +140,35 @@ ClientScene.prototype.draw = function() {
 		
 	} else {
 		
-		var i, j;
-		for (i = 0; i < this.mAllCamera.length; i++) {
-			var cam = this.mAllCamera[i];
-			cam.setupViewProjection();
-			
-			for (j = 0; j < this.mInstanceList.length; j++) {
-				if (this.mInstanceList[j] instanceof GameObject) {
-					this.mInstanceList[j].draw(cam);
-				}
-			}
-		}
+		var layerIndex;
+        for (layerIndex = this.MAX_CAMERA_LAYER; layerIndex >= this.MIN_CAMERA_LAYER; layerIndex--) {
+            if (this.mAllCamera[layerIndex]) {
+                var cameraIndex;
+                for (cameraIndex = 0; cameraIndex < this.mAllCamera[layerIndex].length; cameraIndex++) {
+                    var cam = this.mAllCamera[layerIndex][cameraIndex];
+                    console.log('layer: ', layerIndex);
+                    cam.setupViewProjection();
+                    var instIndex;
+                    for (instIndex = 0; instIndex < this.mInstanceList.length; instIndex++) {
+                        if (this.mInstanceList[instIndex] instanceof GameObject) {
+                            this.mInstanceList[instIndex].draw(cam);
+                        }
+                    }
+                }
+            }
+        }
+		// for (i = 0; i < this.mAllCamera.length; i++) {
+		// 	var cam = this.mAllCamera[i];
+		// 	cam.setupViewProjection();
+		//
+		// 	for (j = 0; j < this.mInstanceList.length; j++) {
+		// 		if (this.mInstanceList[j] instanceof GameObject) {
+		// 			this.mInstanceList[j].draw(cam);
+		// 		}
+		// 	}
+		// }
 	}
-		
+    console.log("draw end");
 	//Selection should not be shown if there is no selection object, if the camera does not exist,
 	// if there is no selected gameobject, and if the selected gameobject is an instance
 	
@@ -156,11 +178,24 @@ ClientScene.prototype.draw = function() {
 // anything from this function!
 ClientScene.prototype.update = function() {
     var i;
-    
+    console.log("update start");
     if (gGuiBase.Core.gRunning) {
-        for (i = 0; i < this.mAllCamera.length; i++) {
-            this.mAllCamera[i].update();
+        // for (i = 0; i < this.mAllCamera.length; i++) {
+        //     this.mAllCamera[i].update();
+        // }
+        var layerIndex;
+        for (layerIndex = this.MIN_CAMERA_LAYER; layerIndex <= this.MAX_CAMERA_LAYER; layerIndex++) {
+            if(this.mAllCamera[layerIndex]) {
+                console.log('UPDATING CAMERAS');
+                var cameraIndex;
+                for (cameraIndex = 0; cameraIndex < this.mAllCamera[layerIndex].length; cameraIndex++) {
+                    var cam = this.mAllCamera[layerIndex][cameraIndex];
+                    console.log(cam);
+                    cam.update();
+                }
+            }
         }
+
         for (i = 0; i < this.mInstanceList.length; i++) {
             if (this.mInstanceList[i] instanceof GameObject) {
                 if (this.mInstanceList[i].mDestroy) { // uses this variable to destroy from external pointer
@@ -184,6 +219,7 @@ ClientScene.prototype.update = function() {
         this.cameraObjects[i].update();
     }
     this.sceneViewCamera.update();
+    console.log("update end");
 };
 
 ClientScene.prototype.addInstance = function(inst) {
@@ -192,21 +228,65 @@ ClientScene.prototype.addInstance = function(inst) {
 };
 
 ClientScene.prototype.addCamera = function(cam) {
-    this.mAllCamera.push(cam);
+    if (!this.mAllCamera[cam.mLayer]) {
+        this.mAllCamera[cam.mLayer] = [cam];
+    } else {
+        this.mAllCamera[cam.mLayer].push(cam);
+    }
     return true;
 };
 
+ClientScene.prototype.removeCamera = function (cameraName) {
+    console.log('removing this camera:', cameraName);
+    var cam = gGuiBase.CameraSupport.getCameraByName(cameraName);
+    var cameraList = this.mAllCamera[cam.mLayer];
+    for (var i = 0; i < cameraList.length; i++) {
+        console.log('cam mname: ', cam.mName);
+        console.log('cameraname: ', cameraName);
+        if (cameraList[i].mName == cameraName) {
+            this.mAllCamera[cam.mLayer].splice(i, 1);
+            return true;
+        }
+    }
+    return false;
+};
+
+ClientScene.prototype.setCameraLayer = function ( camera, layer ) {
+    this.removeCamera( camera.mName );
+    camera.mLayer = layer;
+    this.addCamera( camera );
+};
+
 ClientScene.prototype.getCameraList = function() {
-    return this.mAllCamera;
+    // return this.mAllCamera;
+    var camList = [];
+    var layerIndex;
+    for (layerIndex = this.MIN_CAMERA_LAYER; layerIndex < this.MAX_CAMERA_LAYER; layerIndex++) {
+        console.log(layerIndex, this.mAllCamera[layerIndex]);
+        if(this.mAllCamera[layerIndex]) {
+            var cameraIndex;
+            for (cameraIndex = 0; cameraIndex < this.mAllCamera[layerIndex].length; cameraIndex++) {
+                var cam = this.mAllCamera[layerIndex][cameraIndex];
+                camList.push(cam);
+            }
+        }
+    }
+    return camList;
 };
 
 ClientScene.prototype.getCameraObjectList = function() {
 	return this.cameraObjects;
-}
+};
 
 ClientScene.prototype.clearCameraObjectList = function() {
+    var layerIndex;
+    for (layerIndex = this.MIN_CAMERA_LAYER; layerIndex < this.MAX_CAMERA_LAYER; layerIndex++) {
+        if (this.mAllCamera[layerIndex]) {
+            this.mAllCamera[layerIndex].splice(0, this.mAllCamera[layerIndex].length);
+        }
+    }
 	this.cameraObjects.splice(0,this.cameraObjects.length);
-}
+};
 
 ClientScene.prototype.getSceneCamera = function() {
 	//if (this.mAllCamera.length > 0) return this.mAllCamera[0];

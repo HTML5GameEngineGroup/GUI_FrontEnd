@@ -69,8 +69,9 @@ function Camera(wcCenter, wcWidth, viewportArray, bound) {
         // SHOULD NOT be used except 
         // xform operations during the rendering
         // Client game should not access this!
-	
-	
+
+    // used to determine which camera is displayed on top, 0 is top higher numbers are lower (0 is above 1 is above 2)
+    this.mLayer = 0;
     //gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(this);
 }
 

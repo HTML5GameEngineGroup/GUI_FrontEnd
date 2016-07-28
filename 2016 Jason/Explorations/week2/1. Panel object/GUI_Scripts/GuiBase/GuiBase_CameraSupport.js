@@ -8,16 +8,17 @@ gGuiBase.CameraSupport = (function() {
 	
 	var deleteCamera = function(cameraName) {
 		
-		var list = getCameraList();
+		// var list = getCameraList();
 		var camera = getCameraByName(cameraName);
 		
 		if (this.mSelectedCamera === camera) {
 			gGuiBase.Core.emptyDetailsTab();
 			this.mSelectedCamera = null;
 		}
-		
-		var index = getCameraIndex(cameraName);
-		list.splice(index, 1);
+
+		gGuiBase.SceneSupport.gCurrentScene.removeCamera(cameraName);
+		// var index = getCameraIndex(cameraName);
+		// list.splice(index, 1);
 
 		delete mCamera[cameraName];
 		delete mCameraCode[cameraName];
@@ -43,10 +44,10 @@ gGuiBase.CameraSupport = (function() {
 	var clearCameras = function() {
 		var sceneList = gGuiBase.SceneSupport.getSceneList();
 		for (var i = 0; i < sceneList.length; i++) {
-			var cameras = sceneList[i].getCameraList();
-
-			cameras.splice(0, cameras.length);
-			cameras = [];
+			// var cameras = sceneList[i].getCameraList();
+			// sceneList[i].clearCameras();
+			// cameras.splice(0, cameras.length);
+			// cameras = [];
 		}
 		mCamera = {};
 		mCameraCode = {};
@@ -99,7 +100,7 @@ gGuiBase.CameraSupport = (function() {
 			gGuiBase.SceneSupport.gCurrentScene.mNextCameraID++;
 			name = "Camera" + gGuiBase.SceneSupport.gCurrentScene.mNextCameraID;
 		}
-
+		console.log("create new camera named:", name);
 		// will be overwritten probably not needed
 		window[name] = function(wcCenter, wcWidth, viewportArray, bound) {
 			Camera.call(this, wcCenter, wcWidth, viewportArray, bound);
@@ -119,7 +120,7 @@ gGuiBase.CameraSupport = (function() {
 
 		var cameraObject = new CameraObject(cam);
 		gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
-		gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
+		gGuiBase.SceneSupport.gCurrentScene.addCamera(cam);
 
 		mCamera[cam.mName] = cam;
 		mCameraCode[cam.mName] = code;

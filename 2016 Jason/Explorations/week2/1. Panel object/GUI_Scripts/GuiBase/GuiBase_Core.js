@@ -98,7 +98,6 @@ gGuiBase.Core = (function() {
 		var detailsColor = new ColorCameraContent("ColorCameraContent", gGuiBase.View.CONTENT_STYLE, "Camera Color");
 		
 		var camera = gGuiBase.CameraSupport.getCameraByName(cameraName);
-		console.log('selectDetailsCamera', cameraName, Camera);
 		detailsTransform.updateFields(camera);
 		gGuiBase.Core.selectedCamera = camera;
 

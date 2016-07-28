@@ -204,13 +204,14 @@ gGuiBase.SaveLoadSupport = (function() {
 			
 			for (j = 0; j < camList.length; j++) {
 				var cam = camList[j];
-				cameraData[0 + ((j+1) * 7)] = cam.mName;
-				cameraData[1 + ((j+1) * 7)] = cam.mID;
-				cameraData[2 + ((j+1) * 7)] = cam.getWCCenter();  // [x, y]
-				cameraData[3 + ((j+1) * 7)] = cam.getWCWidth();
-				cameraData[4 + ((j+1) * 7)] = cam.getViewport();  // [x, y, w, h]
-				cameraData[5 + ((j+1) * 7)] = cam.getBackgroundColor();
-				cameraData[6 + ((j+1) * 7)] = gGuiBase.CameraSupport.getCameraCodeByName(cam.mName);
+				cameraData[0 + ((j+1) * 8)] = cam.mName;
+				cameraData[1 + ((j+1) * 8)] = cam.mID;
+				cameraData[2 + ((j+1) * 8)] = cam.getWCCenter();  // [x, y]
+				cameraData[3 + ((j+1) * 8)] = cam.getWCWidth();
+				cameraData[4 + ((j+1) * 8)] = cam.getViewport();  // [x, y, w, h]
+				cameraData[5 + ((j+1) * 8)] = cam.getBackgroundColor();
+				cameraData[6 + ((j+1) * 8)] = gGuiBase.CameraSupport.getCameraCodeByName(cam.mName);
+				cameraData[7 + ((j+1) * 8)] = cam.mLayer;
 			}
 
 			sceneFolder.file("cameras.json", JSON.stringify(cameraData));
@@ -447,14 +448,15 @@ gGuiBase.SaveLoadSupport = (function() {
 								cam.setBackgroundColor(data[i + 5]);
 								cam.mName = name;
 								cam.mID = data[i + 1];
+								cam.mLayer = data[i + 7];
 
 								var cameraObject = new CameraObject(cam);
 								gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
-								gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(cam);
+								gGuiBase.SceneSupport.gCurrentScene.addCamera(cam);
 								gGuiBase.CameraSupport.setCameraCodeByName(name, code);
 								gGuiBase.CameraSupport.setCameraByName(name, cam);
 							}
-							i += 7;
+							i += 8;
 						}
 						// Select the first scene when this process is done
 						gGuiBase.SceneSupport.selectScene(0);
