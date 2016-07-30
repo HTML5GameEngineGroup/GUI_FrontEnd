@@ -40,6 +40,11 @@ OrderInLayerContent.prototype.onFocusOut = function(textField) {
 		gameObject.mOrderInLayer = value;
 		gGuiBase.SceneSupport.gCurrentScene.sortInstanceListByOrder();
 		
+		//Refresh instances
+		gGuiBase.Core.updateInstanceSelectList();
+		var instancesTab = gGuiBase.View.findTabByID("#Instances");
+		instancesTab.refreshContent();
+		
 	} else {
 		//Reset
 		textField.val(gameObject.mOrderInLayer);
@@ -47,7 +52,13 @@ OrderInLayerContent.prototype.onFocusOut = function(textField) {
 };
 
 OrderInLayerContent.prototype.onButtonClick = function() {
+	var gameObject = gGuiBase.Core.selectedGameObject;
 	gameObject.mOrderInLayer = 0;
+	$("#layerTextField").val(0);
 	gGuiBase.SceneSupport.gCurrentScene.sortInstanceListByOrder();
+	
+	gGuiBase.Core.updateInstanceSelectList();
+	var instancesTab = gGuiBase.View.findTabByID("#Instances");
+	instancesTab.refreshContent();
 };
 

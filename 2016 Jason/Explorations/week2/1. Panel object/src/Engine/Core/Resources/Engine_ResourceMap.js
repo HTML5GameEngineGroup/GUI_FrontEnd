@@ -138,7 +138,7 @@ gEngine.ResourceMap = (function () {
             mResourceMap[rName].mRefCount -= 1;
             c = mResourceMap[rName].mRefCount;
             if (c === 0) {
-                delete mResourceMap[rName];
+				delete mResourceMap[rName];
             }
         }
         return c;

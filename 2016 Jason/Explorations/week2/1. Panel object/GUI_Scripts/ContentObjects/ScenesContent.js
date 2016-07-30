@@ -56,6 +56,8 @@ ScenesContent.prototype.onListSelect = function(ui) {
 	// get objectName/objectID
 	var selectedSceneName = ui["selected"]["id"];
 	gGuiBase.Core.selectDetailsScene( selectedSceneName );
+	
+	gGuiBase.DirectManipulationSupport.clearForSceneSwap();
 	//todo: use this function to populate the details panel
 };
 

@@ -531,12 +531,27 @@ gGuiBase.DirectManipulationSupport = (function() {
 		state = InteractionState.NONE;
 	}
 	
+	var clearForSceneSwap = function() {
+		preventInteraction = false;
+		selected = null;
+		draggingTopCamera = false;
+		draggingBotCamera = false;
+		draggingLeftCamera = false;
+		draggingRightCamera = false;
+		draggingTop = false;
+		draggingLeft = false;
+		state = InteractionState.NONE;
+		gGuiBase.Core.selectedGameObject = null;
+		
+	}
+	
     var mPublic = {
        mouseInBound: mouseInBound,
 	   rotatePoint: rotatePoint,
 	   //currentCameraObject: currentCameraObject,
 	   setPreventInteraction: setPreventInteraction,
-	   resetInteraction: resetInteraction
+	   resetInteraction: resetInteraction,
+	   clearForSceneSwap: clearForSceneSwap
     };
     return mPublic;
 }());

@@ -104,9 +104,9 @@ gEngine.Textures = (function () {
     };
 	
 	var loadTextureFromFile = function(targetDivName, callback) {
-        console.log("loadTexture from file");
+        //console.log("loadTexture from file");
         var texName = document.getElementById(targetDivName).value;
-        console.log("texName:", texName);
+        //console.log("texName:", texName);
         var index = texName.lastIndexOf('\\');
         if (index != -1) texName = texName.slice(index + 1);
 		if (!(gEngine.ResourceMap.isAssetLoaded(texName))) {

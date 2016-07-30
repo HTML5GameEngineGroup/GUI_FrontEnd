@@ -15,7 +15,7 @@ gGuiBase.TextureSupport = (function() {
         // if added already return
         if(gAllTextures[texName] || texName == "") return;
         gAllTextures[texName] = true;
-        console.log('currentscene:', gGuiBase.SceneSupport.gCurrentScene);
+        //console.log('currentscene:', gGuiBase.SceneSupport.gCurrentScene);
         loadTexturesToScene();
         // refresh texturelist in view
         var texList = gGuiBase.TextureSupport.getTexList();
@@ -110,7 +110,34 @@ gGuiBase.TextureSupport = (function() {
     
     var removeTexture = function ( texName ) {
         delete gAllTextures[texName];
+		delete gImageMap[texName];
     };
+	
+	var removeTextureFromAll = function (texName) {
+		var sceneList = gGuiBase.SceneSupport.getSceneList();
+		for (var j = 0; j < sceneList.length; j++) {
+			var instances = sceneList[j].getInstanceList();
+			for (i = 0; i < instances.length; i++) {
+
+				if (instances[i].getRenderable() instanceof TextureRenderable && instances[i].getRenderable().mTextureInfo.mName === texName)
+					gGuiBase.TextureSupport.removeTextureFromGameObject(instances[i].mName);
+			}
+		}
+		
+		gEngine.Textures.unloadTexture(texName);
+		gGuiBase.TextureSupport.removeTexture(texName);
+		
+		
+		while (gEngine.ResourceMap.unloadAsset(texName) !== 0);
+
+		gGuiBase.TextureSupport.loadTexturesToScene();
+		
+		var imageList = gGuiBase.TextureSupport.getImageList();
+		gGuiBase.View.findWidgetByID("#TextureSelectList").rebuildWithArray(imageList);
+		var texTab = gGuiBase.View.findTabByID("#Textures");
+		texTab.refreshContent();
+					
+	};
 
     var getTexList = function () {
         var texList = [];
@@ -153,6 +180,7 @@ gGuiBase.TextureSupport = (function() {
         loadTexturesToScene: loadTexturesToScene,
         removeTexture: removeTexture,
         getTexList: getTexList,
+		removeTextureFromAll: removeTextureFromAll,
     };
     return mPublic;
 }());

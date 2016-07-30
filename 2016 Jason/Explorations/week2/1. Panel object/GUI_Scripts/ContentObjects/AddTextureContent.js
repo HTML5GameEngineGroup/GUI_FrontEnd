@@ -47,7 +47,7 @@ AddTextureContent.prototype.initializeEventHandling = function () {
                     gGuiBase.TextureSupport.addTextureObject(imageName);
                     break;
                 case 'delete':
-                    alert('to be implemented');
+					gGuiBase.TextureSupport.removeTextureFromAll(imageName);
                     break;
             }
         }
