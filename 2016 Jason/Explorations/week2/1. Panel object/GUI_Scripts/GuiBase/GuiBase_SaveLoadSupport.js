@@ -222,25 +222,28 @@ gGuiBase.SaveLoadSupport = (function() {
 			for (j = 0; j < instanceList.length; j++) {
 				var inst = instanceList[j];
 				
-				instanceData[0 + (j * 8)] = inst.mName;
-				instanceData[1 + (j * 8)] = inst.mID;
+				instanceData[0 + (j * 9)] = inst.mName;
+				instanceData[1 + (j * 9)] = inst.mID;
 				if (inst instanceof GameObject) {
 					// If it's a GO, get the relevant data
 					var xf = inst.getXform();
-					instanceData[2 + (j * 8)] = xf.getXPos();
-					instanceData[3 + (j * 8)] = xf.getYPos();
-					instanceData[4 + (j * 8)] = xf.getWidth();
-					instanceData[5 + (j * 8)] = xf.getHeight();
-					instanceData[6 + (j * 8)] = xf.getRotationInDegree();
-					instanceData[7 + (j * 8)] = inst.getRenderable().getColor();
+					instanceData[2 + (j * 9)] = xf.getXPos();
+					instanceData[3 + (j * 9)] = xf.getYPos();
+					instanceData[4 + (j * 9)] = xf.getWidth();
+					instanceData[5 + (j * 9)] = xf.getHeight();
+					instanceData[6 + (j * 9)] = xf.getRotationInDegree();
+					instanceData[7 + (j * 9)] = inst.getRenderable().getColor();
+					instanceData[8 + (j * 9)] = inst.mOrderInLayer;
 				} else {
 					// Blank placeholders
-					instanceData[2 + (j * 8)] = 0;
-					instanceData[3 + (j * 8)] = 0;
-					instanceData[4 + (j * 8)] = 0;
-					instanceData[5 + (j * 8)] = 0;
-					instanceData[6 + (j * 8)] = 0;
-					instanceData[7 + (j * 8)] = 0;
+					instanceData[2 + (j * 9)] = 0;
+					instanceData[3 + (j * 9)] = 0;
+					instanceData[4 + (j * 9)] = 0;
+					instanceData[5 + (j * 9)] = 0;
+					instanceData[6 + (j * 9)] = 0;
+					instanceData[7 + (j * 9)] = 0;
+					instanceData[8 + (j * 9)] = 0;
+					
 				}
 			}
 			sceneFolder.file("instances.json", JSON.stringify(instanceData));
@@ -367,6 +370,7 @@ gGuiBase.SaveLoadSupport = (function() {
 				xf.setRotationInDegree(data[7]);
 				obj.getRenderable().setColor(data[8]);
 				
+				
 				gGuiBase.ObjectSupport.setGameObjectByID(obj.mName, obj);
 				gGuiBase.ObjectSupport.setGameObjectCodeByID(obj.mName, data[1]);
 				
@@ -479,6 +483,8 @@ gGuiBase.SaveLoadSupport = (function() {
 								xf.setRotationInDegree(data[i + 6]);
 								var rend = inst.getRenderable();
 								rend.setColor(data[i + 7]);
+								inst.mOrderInLayer = data[i + 8];
+								console.log(data);
 							} else {
 								eval("inst = new " + data[i + 0] + "()");
 							}
@@ -489,10 +495,12 @@ gGuiBase.SaveLoadSupport = (function() {
 							//gGameCore.getSceneByName(sceneName).addInstance(inst);
 							var scene = gGuiBase.SceneSupport.getSceneByName(sceneName);
 							gGuiBase.InstanceSupport.addInstance(inst, scene);
-							i += 8;
+							i += 9;
 						}
 						// should be done adding instances refresh instances!
 						gGuiBase.Core.updateInstanceSelectList();
+						var instancesTab = gGuiBase.View.findTabByID("#Instances");
+						instancesTab.refreshContent();
 	
 						// gGuiBase.View.refreshAllTabContent()
 					} else if (relativePath.endsWith(".json")) {
