@@ -17,6 +17,7 @@ gGuiBase.CameraSupport = (function() {
 		}
 
 		gGuiBase.SceneSupport.gCurrentScene.removeCamera(cameraName);
+		gGuiBase.SceneSupport.gCurrentScene.removeCameraObject(cameraName);
 		// var index = getCameraIndex(cameraName);
 		// list.splice(index, 1);
 
@@ -26,6 +27,7 @@ gGuiBase.CameraSupport = (function() {
 		
 		gGuiBase.Core.reinitializeCameraTab();
 		gGuiBase.View.refreshAllTabContent();
+
 	};
 	
 	var getCameraIndex = function(cameraName) {
@@ -51,6 +53,7 @@ gGuiBase.CameraSupport = (function() {
 		}
 		mCamera = {};
 		mCameraCode = {};
+		
 	};
 	
 	var getCameraListNames = function() {

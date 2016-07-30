@@ -231,7 +231,17 @@ ClientScene.prototype.removeCamera = function (cameraName) {
             return true;
         }
     }
+	
+	
     return false;
+};
+
+ClientScene.prototype.removeCameraObject = function(cameraName) {
+	for (var i = 0; i < this.cameraObjects.length; i++) {
+		if (this.cameraObjects[i].cameraRef.mName === cameraName) {
+			this.cameraObjects.splice(i, 1);
+		}
+	}
 };
 
 ClientScene.prototype.setCameraLayer = function ( camera, layer ) {
