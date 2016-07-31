@@ -20,17 +20,16 @@ function CameraTransformContent(tabContentID, style, title) {
 
 	this.layerLabel = null;
 	this.layerDropDown = null;
-	//todo generate this from camerassupport min max
+	//todo generate this from cameras support min max
 	this.layerOptions = [0,1,2,3,4,5];
-	this.layerSetting = 0;
 
 	GuiTabContent.call(this, tabContentID, style, title);
 }
-
 gGuiBase.View.inheritPrototype(CameraTransformContent, GuiTabContent);
 
+// set initial values to default values of camera
 CameraTransformContent.prototype.initialize = function () {
-	
+	//todo dont hard code these values
 	var textStyle = 'margin-left: 10px; margin-top: 4px';
 	var textFieldStyle = 'width: 90%; margin-left: 10px';
 	
@@ -55,7 +54,7 @@ CameraTransformContent.prototype.initialize = function () {
 	this.viewportWHText = new Text("viewportWHText", textStyle, "W / H");
 
 	this.layerLabel = new Text("layerLabel", textStyle, "Layer");
-	this.layerDropDown = new DropdownList("layerDropDown", GuiContentWidget.NO_STYLE, this.layerOptions);
+	this.layerDropDown = new DropdownList("layerDropDown", textStyle, this.layerOptions);
 	
 	this.widgetList.push(this.objectNameText);
 	this.widgetList.push(this.objectName);
@@ -76,6 +75,7 @@ CameraTransformContent.prototype.initialize = function () {
 	this.widgetList.push(this.layerDropDown);
 };
 
+// initialize text fields
 CameraTransformContent.prototype.initializeEventHandling = function () {
 	this.objectName.setOnFocusOut(this.onTextFieldFocusOut);
 	this.wcX.setOnFocusOut(this.onTextFieldFocusOut);
@@ -88,12 +88,14 @@ CameraTransformContent.prototype.initializeEventHandling = function () {
 	this.layerDropDown.setOnSelect(this.onLayerSelect);
 };
 
+// set camera to settings on focus out
 CameraTransformContent.prototype.onTextFieldFocusOut = function(textField) {
 	var value = textField.val();
 	var camera = gGuiBase.Core.selectedCamera;
 	var center = camera.getWCCenter();
 	var viewport = camera.getViewport();
-	
+
+	// Handle any changes to Camera
 	switch(textField.attr("id")) {
 		case "cameraNameField":
 			if (value == camera.mName) break;
@@ -139,9 +141,10 @@ CameraTransformContent.prototype.onTextFieldFocusOut = function(textField) {
 			break;
 		default:
 			break;
-	};
+	}
 };
 
+// sets transforms fields to the selected cameras
 CameraTransformContent.prototype.updateFields = function( camera ) {
 	this.objectName.setText( camera.mName );
 	var wc = camera.getWCCenter();
@@ -157,18 +160,16 @@ CameraTransformContent.prototype.updateFields = function( camera ) {
 	this.viewportH.setText(vp[3]);
 };
 
+// sets the selected camera's layer to this contents new layer setting
 CameraTransformContent.prototype.onLayerSelect = function (layer) {
 	layer = Number(layer);
 	var cam = gGuiBase.Core.selectedCamera;
-	console.log('cam = ', cam.mName, 'prev layer = ', cam.mLayer);
-	console.log('calling setcameralayer on', cam.mName, ' and layer = ', layer);
-	gGuiBase.SceneSupport.gCurrentScene.setCameraLayer(cam, layer)
-	console.log(gGuiBase.CameraSupport.getCameraList());
+	gGuiBase.SceneSupport.gCurrentScene.setCameraLayer(cam, layer);
 };
 
+// updates the layer selector to the currently selected camera's layer
 CameraTransformContent.prototype.setLayerDropDown = function ( cam ) {
 	var cam = gGuiBase.Core.selectedCamera;
-	console.log('selectedCam is set to:', cam);
 	if (cam) {
 		$('#layerDropDown').val(cam.mLayer);
 	}
