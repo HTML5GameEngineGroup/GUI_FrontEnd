@@ -268,12 +268,16 @@ ClientScene.prototype.getCameraObjectList = function() {
 	return this.cameraObjects;
 };
 
-ClientScene.prototype.clearCameraObjectList = function() {
+ClientScene.prototype.clearCameras = function () {
     for (var layerIndex = this.MIN_CAMERA_LAYER; layerIndex <= this.MAX_CAMERA_LAYER; layerIndex++) {
         if (this.mAllCamera[layerIndex]) {
             this.mAllCamera[layerIndex].splice(0, this.mAllCamera[layerIndex].length);
         }
     }
+    this.clearCameraObjectList();
+};
+
+ClientScene.prototype.clearCameraObjectList = function() {
 	this.cameraObjects.splice(0,this.cameraObjects.length);
 };
 

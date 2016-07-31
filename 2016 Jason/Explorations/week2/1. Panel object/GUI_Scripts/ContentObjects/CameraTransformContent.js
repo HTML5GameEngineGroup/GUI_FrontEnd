@@ -169,7 +169,6 @@ CameraTransformContent.prototype.onLayerSelect = function (layer) {
 
 // updates the layer selector to the currently selected camera's layer
 CameraTransformContent.prototype.setLayerDropDown = function ( cam ) {
-	var cam = gGuiBase.Core.selectedCamera;
 	if (cam) {
 		$('#layerDropDown').val(cam.mLayer);
 	}
