@@ -65,9 +65,13 @@ gGuiBase.CameraSupport = (function() {
 	};
 
 	// returns true if name conflict, else false
-	var checkForNameConflict = function(name) {
+	var checkForNameConflict = function(cameraName) {
 		// checks if name is taken by a camera or gameObject
-		return name in mCamera || gGuiBase.ObjectSupport.checkForNameConflict(name);
+		return cameraName in mCamera || gGuiBase.ObjectSupport.checkForCameraConflict(cameraName);
+	};
+	
+	var checkForObjectConflict = function( objectName ) {
+		return objectName in mCamera;
 	};
 
 	// returns default code used to create and edit a camera
@@ -150,6 +154,7 @@ gGuiBase.CameraSupport = (function() {
 		//selectCamera: selectCamera,
 		getCameraList: getCameraList,
 		checkForNameConflict: checkForNameConflict,
+		checkForObjectConflict: checkForObjectConflict,
 		// createDefaultCamera: createDefaultCamera,
 		getCameraListNames: getCameraListNames,
 		// getCameraByName: getCameraByName,

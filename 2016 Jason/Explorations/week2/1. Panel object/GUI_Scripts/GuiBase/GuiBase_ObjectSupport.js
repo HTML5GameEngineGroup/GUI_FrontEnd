@@ -5,11 +5,17 @@ gGuiBase.ObjectSupport = (function() {
 
     var mGO = {};           // store gameObjects
     var mGOCode = {};       // store gameObjects code
-    var mNextObjID = 0;
+    var mNextObjID = 0;     // stores id used to create unique object names
     
-    // returns true if name is already in use
-    var checkForNameConflict = function(name) {
-        return (mGO[name] !== undefined);
+    // returns true if objectName is already in use
+    var checkForNameConflict = function( objName ) {
+        // they share the same name space because the window stores all classes
+        return objName in mGO || gGuiBase.CameraSupport.checkForObjectConflict(objName);
+    };
+
+    // returns true if an cameraName is already taken by an objectName
+    var checkForCameraConflict = function( cameraName ) {
+        return cameraName in mGO;
     };
 
     // creates a defaultObject and returns its name
@@ -256,6 +262,7 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
         createDefaultTextObject: createDefaultTextObject,
 		deleteObject: deleteObject,
         checkForNameConflict: checkForNameConflict,
+        checkForCameraConflict: checkForCameraConflict,
         copyTransform: copyTransform,
         copyTransformOnTransforms: copyTransformOnTransforms,
 		replaceInMap: replaceInMap,
