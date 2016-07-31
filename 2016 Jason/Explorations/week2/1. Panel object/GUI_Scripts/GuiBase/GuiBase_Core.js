@@ -202,8 +202,6 @@ gGuiBase.Core = (function() {
 		for (var i = 0; i < sceneList.length; i++) {
 			sceneList[i].clearCameraObjectList();
 		}
-		
-		
 		sceneList.splice(0, sceneList.length);
 		
 		var selectedGameObject = null;

@@ -117,12 +117,12 @@ gEngine.Textures = (function () {
 			fr.onload = function() {
 				gEngine.ResourceMap.asyncLoadRequested(texName);
 				img.src = fr.result;
-			}
+			};
 			
 			img.onload = function() {
 				_processLoadedImage(texName, img);
 				callback(texName);
-			}
+			};
 			
 			fr.readAsDataURL(document.getElementById(targetDivName).files[0]);
 		} else {

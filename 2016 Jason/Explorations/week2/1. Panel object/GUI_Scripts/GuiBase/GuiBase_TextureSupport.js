@@ -33,8 +33,6 @@ gGuiBase.TextureSupport = (function() {
 	var getImage = function(texName) {
 		return gImageMap[texName];
 	};
-	
-	
 
     // loads the texture into the engine via the scene
     var loadTexturesToScene = function () {
@@ -162,7 +160,7 @@ gGuiBase.TextureSupport = (function() {
 				return imageName;
 		}
 		return "None";
-	}
+	};
 
 
     var mPublic = {

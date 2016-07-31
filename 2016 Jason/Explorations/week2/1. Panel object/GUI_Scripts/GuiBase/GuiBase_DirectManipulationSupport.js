@@ -392,7 +392,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 			selected = null;
 			gGuiBase.Core.emptyDetailsTab();
 		}
-	}
+	};
 	
 	var refreshGameObjectTransform = function() {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
@@ -406,7 +406,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 		var detailsTransform = detailsTab.getContentObject("#CameraTransformContent");
 		detailsTransform.updateFields(selected.cameraRef);
 		detailsTab.refreshSpecificContent("#CameraTransformContent");
-	}
+	};
 	
 	
 	//Checks if the mouse position is within the object transform
@@ -529,7 +529,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 		draggingLeft = false;
 		
 		state = InteractionState.NONE;
-	}
+	};
 	
 	var clearForSceneSwap = function() {
 		preventInteraction = false;
