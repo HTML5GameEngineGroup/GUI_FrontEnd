@@ -1,4 +1,4 @@
-
+// constructor
 function ObjectContent(tabContentID, style, title) {
 	this.objectAddButton = null;
 	this.objectSelectList = null;
@@ -6,10 +6,9 @@ function ObjectContent(tabContentID, style, title) {
 
 	this.selectListID = "objectSelectList1";
 	GuiTabContent.call(this, tabContentID, style, title);
-}
+}gGuiBase.View.inheritPrototype(ObjectContent, GuiTabContent);
 
-gGuiBase.View.inheritPrototype(ObjectContent, GuiTabContent);
-
+// add-add button and current objects to content panel
 ObjectContent.prototype.initialize = function () {
 	this.objectAddButton = new Button("objectAddButton", GuiTabContent.NO_STYLE, "+Object");
 	this.widgetList.push(this.objectAddButton);
@@ -22,9 +21,9 @@ ObjectContent.prototype.initialize = function () {
 ObjectContent.prototype.initializeEventHandling = function () {
 	this.objectAddButton.setOnClick(this.buttonOnClick);
 	this.objectSelectList.setOnSelect(this.selectObject);
-	
 	this.objectSelectList.addListClass("objectListMenu");
 	
+	// add right click menu to objects in the object panel
 	$(this.objectSelectList.getID()).contextmenu({
 		delegate: ".objectListMenu",
 		menu: [
@@ -34,21 +33,24 @@ ObjectContent.prototype.initializeEventHandling = function () {
 			{title: "Delete", cmd: "delete", uiIcon: "ui-icon-closethick"},
 			],
 		select: function(event, ui) {
-			var GOName = ui.target.text();
+			var gameObjectName = ui.target.text();
 			switch (ui.cmd) {
+				// update details panel with selected object
 				case 'details':
-					gGuiBase.Core.selectDetailsObject(GOName);
+					gGuiBase.Core.selectDetailsObject(gameObjectName);
 					break;
+				// open code editor for selected object
 				case 'edit':
-					console.log(ui.target.text());
-					gGuiBase.EditorSupport.createFloatingEditor(GOName);
+					gGuiBase.EditorSupport.createFloatingEditor(gameObjectName);
 					break;
+				// create an instance of the object into the current scene
 				case 'instantiate':
-					gGuiBase.Core.addInstanceWithName(GOName);
+					gGuiBase.Core.addInstanceWithName(gameObjectName);
 					break;
+				// delete the object and all its instances from all scenes
 				case 'delete':
-					if (confirm("Warning: This will delete all instances of " + GOName + ".\n\Delete anyways?")) { // Evalutes to true and perform an action if OK is pressed, otherwise do nothing
-                        gGuiBase.ObjectSupport.deleteObject(GOName);
+					if (confirm("Warning: This will delete all instances of " + gameObjectName + ".\n\Delete anyways?")) { // Evalutes to true and perform an action if OK is pressed, otherwise do nothing
+                        gGuiBase.ObjectSupport.deleteObject(gameObjectName);
 					}
 					break;
 			}
@@ -68,15 +70,3 @@ ObjectContent.prototype.selectObject = function( ui ) {
 	var selectedObjectName = ui["selected"]["id"];
 	gGuiBase.Core.selectDetailsObject( selectedObjectName );
 };
-
-// these are global
-ObjectContent.prototype.onTextFieldFocusOut = function() {
-	alert("focus out");
-};
-
-ObjectContent.prototype.onSliderChange = function(sliderValue) {
-	console.log("slider value: " + sliderValue);
-};
-
-
-
