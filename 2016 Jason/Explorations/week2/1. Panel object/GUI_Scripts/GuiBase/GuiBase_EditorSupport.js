@@ -87,8 +87,8 @@ gGuiBase.EditorSupport = (function() {
         // Add a button at the bottom
         editorArea.append('<br>');
         editorArea.append('<ul class="floating-nav-menu" id="' + navBottomName + '">' +
-            '<li id="' + okName + '"><a href="#">OK</a></li>' +           // Places this on the farthest right
-            '<li id="' + cancelName + '"><a href="#">Cancel</a></li>' +   // Left of the OK button
+            '<li id="' + okName + '"><a href="#"><button type="button" class="btn btn-default">OK</button></a></li>' +           // Places this on the farthest right
+            '<li id="' + cancelName + '"><a href="#"><button type="button" class="btn btn-danger">Cancel</button></a></li>' +   // Left of the OK button
             '</ul>');
         $('#' + okName).css('float', 'right');
         $('#' + cancelName).css('float', 'right');
