@@ -37,6 +37,7 @@ gGuiBase.SaveLoadSupport = (function() {
 			gGuiBase.Core.selectedGameObject = null;
 		} else {
 			//Load the backed-up game state
+			gGuiBase.LightSupport.removeLightReferences();
 			gGuiBase.SaveLoadSupport.fileOpen(true);
 
 			$('#menuRun').css('background-color', 'white');
@@ -133,7 +134,7 @@ gGuiBase.SaveLoadSupport = (function() {
 		var misc = files.folder("Misc");
 		var objects = files.folder("Objects");
 		var scenes = files.folder("Scenes");
-		var textures = files.folder("Textures"); // Not used yet
+		var textures = files.folder("Textures");
 		
 		// JSON files not in folders
 		var globalVars;
@@ -170,6 +171,13 @@ gGuiBase.SaveLoadSupport = (function() {
 			objectData[6] = xf.getHeight();
 			objectData[7] = xf.getRotationInDegree();
 			objectData[8] = obj.getRenderable().getColor();
+			
+			//Is it a lightrenderable
+			if (rend instanceof LightRenderable)
+				objectData[9] = true;
+			else
+				objectData[9] = false;
+			
 			objects.file(obj.mName + ".json", JSON.stringify(objectData));
 		}
 		
@@ -246,8 +254,54 @@ gGuiBase.SaveLoadSupport = (function() {
 					
 				}
 			}
+			
 			sceneFolder.file("instances.json", JSON.stringify(instanceData));
+			
+			//Finally, lights
+			var lightSet = gGuiBase.SceneSupport.gCurrentScene.mLightSet;
+			var lightData = {};
+			for (var j = 0; j < lightSet.numLights(); j++) {
+			
+				var light = lightSet.getLightAt(j);
+				
+				if (light instanceof Light) {
+					lightData[0 + (j * 13)] = light.mID;
+					lightData[1 + (j * 13)] = light.getColor();
+					lightData[2 + (j * 13)] = light.mPosition;
+					lightData[3 + (j * 13)] = light.mDirection;
+					lightData[4 + (j * 13)] = light.mNear;
+					lightData[5 + (j * 13)] = light.mFar;
+					lightData[6 + (j * 13)] = light.mInner;
+					lightData[7 + (j * 13)] = light.mOuter;
+					lightData[8 + (j * 13)] = light.mIntensity;
+					lightData[9 + (j * 13)] = light.mDropOff;
+					lightData[10 + (j * 13)] = light.mLightType;
+					lightData[11 + (j * 13)] = light.mIsOn;
+					lightData[12 + (j * 13)] = light.mCastShadow;
+				} else {
+					lightData[0 + (j * 13)] = 0;
+					lightData[1 + (j * 13)] = 0;
+					lightData[2 + (j * 13)] = 0;
+					lightData[3 + (j * 13)] = 0;
+					lightData[4 + (j * 13)] = 0;
+					lightData[5 + (j * 13)] = 0;
+					lightData[6 + (j * 13)] = 0;
+					lightData[7 + (j * 13)] = 0;
+					lightData[8 + (j * 13)] = 0;
+					lightData[9 + (j * 13)] = 0;
+					lightData[10 + (j * 13)] = 0;
+					lightData[11 + (j * 13)] = 0;
+					lightData[12 + (j * 13)] = 0;
+				}
+				
+				
+			}
+			sceneFolder.file("lights.json", JSON.stringify(lightData));
+			
+			
 		}
+		
+		
 		
 		// Textures
 		var i;
@@ -353,9 +407,13 @@ gGuiBase.SaveLoadSupport = (function() {
 				if (texture == "None") {
 					eval("obj = new " + className + "(new Renderable());");
 				} else {
-	
 					//gGuiBase.TextureSupport.addTexture(texture);
-					eval('obj = new ' + className + '(new TextureRenderable("' + texture + '"));');
+					if (data[9]) { //If renderable instanceof LightRenderable
+						eval('obj = new ' + className + '(new LightRenderable("' + texture + '"));');
+					} else {
+						eval('obj = new ' + className + '(new TextureRenderable("' + texture + '"));');
+					}
+					
 				}
 				//var entry = [obj, data[1], data[2]];
 				
@@ -369,7 +427,6 @@ gGuiBase.SaveLoadSupport = (function() {
 				xf.setHeight(data[6]);
 				xf.setRotationInDegree(data[7]);
 				obj.getRenderable().setColor(data[8]);
-				
 				
 				gGuiBase.ObjectSupport.setGameObjectByID(obj.mName, obj);
 				gGuiBase.ObjectSupport.setGameObjectCodeByID(obj.mName, data[1]);
@@ -397,6 +454,7 @@ gGuiBase.SaveLoadSupport = (function() {
 				currentScene.mID = "unset";
 				currentScene.mAllCamera = [];
 				currentScene.mAllObject = [];
+				currentScene.lightSet = new LightSet();
 				
 				var sceneList = gGuiBase.SceneSupport.getSceneList();
 				sceneList.push(currentScene);
@@ -503,6 +561,32 @@ gGuiBase.SaveLoadSupport = (function() {
 						instancesTab.refreshContent();
 	
 						// gGuiBase.View.refreshAllTabContent()
+					} else if (relativePath.endsWith("lights.json")) {
+						var i = 0;
+						while (typeof(data[i]) !== "undefined") {
+							var light = new Light();
+							light.mID = data[i + 0];
+							light.setColor(data[i + 1]);
+							light.mPosition = data[i + 2];
+							light.mDirection = data[i + 3]
+							light.mNear = data[i + 4];
+							light.mFar = data[i + 5];
+							light.mInner = data[i + 6];
+							light.mOuter = data[i + 7];
+							light.mIntensity = data[i + 8];
+							light.mDropOff = data[i + 9];
+							light.mLightType = data[i + 10];
+							light.mIsOn = data[i + 11];
+							light.mCastShadow = data[i + 12];
+	
+							gGuiBase.LightSupport.addLight(light);
+							i += 13;
+						}
+						
+						gGuiBase.Core.reinitializeLightsTab();
+						var lightsTab = gGuiBase.View.findTabByID("#Lights");
+						lightsTab.refreshContent();
+						
 					} else if (relativePath.endsWith(".json")) {
 						// Unless the user inserted a .json, this is the scene file
 						var theScene = gGuiBase.SceneSupport.getSceneByName(sceneName);

@@ -50,6 +50,7 @@ gGuiBase.Core = (function() {
 		gGuiBase.View.refreshAllTabContent();
 	};
 	
+	
 	var selectDetailsLight = function(id) {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		detailsTab.clearContent();

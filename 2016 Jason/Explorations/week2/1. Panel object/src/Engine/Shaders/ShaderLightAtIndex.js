@@ -34,10 +34,12 @@ ShaderLightAtIndex.prototype.loadToShader = function (aCamera, aLight) {
     var gl = gEngine.View.getGL();
     gl.uniform1i(this.mIsOnRef, aLight.isLightOn());
     if (aLight.isLightOn()) {
+		//console.log(aLight);
         var p = aCamera.wcPosToPixel(aLight.getPosition());
         var n = aCamera.wcSizeToPixel(aLight.getNear());
         var f = aCamera.wcSizeToPixel(aLight.getFar());
         var c = aLight.getColor();
+		
         gl.uniform4fv(this.mColorRef, c);
         gl.uniform3fv(this.mPosRef, vec3.fromValues(p[0], p[1], p[2]));
         gl.uniform1f(this.mNearRef, n);
