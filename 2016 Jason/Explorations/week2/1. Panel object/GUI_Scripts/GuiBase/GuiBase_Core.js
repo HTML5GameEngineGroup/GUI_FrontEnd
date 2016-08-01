@@ -54,14 +54,18 @@ gGuiBase.Core = (function() {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		detailsTab.clearContent();
 		var detailsTransform = new LightTransformContent("LightTransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
+		var color = new ColorLightContent("ColorLightContent", gGuiBase.View.CONTENT_STYLE, "Color");
 		
 		var light = gGuiBase.LightSupport.getLightByID( id );           // get gameObj
 		gGuiBase.Core.selectedLight = light;
 		detailsTransform.updateFields(light);
 		
 		detailsTab.addContent(detailsTransform);
+		detailsTab.addContent(color);
 
 		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
+		detailsTransform.setTypeDropdown();
+		
 	};
 
     // updates the details tab with the object whose name is passed as parameter
@@ -109,6 +113,7 @@ gGuiBase.Core = (function() {
 		
 		detailsTab.addContent(detailsTransform);
 		this.updateInstanceSelectList();
+		this.reinitializeLightsTab();
 		gGuiBase.View.refreshAllTabContent();
 	};
 
@@ -138,6 +143,11 @@ gGuiBase.Core = (function() {
 	
 	var reinitializeSceneTab = function() {
 		gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
+	};
+	
+	var reinitializeLightsTab = function() {
+		gGuiBase.View.findWidgetByID("#lightSelectList").rebuildWithArray(gGuiBase.LightSupport.getLightIDList());
+		gGuiBase.View.refreshAllTabContent();
 	};
 	
 	var emptyDetailsTab = function () {
@@ -247,6 +257,7 @@ gGuiBase.Core = (function() {
 	var reinitializeTabs = function() {
 		reinitializeSceneTab();
 		reinitializeCameraTab();
+		reinitializeLightsTab();
 		updateObjectSelectList();
 		updateInstanceSelectList();
 		emptyDetailsTab();
@@ -267,6 +278,7 @@ gGuiBase.Core = (function() {
 		reinitializeCameraTab: reinitializeCameraTab,
 		reinitializeSceneTab: reinitializeSceneTab,
 		reinitializeTabs: reinitializeTabs,
+		reinitializeLightsTab: reinitializeLightsTab,
 		
 		addInstance: addInstance,
 		addInstanceWithName: addInstanceWithName,

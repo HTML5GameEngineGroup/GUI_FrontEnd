@@ -45,7 +45,6 @@ LightTransformContent.prototype.initialize = function () {
 	
 	var textStyle = 'margin-left: 10px; margin-top: 4px';
 	var textFieldStyle = 'width: 90%; margin-left: 10px';
-	var sliderStyle = 'width: 90%; margin-top: 10px; margin-bottom: 10px; margin-left: 10px';
 	
 	this.lightNameText = new Text("lightNameText", textStyle, "Name");
 	this.lightName = new TextField("lightNameField", textFieldStyle, "Light0");
@@ -79,9 +78,10 @@ LightTransformContent.prototype.initialize = function () {
 	this.lightType = new DropdownList("lightTypeDropdown", textFieldStyle, types);
 	
 	this.lightOnText = new Text("lightOnText", textStyle, "Light on/off");
-	//this.lightOn = new Checkbox
+	this.lightOn = new Checkbox("lightOn", textStyle);
 	
 	this.lightCastShadowText = new Text("lightCastShadowText", textStyle, "Cast shadow");
+	this.lightCastShadow = new Checkbox("lightCastShadow", textStyle);
 	
 	this.widgetList.push(this.lightNameText);
 	this.widgetList.push(this.lightName);
@@ -108,9 +108,9 @@ LightTransformContent.prototype.initialize = function () {
 	this.widgetList.push(this.lightTypeText);
 	this.widgetList.push(this.lightType);
 	this.widgetList.push(this.lightOnText);
-	//this.widgetList.push(this.lightOn);
+	this.widgetList.push(this.lightOn);
 	this.widgetList.push(this.lightCastShadowText);
-	//this.widgetList.push(this.lightCastShadow);
+	this.widgetList.push(this.lightCastShadow);
 	
 	
 };
@@ -129,6 +129,11 @@ LightTransformContent.prototype.initializeEventHandling = function () {
 	this.lightOuter.setOnFocusOut(this.onTextFieldFocusOut);
 	this.lightIntensity.setOnFocusOut(this.onTextFieldFocusOut);
 	this.lightDropoff.setOnFocusOut(this.onTextFieldFocusOut);
+	
+	this.lightOn.setOnChecked(this.lightOnCheck);
+	this.lightCastShadow.setOnChecked(this.lightCastShadowOnCheck);
+	
+	this.lightType.setOnSelect(this.onListSelect);
 	
 };
 
@@ -219,9 +224,48 @@ LightTransformContent.prototype.updateFields = function( light ) {
 	this.lightIntensity.setText(light.mIntensity);
 
 	this.lightDropoff.setText(light.mDropOff);
+	
 
 	//this.lightType = null;
 
+};
+
+LightTransformContent.prototype.setTypeDropdown = function() {
+	var light = gGuiBase.Core.selectedLight;
+	var type;
+	switch (light.mLightType) {
+		case Light.eLightType.ePointLight: type = "Point"; break;
+		case Light.eLightType.eDirectionalLight: type = "Directional"; break;
+		case Light.eLightType.eSpotLight: type = "Spotlight"; break;
+		default: console.log("Invalid light type");
+	}
+	$('#lightTypeDropdown').val(type);
+};
+
+LightTransformContent.prototype.onListSelect = function(value) {
+	var light = gGuiBase.Core.selectedLight;
+	var content = gGuiBase.View.findTabContentByID("#LightTransformContent");
+	var type = content.getDropdownTexName();
+	
+	switch(type) {
+		case "Point": light.mLightType = Light.eLightType.ePointLight; break;
+		case "Directional": light.mLightType = Light.eLightType.eDirectionalLight; break;
+		case "Spotlight": light.mLightType = Light.eLightType.eSpotLight; break;
+	}
+};
+
+LightTransformContent.prototype.getDropdownTexName = function() {
+	return this.lightType.getSelectedListItem();
+};
+
+LightTransformContent.prototype.lightOnCheck = function(checked) {
+	var light = gGuiBase.Core.selectedLight;
+	light.mIsOn = checked;
+};
+
+LightTransformContent.prototype.lightCastShadowOnCheck = function(checked) {
+	var light = gGuiBase.Core.selectedLight;
+	light.mCastShadow = checked;
 };
 
 
