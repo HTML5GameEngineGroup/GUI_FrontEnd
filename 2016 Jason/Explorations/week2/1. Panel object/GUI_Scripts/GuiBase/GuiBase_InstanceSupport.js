@@ -26,6 +26,11 @@ gGuiBase.InstanceSupport = (function() {
 		gGuiBase.SceneSupport.gCurrentScene.sortInstanceListByOrder();
         // track new instance by id
         mInst[inst.mID] = inst;
+		
+		if (inst.getRenderable() instanceof LightRenderable) {
+			gGuiBase.LightSupport.addLightsToInstances();
+		}
+		
         return inst.mID;
     };
 	

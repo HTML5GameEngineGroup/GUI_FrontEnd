@@ -62,6 +62,8 @@ gGuiBase.Core = (function() {
 		
 		detailsTab.addContent(detailsTransform);
 		detailsTab.addContent(color);
+		
+		gGuiBase.DirectManipulationSupport.resetInteraction();
 
 		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
 		detailsTransform.setTypeDropdown();

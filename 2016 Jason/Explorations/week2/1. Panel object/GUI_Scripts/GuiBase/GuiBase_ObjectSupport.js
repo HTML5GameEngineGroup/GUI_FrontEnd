@@ -130,7 +130,11 @@ gGuiBase.ObjectSupport = (function() {
         console.log(gameObject.getRenderable().mTexture);
         var texture = gameObject.getRenderable().mTexture;
         if (texture) {
-            eval('newGO = new ' + gameObject.mName + '(new TextureRenderable("' + texture + '"));');
+			if (gameObject.getRenderable() instanceof LightRenderable) {
+				eval('newGO = new ' + gameObject.mName + '(new LightRenderable("' + texture + '"));');
+			} else {
+				eval('newGO = new ' + gameObject.mName + '(new TextureRenderable("' + texture + '"));');
+			}
         } else {
             eval('newGO = new ' + gameObject.mName + '(new Renderable());');
         }

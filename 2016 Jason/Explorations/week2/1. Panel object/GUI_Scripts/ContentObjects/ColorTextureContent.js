@@ -6,6 +6,9 @@ function ColorTextureContent(tabContentID, style, title) {
 	this.textureDropDown = null;
 	this.textureButton = null;
 	this.textureSelectDialog = null;
+	
+	this.applyLightText = null;
+	this.applyLightCheckbox = null;
 
 	GuiTabContent.call(this, tabContentID, style, title);
 }
@@ -26,11 +29,19 @@ ColorTextureContent.prototype.initialize = function () {
 	this.textureDropDown = new DropdownList("textureDropDown", textFieldStyle, textureNames);
 	
 	this.textureButton = new Button("textureButton", GuiTabContent.NO_STYLE, "Select texture");
+	
+	this.applyLightText = new Text("applyLightText", textStyle, "Apply lighting");
+	this.applyLightCheckbox = new Checkbox("applyLightCheckbox", textStyle);
+	
 	this.widgetList.push(this.colorText);
 	this.widgetList.push(this.colorField);
 	this.widgetList.push(this.textureText);
 	this.widgetList.push(this.textureDropDown);
 	this.widgetList.push(this.textureButton);
+	this.widgetList.push(this.applyLightText);
+	this.widgetList.push(this.applyLightCheckbox);
+	
+	
 	// if (gGuiBase.Core.selectedGameObject) this.setDropdownToSelectedGO();
 };
 
@@ -44,7 +55,12 @@ ColorTextureContent.prototype.initializeEventHandling = function () {
 	var newColor = [oldColor[0] * 255, oldColor[1] * 255, oldColor[2] * 255, oldColor[3]];
 	$(this.colorField.getID()).val("rgba(" + newColor + ")");
 	
+	if (gameObject.getRenderable() instanceof LightRenderable) 
+		$(this.applyLightCheckbox.getID()).prop('checked', true);
+	
 	this.textureButton.setOnClick(this.onButtonClick);
+	
+	this.applyLightCheckbox.setOnChecked(this.applyLightChecked);
 	
 };
 
@@ -117,4 +133,20 @@ ColorTextureContent.prototype.setDropdownToSelectedGO = function() {
 	} else {
 		$('#textureDropDown').val("None");
 	}
+};
+
+ColorTextureContent.prototype.applyLightChecked = function(checked) {
+	var gameObject = gGuiBase.Core.selectedGameObject;
+	var colorTextureContent = gGuiBase.View.findTabContentByID("#ColorTextureContent");
+	var textureName = colorTextureContent.getDropdownTexName();
+	if (checked) {
+		if (textureName === "None") return; //Can't apply light
+		gGuiBase.LightSupport.addLightingToGameObject(gameObject.mName, textureName);
+		gGuiBase.LightSupport.addLightsToInstances();
+		
+	} else {
+		if (textureName === "None") return;
+		gGuiBase.TextureSupport.addTextureToGameObject(gameObject.mName, textureName);
+	}
+	
 };
