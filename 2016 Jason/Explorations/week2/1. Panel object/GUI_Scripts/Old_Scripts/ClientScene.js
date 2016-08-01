@@ -30,6 +30,8 @@ function ClientScene(number) {
     this.isInitialized = false;
     this.mAllTextures = {};
 	
+	this.mLightSet = new LightSet();
+	
 	this.selectObject = null;
 	this.rotationObject = null;
 	this.sceneViewCamera = null;
