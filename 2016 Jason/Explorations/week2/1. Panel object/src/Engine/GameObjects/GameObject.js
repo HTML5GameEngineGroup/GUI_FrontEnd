@@ -29,11 +29,12 @@ function GameObject(renderableObj) {
     this.mCollidableFlag = false;
     this.mCollisionPixelFlag = false;
     this.mCollisionSet = null;
-    this.start();
+    this.mDestroy = false;
+    // added for layer support
+    this.mOrderInLayer = 0;
     this.mLayer=2;
     gEngine.LayerManager.addToLayer(gEngine.eLayer.eActors, this);
-	
-	this.mOrderInLayer = 0;
+    this.start();
 }
 
 /**

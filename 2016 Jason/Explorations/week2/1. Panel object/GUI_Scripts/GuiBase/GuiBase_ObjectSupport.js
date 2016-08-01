@@ -18,34 +18,38 @@ gGuiBase.ObjectSupport = (function() {
         return cameraName in mGO;
     };
 
-    // creates a defaultObject and returns its name
-    var createDefaultObject = function() {
-        // create new default name
+    // sets GameObject gameObject's transform to default values (arbitrary values)
+    var setDefaultTransform = function ( gameObject ) {
+        var xf = gameObject.getXform();
+        xf.setXPos(20);
+        xf.setYPos(60);
+        xf.setWidth(5);
+        xf.setHeight(5);
+    };
+
+    // returns a name for gameobjects
+    var getUniqueName = function ( ) {
         var name = "GameObj" + mNextObjID;
-        while (this.checkForNameConflict(name)) {
+        while (checkForNameConflict(name)) {
             mNextObjID++; // This has not been incremented yet so do it here.  After this method is over, + Object will increment it to a unique value.
             name = "GameObj" + mNextObjID;
         }
-        
-        // will be overwritten probably not needed
-        window[name] = function(renderableObj) {
-            GameObject.call(this, renderableObj);
-        };
-        gEngine.View.inheritPrototype(window[name], window["GameObject"]);
-		
-		var code = this.getDefaultCodeGO(name);
+        return name;
+    };
+
+    // creates a defaultObject and returns its name
+    var createDefaultObject = function() {
+        // create new default name
+        var name = getUniqueName();
         // Add code to window
+        var code = getDefaultCodeGO(name);
         // dynamically create a new class which inherits from GameObject Class
         eval(code);
         // create a instance of this GO
         var newGO;
         eval('newGO = new ' + name + '(new Renderable());');
         // Make a default xform
-        var xf = newGO.getXform();                                             // set default transform
-        xf.setXPos(20);
-        xf.setYPos(60);
-        xf.setWidth(5);
-        xf.setHeight(5);
+        setDefaultTransform( newGO );
         newGO.mID = name;
         newGO.mName = name;                                                    // object class name
         mGO[newGO.mName] = newGO;                                               // add to map
@@ -53,81 +57,62 @@ gGuiBase.ObjectSupport = (function() {
         return newGO.mName;
     };
 
+    // creates a texture gameObject, whose texture is texture, and has default transform
     var createDefaultTextObject = function(texture) {
         // create new default name
-        var name = "GameObj" + mNextObjID;
-        while (this.checkForNameConflict(name)) {
-            mNextObjID++; // This has not been incremented yet so do it here.  After this method is over, + Object will increment it to a unique value.
-            name = "GameObj" + mNextObjID;
-        }
-
-        // will be overwritten probably not needed
-        window[name] = function(renderableObj) {
-            GameObject.call(this, renderableObj);
-        };
-        gEngine.View.inheritPrototype(window[name], window["GameObject"]);
-
-        var code = this.getDefaultCodeGO(name);
+        var name = getUniqueName();
         // Add code to window
+        var code = getDefaultCodeGO(name);
         // dynamically create a new class which inherits from GameObject Class
         eval(code);
         // create a instance of this GO
         var newGO;
         eval('newGO = new ' + name + '(new TextureRenderable("' + texture + '"));');
         // Make a default xform
-        var xf = newGO.getXform();                                             // set default transform
-        xf.setXPos(20);
-        xf.setYPos(60);
-        xf.setWidth(5);
-        xf.setHeight(5);
+        setDefaultTransform( newGO );
         newGO.mID = name;
-        newGO.mName = name;                                                    // object class name
-        mGO[newGO.mName] = newGO;                                               // add to map
+        newGO.mName = name;                         // object class name
+        mGO[newGO.mName] = newGO;                   // add to map
         mGOCode[newGO.mName] = code;                // add code to code map
-
         return newGO.mName;
     };
-    
-   
-	
+
+	// delete gameobject whose name is objName from ObjectSupport and all its instances from all scenes
 	var deleteObject = function(objName) {
-		
+        // remove from details if object is selected
 		if (objName === gGuiBase.Core.selectedGameObject.mName) {
 			gGuiBase.Core.emptyDetailsTab();
 			gGuiBase.Core.selectedGameObject = null;
 		}
-		
+
+        // remove from object support
 		delete mGO[objName];
 		delete mGOCode[objName];
-        
+
+        // remove from all scenes
 		gGuiBase.InstanceSupport.deleteInstancesWithName(objName); //Delete instances containing the object name
+
+        // update gui panels to reflect removal
 		gGuiBase.Core.updateObjectSelectList();
 		gGuiBase.Core.updateInstanceSelectList();
 		gGuiBase.View.refreshAllTabContent();		
 	};
-	
+
+    // replaces name in ObjectSupport of object whose name is oldName
 	var replaceInMap = function(oldName, newName) {
-		
-		console.log(mGO[oldName]);
-		console.log(mGOCode[oldName]);
 		var object = mGO[oldName];
 		delete mGO[oldName];
 		var code = mGOCode[oldName];
 		delete mGOCode[oldName];
-		
-		
 		object.mName = newName;
 		object.mID = newName;
 		mGO[newName] = object;
 		mGOCode[newName] = code;
 	};
 	
-	
-    
+    // returns a new GameObject who is a copy of gameObject
     var cloneGO = function ( gameObject ) {
         var newGO;
-        console.log("type of renderable in clone:", typeof(gameObject.getRenderable()));
-        console.log(gameObject.getRenderable().mTexture);
         var texture = gameObject.getRenderable().mTexture;
         if (texture) {
 			if (gameObject.getRenderable() instanceof LightRenderable) {
@@ -145,7 +130,8 @@ gGuiBase.ObjectSupport = (function() {
         newGO.mName = gameObject.mName;                                                    // object class name
         return newGO;
     };
-    
+
+    // copies values from gameobject = sourceGO's transform to gameObject = targetGO's transform
     var copyTransform = function ( targetGO, sourceGO ) {
         var targetTransform = targetGO.getXform();                                             // set default transform
         var gameObjectTransform = sourceGO.getXform();
@@ -153,6 +139,7 @@ gGuiBase.ObjectSupport = (function() {
         copyTransformOnTransforms(targetTransform, gameObjectTransform);
     };
 
+    // sets targetXF to sourceXF, does not alter source
     var copyTransformOnTransforms = function ( targetXf, sourceXf) {
         targetXf.setXPos(sourceXf.getXPos());
         targetXf.setYPos(sourceXf.getYPos());
@@ -161,50 +148,48 @@ gGuiBase.ObjectSupport = (function() {
         targetXf.setRotationInDegree(sourceXf.getRotationInDegree());
     };
     
-    // names are id, names must be unique
+    // returns a the gameobject (prefab) whose id is name
     var getGameObjectByID = function( name ) {
         return mGO[ name ];
     };
 
+    // default code used to generate a game object
     var getDefaultCodeGO = function( name ) {
         return 'window["' + name + '"] = function(renderableObj) {\n\
-    GameObject.call(this, renderableObj);\n\
-    this.mCollidableFlag = false;\n\
-    this.mCollisionPixelFlag = false;\n\
-    this.mDestroy = false;\n\
-}\n\
-gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
-\n\
-' + name + '.prototype.update = function() {\n\
-    GameObject.prototype.update.call(this);\n\
-};\n\
-\n\
-' + name + '.prototype.draw = function(aCamera) {\n\
-    GameObject.prototype.draw.call(this, aCamera);\n\
-};\n\
-\n\
-' + name + '.prototype.onCollisionStay = function(otherObj) {\n\
-    \n\
-};\n\
-\n\
-' + name + '.prototype.onCollisionEnter = function(otherObj) {\n\
-    \n\
-};\n\
-\n\
-' + name + '.prototype.onCollisionExit = function(otherObj) {\n\
-    \n\
-};';
+            GameObject.call(this, renderableObj);\n\
+        }\n\
+        gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
+        \n\
+        ' + name + '.prototype.update = function() {\n\
+            GameObject.prototype.update.call(this);\n\
+        };\n\
+        \n\
+        ' + name + '.prototype.draw = function(aCamera) {\n\
+            GameObject.prototype.draw.call(this, aCamera);\n\
+        };\n\
+        \n\
+        ' + name + '.prototype.onCollisionStay = function(otherObj) {\n\
+            \n\
+        };\n\
+        \n\
+        ' + name + '.prototype.onCollisionEnter = function(otherObj) {\n\
+        \n\
+        };\n\
+        \n\
+        ' + name + '.prototype.onCollisionExit = function(otherObj) {\n\
+            \n\
+        };';
     };
 
-
-
+    // returns code for non gameobjects
     var getDefaultCodeClass = function(name, id) {
         return 'window["' + name + '"] = function() {\n\
-    this.mName = "' + name + '";\n\
-    this.mID = "' + id + '";\n\
-}';
+            this.mName = "' + name + '";\n\
+            this.mID = "' + id + '";\n\
+        }';
     };
 
+    // returns a new list of all gameobjects
     var getObjectList = function() {
         var objList = [];
         for (var objName in mGO) {
@@ -212,7 +197,8 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
         }
         return objList;
     };
-	
+
+    // returns a new list of the names of all the game objects
 	var getObjectNameList = function() {
 		var objList = [];
 		for (var objName in mGO) {
@@ -220,7 +206,8 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
 		}
 		return objList;
 	};
-	
+
+    // returns a new list of all the code for the game objects
 	var getObjectCodeList = function() {
 		var objList = [];
         for (var objName in mGOCode) {
@@ -228,19 +215,23 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
         }
         return objList;
 	};
-    
+
+    // sets gameObject whose name is GOName to gameObject Object
 	var setGameObjectByID = function ( GOName, object ) {
 		mGO[GOName] = object;
 	};
-	
+
+    // returns gameObject whose name is GOName
     var getGameObjectCodeByID = function ( GOName ) {
         return mGOCode[GOName];
     };
-    
+
+    // returns code of gameObject whose name is GOName
     var setGameObjectCodeByID = function ( GOName, Code ) {
         mGOCode[GOName] = Code;  
     };
-	
+
+    // removes all gameObjects from ObjectSupport
 	var clearObjects = function() {
 		for (var objName in mGO) {
 			delete mGO[objName];
@@ -255,12 +246,6 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
 		mNextObjID = 0;
 	};
     
-    var inheritPrototype = function (subClass, superClass) {
-        var prototype = Object.create(superClass.prototype);
-        prototype.constructor = subClass;
-        subClass.prototype = prototype;
-    };
-
     var mPublic = {
         createDefaultObject: createDefaultObject,
         createDefaultTextObject: createDefaultTextObject,
@@ -281,9 +266,7 @@ gEngine.View.inheritPrototype(window["' + name + '"], window["GameObject"]);\n\
         getGameObjectCodeByID: getGameObjectCodeByID,
         setGameObjectCodeByID: setGameObjectCodeByID,
 		mNextObjID: mNextObjID,
-		clearObjects: clearObjects,
-
-        inheritPrototype: inheritPrototype
+		clearObjects: clearObjects
     };
     return mPublic;
 }());
