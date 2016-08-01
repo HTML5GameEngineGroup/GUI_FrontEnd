@@ -50,6 +50,8 @@ ColorTextureContent.prototype.initializeEventHandling = function () {
 	$('#colorTextField').colorpicker({format:'rgba'});
 	this.colorField.setOnFocusOut(this.onFocusOut);
 	
+	this.setDropdownToSelectedGO();
+	
 	var gameObject = gGuiBase.Core.selectedGameObject;
 	var oldColor = gameObject.getRenderable().getColor();
 	var newColor = [oldColor[0] * 255, oldColor[1] * 255, oldColor[2] * 255, oldColor[3]];
@@ -121,18 +123,19 @@ ColorTextureContent.prototype.getDropdownTexName = function() {
 
 ColorTextureContent.prototype.setDropdownToSelectedGO = function() {
 	var renderable = gGuiBase.Core.selectedGameObject.getRenderable();
+	
 	// console.log(selectedGameObject);
 	// console.log("isntance of:", selectedGameObject.getRenderable() instanceof TextureRenderable);
 	//console.log('instance of:', renderable instanceof TextureRenderable);
 	// var texture = gGuiBase.Core.selectedGameObject.getRenderable().getTexture();
 	//console.log(renderable);
-	if (renderable instanceof TextureRenderable) {
+	if (renderable instanceof TextureRenderable || renderable instanceof LightRenderable) {
 		var texName = renderable.getTexture();
-		console.log('texName:', texName);
 		$('#textureDropDown').val(texName);
 	} else {
 		$('#textureDropDown').val("None");
 	}
+	
 };
 
 ColorTextureContent.prototype.applyLightChecked = function(checked) {

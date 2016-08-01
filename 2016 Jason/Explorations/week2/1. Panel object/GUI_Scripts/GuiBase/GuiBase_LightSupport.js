@@ -86,8 +86,9 @@ gGuiBase.LightSupport = (function() {
 			if (inst.mName === gameObjectName) {
 				// assign appropriate renderable
 				var rend = new LightRenderable(textureName);
+				gGuiBase.TextureSupport.setRenderableForGameObject(inst, rend);
 			}
-			gGuiBase.TextureSupport.setRenderableForGameObject(inst, rend);
+			
 			
 		}
 	};
@@ -100,8 +101,9 @@ gGuiBase.LightSupport = (function() {
 			var instances = sceneList[j].getInstanceList();
 			for (i = 0; i < instances.length; i++) {
 				var renderable = instances[i].getRenderable();
-				renderable.deleteAllLights();
 				if (renderable instanceof LightRenderable) {
+					
+					renderable.deleteAllLights();
 					var lightSet = sceneList[j].mLightSet;
 					for (var k = 0; k < lightSet.numLights(); k++) {
 						renderable.addLight(lightSet.getLightAt(k));

@@ -200,7 +200,8 @@ gGuiBase.Core = (function() {
 		detailsTab.addContent(detailsTransform);
 		detailsTab.addContent(detailsColorTexture);
 		detailsTab.addContent(detailsOrder);
-
+		
+		
 		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
 		gGuiBase.View.findTabContentByID('#ColorTextureContent').setDropdownToSelectedGO();
 	};
