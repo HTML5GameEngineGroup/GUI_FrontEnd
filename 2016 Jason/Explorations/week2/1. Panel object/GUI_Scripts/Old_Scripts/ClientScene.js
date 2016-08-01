@@ -40,14 +40,6 @@ function ClientScene(number) {
 gEngine.View.inheritPrototype(ClientScene, Scene);
 
 ClientScene.prototype.loadScene = function() {
-   // loads the audios
-    //gEngine.AudioClips.loadAudio(this.kBgClip);
-   // gEngine.AudioClips.loadAudio(this.kCue);
-    //gEngine.TextFileLoader.loadTextFile(this.kSceneFile, gEngine.TextFileLoader.eTextFileType.eTextFile);
-    // gEngine.Textures.loadTexture("assets/minion_sprite.png");
-	
-	//If it hasn't already been loaded, load it
-	// if (!(gEngine.ResourceMap.isAssetLoaded("assets/cameraicon.png")))
 
     for (var texture in gGuiBase.TextureSupport.gAllTextures) {
       gEngine.Textures.loadTexture(texture);
@@ -161,9 +153,6 @@ ClientScene.prototype.draw = function() {
 		// 	}
 		// }
 	}
-	//Selection should not be shown if there is no selection object, if the camera does not exist,
-	// if there is no selected gameobject, and if the selected gameobject is an instance
-	
 };
 
 // The update function, updates the application state. Make sure to _NOT_ draw

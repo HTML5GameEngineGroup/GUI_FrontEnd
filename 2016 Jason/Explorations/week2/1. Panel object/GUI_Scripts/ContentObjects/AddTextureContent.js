@@ -64,7 +64,6 @@ AddTextureContent.prototype.selectObject = function( ui ) {
 
 AddTextureContent.prototype.onFileSelect = function() {
 	gEngine.Textures.loadTextureFromFile("TextureInput", gGuiBase.TextureSupport.addTexture);
-	
 };
 
 
