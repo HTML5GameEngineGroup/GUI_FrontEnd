@@ -70,6 +70,10 @@ LightRenderable.prototype.getLightAt = function (index) {
 LightRenderable.prototype.addLight = function (l) {
     this.mLights.push(l);
 };
+
+LightRenderable.prototype.deleteAllLights = function() {
+	this.mLights = [];
+};
 //--- end of Public Methods
 
 //</editor-fold>

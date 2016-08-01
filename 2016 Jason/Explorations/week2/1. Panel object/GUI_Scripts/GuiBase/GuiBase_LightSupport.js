@@ -14,6 +14,13 @@ gGuiBase.LightSupport = (function() {
 		return light;
 	};
 	
+	var addLight = function(light) {
+		gGuiBase.SceneSupport.gCurrentScene.mLightSet.addToSet(light);
+		
+		this.addLightsToInstances();
+		gGuiBase.View.findWidgetByID("#lightSelectList").rebuildWithArray(gGuiBase.LightSupport.getLightIDList());
+	};
+	
 	var checkForNameConflict = function(name) {
 		var lightSet = gGuiBase.SceneSupport.gCurrentScene.mLightSet;
         var result = false;
@@ -93,11 +100,26 @@ gGuiBase.LightSupport = (function() {
 			var instances = sceneList[j].getInstanceList();
 			for (i = 0; i < instances.length; i++) {
 				var renderable = instances[i].getRenderable();
+				renderable.deleteAllLights();
 				if (renderable instanceof LightRenderable) {
 					var lightSet = sceneList[j].mLightSet;
 					for (var k = 0; k < lightSet.numLights(); k++) {
 						renderable.addLight(lightSet.getLightAt(k));
 					}
+				}
+			}
+		}
+	};
+	
+	var removeLightReferences = function() {
+		var sceneList = gGuiBase.SceneSupport.getSceneList();
+		for (var j = 0; j < sceneList.length; j++) {
+			// First update all instances with the new name and class
+			var instances = sceneList[j].getInstanceList();
+			for (i = 0; i < instances.length; i++) {
+				var renderable = instances[i].getRenderable();
+				if (renderable instanceof LightRenderable) {
+					renderable.deleteAllLights();
 				}
 			}
 		}
@@ -110,7 +132,9 @@ gGuiBase.LightSupport = (function() {
 		getLightIDList: getLightIDList,
 		addLightingToGameObject: addLightingToGameObject,
 		setLightRenderableForAllInstancesOfObject: setLightRenderableForAllInstancesOfObject,
-		addLightsToInstances: addLightsToInstances
+		addLightsToInstances: addLightsToInstances,
+		addLight: addLight,
+		removeLightReferences: removeLightReferences,
     };
     return mPublic;
 }());
