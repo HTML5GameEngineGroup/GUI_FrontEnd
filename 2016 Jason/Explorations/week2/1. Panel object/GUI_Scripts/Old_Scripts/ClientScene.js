@@ -41,11 +41,7 @@ gEngine.View.inheritPrototype(ClientScene, Scene);
 
 ClientScene.prototype.loadScene = function() {
 
-    for (var texture in gGuiBase.TextureSupport.gAllTextures) {
-      gEngine.Textures.loadTexture(texture);
-    }
 };
-
 
 ClientScene.prototype.unloadScene = function() {
     // Step A: Game loop not running, unload all assets
@@ -64,12 +60,6 @@ ClientScene.prototype.unloadScene = function() {
     // Step B: starts the next level
     // starts the next level
     //var nextLevel = new BlueLevel();  // next level to be loaded
-    //gEngine.View.startScene(nextLevel);
-    for (var texture in this.mAllTextures) {
-        gEngine.Textures.unloadTexture(texture);
-    };
-	
-	//gEngine.Textures.unloadTexture("assets/cameraicon.png");
 };
 
 ClientScene.prototype.initialize = function() {
@@ -142,16 +132,6 @@ ClientScene.prototype.draw = function() {
                 }
             }
         }
-		// for (i = 0; i < this.mAllCamera.length; i++) {
-		// 	var cam = this.mAllCamera[i];
-		// 	cam.setupViewProjection();
-		//
-		// 	for (j = 0; j < this.mInstanceList.length; j++) {
-		// 		if (this.mInstanceList[j] instanceof GameObject) {
-		// 			this.mInstanceList[j].draw(cam);
-		// 		}
-		// 	}
-		// }
 	}
 };
 
@@ -222,8 +202,6 @@ ClientScene.prototype.removeCamera = function (cameraName) {
             return true;
         }
     }
-	
-	
     return false;
 };
 
