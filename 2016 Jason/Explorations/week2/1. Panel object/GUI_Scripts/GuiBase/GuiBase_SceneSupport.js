@@ -11,23 +11,17 @@ gGuiBase.SceneSupport = (function() {
     gEngine.View.initializeEngineCore('GLCanvas', gCurrentScene);
 	
 	var selectScene = function(index) {
-		gEngine.GameLoop.stop();
-		//todo unload textures
-		// gGuiBase.SceneSupport.gCurrentScene.unloadScene();
+		gEngine.GameLoop.stop();	// this unloads anything in scene.unload
 		if (index !== null) {
 			gGuiBase.SceneSupport.gCurrentScene = mSceneList[index];
-			//gGuiBase.SceneSupport.gCurrentScene.loadScene();
-			gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
+			gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);	// this loads anything in scene.load
 			gGuiBase.Core.reinitializeCameraTab();
-			//gGuiBase.SceneSupport.gCurrentScene.setInitialCameraObject();
-			
 		} else {
 			this.runBlankScene();
 		}
 		return gCurrentScene;
 	};
-	
-	
+
     // returns true if name is already in use
     var checkForNameConflict = function(name) {
         var result = false;
@@ -79,7 +73,6 @@ gGuiBase.SceneSupport = (function() {
 		return -1;
 	};
 	
-	
 	var runBlankScene = function() {
 		var blank = new ClientScene(-1);
 		gCurrentScene = blank;
@@ -96,7 +89,6 @@ gGuiBase.SceneSupport = (function() {
 
 	var selectSceneByName = function(name) {
 		// Select the scene at the index and run it too
-		
 		gEngine.GameLoop.stop();
 		if (name !== null) {
 			gGuiBase.SceneSupport.gCurrentScene = getSceneByName(name);
@@ -106,7 +98,6 @@ gGuiBase.SceneSupport = (function() {
 		} else {
 			runBlankScene();
 		}
-		
 		return gCurrentScene;
 	};
 
@@ -123,7 +114,6 @@ gGuiBase.SceneSupport = (function() {
     };
 
     var getSceneList = function() {
-		
         return mSceneList;
     };
 	
@@ -133,7 +123,7 @@ gGuiBase.SceneSupport = (function() {
 			nameArray.push(mSceneList[i].mName);
 		}
 		return nameArray;
-	}
+	};
 
     var mPublic = {
 		gCurrentScene: gCurrentScene,

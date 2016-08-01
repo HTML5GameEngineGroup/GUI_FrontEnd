@@ -104,11 +104,9 @@ gEngine.Textures = (function () {
     };
 	
 	var loadTextureFromFile = function(targetDivName, callback) {
-        //console.log("loadTexture from file");
         var texName = document.getElementById(targetDivName).value;
-        //console.log("texName:", texName);
         var index = texName.lastIndexOf('\\');
-        if (index != -1) texName = texName.slice(index + 1);
+        if (index != -1) texName = texName.slice(index + 1);    // remove nonfile name prefix
 		if (!(gEngine.ResourceMap.isAssetLoaded(texName))) {
 			// Create new Texture object.
 			var img = new Image();
@@ -131,7 +129,6 @@ gEngine.Textures = (function () {
 	};
 	
 	var loadTextureFromImageSrc = function(textureName, imgString, callback) {
-		console.log("loadTexture from Imagesrc");
 		if (!(gEngine.ResourceMap.isAssetLoaded(textureName))) {
 			// Create new Texture object.
 			var img = new Image();
@@ -147,27 +144,6 @@ gEngine.Textures = (function () {
 			gEngine.ResourceMap.incAssetRefCount(textureName);
 		}
 	};
-
-    var loadSingleTexture = function (textureName, callBack) {
-        if (!(gEngine.ResourceMap.isAssetLoaded(textureName))) {
-            // Create new Texture object.
-            var img = new Image();
-
-            // Update resources in loading counter.
-            gEngine.ResourceMap.asyncLoadRequested(textureName);
-
-            // When the texture loads, convert it to the WebGL format then put
-            // it back into the mTextureMap.
-            img.onload = function () {
-                _processLoadedImage(textureName, img);
-                alert(textureName + 'imageloaded');
-                callBack();
-            };
-            img.src = textureName;
-        } else {
-            gEngine.ResourceMap.incAssetRefCount(textureName);
-        }
-    };
 
     /**
      * Remove the reference to allow associated memory <p>
@@ -288,7 +264,6 @@ gEngine.Textures = (function () {
         loadTexture: loadTexture,
 		loadTextureFromFile: loadTextureFromFile,
         loadTextureFromImageSrc: loadTextureFromImageSrc,
-        loadSingleTexture: loadSingleTexture,
         unloadTexture: unloadTexture,
         activateTexture: activateTexture,
         activateNormalMap: activateNormalMap,

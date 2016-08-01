@@ -15,13 +15,9 @@ gGuiBase.TextureSupport = (function() {
         // if added already return
         if(gAllTextures[texName] || texName == "") return;
         gAllTextures[texName] = true;
-        //console.log('currentscene:', gGuiBase.SceneSupport.gCurrentScene);
         loadTexturesToScene();
         // refresh texturelist in view
-        var texList = gGuiBase.TextureSupport.getTexList();
-		
 		var imageList = gGuiBase.TextureSupport.getImageList();
-        //gGuiBase.View.findWidgetByID("#texSelectList1").rebuildWithArray( texList );
 		gGuiBase.View.findWidgetByID("#TextureSelectList").rebuildWithArray( imageList );
         gGuiBase.View.refreshAllTabContent();  // refresh panel
     };
@@ -40,7 +36,6 @@ gGuiBase.TextureSupport = (function() {
         gEngine.GameLoop.stop();
         gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
         gGuiBase.Core.reinitializeCameraTab();
-        //update the gui
     };
 
     // texture must be already added to texture support!
@@ -61,7 +56,6 @@ gGuiBase.TextureSupport = (function() {
         // copy transform from object to new texture
         this.setRenderableForGameObject(gameObject, rend);
         this.setRenderableForAllInstancesOfObject(gameObjectName, "None");
-
     };
 
     var setRenderableForGameObject = function (gameObject, newRenderable) {
