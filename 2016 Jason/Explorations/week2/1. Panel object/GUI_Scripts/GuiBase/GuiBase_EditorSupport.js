@@ -87,10 +87,12 @@ gGuiBase.EditorSupport = (function() {
         // Add a button at the bottom
         editorArea.append('<br>');
         editorArea.append('<ul class="floating-nav-menu" id="' + navBottomName + '">' +
-            '<li id="' + okName + '"><a href="#"><button type="button" class="btn btn-default">OK</button></a></li>' +           // Places this on the farthest right
-            '<li id="' + cancelName + '"><a href="#"><button type="button" class="btn btn-danger">Cancel</button></a></li>' +   // Left of the OK button
+            '<li id="' + okName + '"><a href="#"><button type="button" class="btn btn-default"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button></a></li>' +           // Places this on the farthest right
+            '<li id="' + cancelName + '"><a href="#"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Cancel</button></a></li>' +   // Left of the OK button
             '</ul>');
-        $('#' + okName).css('float', 'right');
+        $('#' + okName)
+            .css('float', 'right')
+            .css('margin-left', '4px');
         $('#' + cancelName).css('float', 'right');
         $('.floating-nav-menu')
             .css('margin', 0)
@@ -110,16 +112,7 @@ gGuiBase.EditorSupport = (function() {
                     // Puts code into system
                     eval(result);
 
-                    // ******************** start here ***************************
-                    var i;
-                    var objs = gGuiBase.ObjectSupport.getObjectList();
-                    var objCode = gGuiBase.ObjectSupport.getObjectCodeList();
-                    for (i = 0; i < objs.length; i++) {
-                        if (objs[i].mName === selectedName) {
-                            eval(objCode[i]);
-                        }
-                    }
-
+                    // todo remove direct access to scene data structure
                     var sceneList = gGuiBase.SceneSupport.getSceneList();
                     for (var j = 0; j < sceneList.length; j++) {
 
@@ -143,7 +136,6 @@ gGuiBase.EditorSupport = (function() {
                             }
                         }
                     }
-                    // ************** end here *****************
                     msg = "Code saved!";
                 } catch (error) {
                     msg = "Your code contains an error.  Please review.\n\n" + error;
@@ -156,43 +148,30 @@ gGuiBase.EditorSupport = (function() {
                     // Puts code into system
                     eval(result);
 
-                    // this evals twice?
-                    // // ******************** start here ***************************
-                    // var i;
-                    // var objs = gGuiBase.ObjectSupport.getObjectList();
-                    // var objCode = gGuiBase.ObjectSupport.getObjectCodeList();
-                    // for (i = 0; i < objs.length; i++) {
-                    //     if (objs[i].mName === selectedName) {
-                    //         eval(objCode[i]);
-                    //     }
-                    // }
-
-
+                    // todo remove direct access to scene data structure
                     var sceneList = gGuiBase.SceneSupport.getSceneList();
                     for (var j = 0; j < sceneList.length; j++) {
-
                         // First update all instances with the new name and class
-                        var instances = sceneList[j].getCameraList();
-                        for (i = 0; i < instances.length; i++) {
-                            var name = instances[i].mName;
+                        var cameraInstances = sceneList[j].getCameraList();
+                        for (i = 0; i < cameraInstances.length; i++) {
+                            var name = cameraInstances[i].mName;
                             if (name === selectedName) {
                                 // Each instance needs to be re-created exactly as the old one, but as a new class
                                 // They also need their name value modified
-                                var center = instances[i].getWCCenter();
-                                var width = instances[i].getWCWidth();
-                                var viewport = instances[i].getViewport();
-                                var bgColor = instances[i].getBackgroundColor();
+                                var center = cameraInstances[i].getWCCenter();
+                                var width = cameraInstances[i].getWCWidth();
+                                var viewport = cameraInstances[i].getViewport();
+                                var bgColor = cameraInstances[i].getBackgroundColor();
                                 var bound = undefined;
                                 var newInstance;
                                 eval("newInstance = new " + name + "(center, width, viewport, bound);");
-                                newInstance.mID = instances[i].mID;
-                                newInstance.mName = instances[i].mName;
+                                newInstance.mID = cameraInstances[i].mID;
+                                newInstance.mName = cameraInstances[i].mName;
                                 newInstance.setBackgroundColor(bgColor);
-                                instances[i] = newInstance;
+                                cameraInstances[i] = newInstance;
                             }
                         }
                     }
-                    // ************** end here *****************
                     msg = "Code saved!";
                 } catch (error) {
                     msg = "Your code contains an error.  Please review.\n\n" + error;

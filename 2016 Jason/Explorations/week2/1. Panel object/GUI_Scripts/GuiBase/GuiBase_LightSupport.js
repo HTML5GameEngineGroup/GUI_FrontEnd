@@ -110,7 +110,7 @@ gGuiBase.LightSupport = (function() {
 		getLightIDList: getLightIDList,
 		addLightingToGameObject: addLightingToGameObject,
 		setLightRenderableForAllInstancesOfObject: setLightRenderableForAllInstancesOfObject,
-		addLightsToInstances: addLightsToInstances,
+		addLightsToInstances: addLightsToInstances
     };
     return mPublic;
 }());

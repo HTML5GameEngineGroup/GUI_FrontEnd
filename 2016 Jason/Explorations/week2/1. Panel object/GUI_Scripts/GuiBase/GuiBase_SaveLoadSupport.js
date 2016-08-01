@@ -353,7 +353,6 @@ gGuiBase.SaveLoadSupport = (function() {
 				if (texture == "None") {
 					eval("obj = new " + className + "(new Renderable());");
 				} else {
-	
 					//gGuiBase.TextureSupport.addTexture(texture);
 					eval('obj = new ' + className + '(new TextureRenderable("' + texture + '"));');
 				}
@@ -369,7 +368,6 @@ gGuiBase.SaveLoadSupport = (function() {
 				xf.setHeight(data[6]);
 				xf.setRotationInDegree(data[7]);
 				obj.getRenderable().setColor(data[8]);
-				
 				
 				gGuiBase.ObjectSupport.setGameObjectByID(obj.mName, obj);
 				gGuiBase.ObjectSupport.setGameObjectCodeByID(obj.mName, data[1]);
@@ -421,6 +419,7 @@ gGuiBase.SaveLoadSupport = (function() {
 						gGuiBase.SceneSupport.gCurrentScene.cameraObjects = [];
 
 						while (typeof(data[i]) !== "undefined") {
+							// add sceneCam to scene
 							if (data[i+1] === "SceneViewCamera") {
 								var name = data[i];
 								var cam = new Camera(
@@ -432,7 +431,9 @@ gGuiBase.SaveLoadSupport = (function() {
 								cam.mName = name;
 								cam.mID = data[i + 1];
 								gGuiBase.SceneSupport.gCurrentScene.setSceneCamera(cam);
-							} else {
+							}
+							// add camera to scene
+							else {
 								var name = data[i];
 								var wcCenter = vec2.fromValues(data[i + 2][0], data[i + 2][1]);
 								var wcWidth = data[i + 3];
