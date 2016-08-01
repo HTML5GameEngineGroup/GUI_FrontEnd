@@ -75,8 +75,8 @@ LightTransformContent.prototype.initialize = function () {
 	this.lightDropoff = new TextField("lightDropoffField", textFieldStyle, "1");
 	
 	this.lightTypeText = new Text("lightTypeText", textStyle, "Type");
-	var types = {"Point", "Directional", "Spotlight"};
-	this.lightType = new DropDownList("lightTypeDropdown", textFieldStyle, types);
+	var types = ["Point", "Directional", "Spotlight"];
+	this.lightType = new DropdownList("lightTypeDropdown", textFieldStyle, types);
 	
 	this.lightOnText = new Text("lightOnText", textStyle, "Light on/off");
 	//this.lightOn = new Checkbox
@@ -122,7 +122,7 @@ LightTransformContent.prototype.initializeEventHandling = function () {
 	this.lightZ.setOnFocusOut(this.onTextFieldFocusOut);
 	this.lightDirX.setOnFocusOut(this.onTextFieldFocusOut);
 	this.lightDirY.setOnFocusOut(this.onTextFieldFocusOut);
-	this.lightDirZ.setOnSliderChange(this.onSliderChange);
+	this.lightDirZ.setOnFocusOut(this.onTextFieldFocusOut);
 	this.lightFar.setOnFocusOut(this.onTextFieldFocusOut);
 	this.lightNear.setOnFocusOut(this.onTextFieldFocusOut);
 	this.lightInner.setOnFocusOut(this.onTextFieldFocusOut);
@@ -133,124 +133,59 @@ LightTransformContent.prototype.initializeEventHandling = function () {
 };
 
 LightTransformContent.prototype.onTextFieldFocusOut = function(textField) {
-	//Can do all the handling for changing game object here
-	
-	/*var gameObject = gGuiBase.Core.selectedGameObject;
+
+	var light = gGuiBase.Core.selectedLight;
 	var value = textField.val();
-	var xform = gameObject.getXform();
 	
 	switch(textField.attr("id")) {
-		case "gameObjectNameField":
-			var gLastSetName = textField.val();
-			
-			if (gameObject.mID.includes('[') && gameObject.mID.includes(']')) {
-				break;
-			}
-			if (gLastSetName !== gameObject.mName) { // If the name is new
-                if (!gGuiBase.ObjectSupport.checkForNameConflict(gLastSetName)) {
-                    // Create a new class with the new name
-					//delete window[gameObject.mName];
-					
-					window[gLastSetName] = function(renderableObj) {
-						GameObject.call(this, renderableObj);
-					};
-                    gEngine.View.inheritPrototype(window[gLastSetName], GameObject);
-                    
-                    // Re-eval any class code
-                    var i;
-					var code;
-                    var objs = gGuiBase.ObjectSupport.getObjectList();
-					var objCode = gGuiBase.ObjectSupport.getObjectCodeList();
-                    for (i = 0; i < objs.length; i++) { //Find the old code
-                        if (objs[i].mName === gameObject.mName) {
-							code = objCode[i];
-                            
-                        }
-                    }
-					
-					code = gGuiBase.Core.replaceObjectNameInCode(code, gameObject.mName, gLastSetName);
-					gGuiBase.ObjectSupport.setGameObjectCodeByID(gameObject.mName, code);
-                    eval(code);
-					
-					var sceneList = gGuiBase.SceneSupport.getSceneList();
-					for (var j = 0; j < sceneList.length; j++) {
-						
-						// First update all instances with the new name and class
-						var instances = sceneList[j].getInstanceList();
-						for (i = 0; i < instances.length; i++) {
-							var name = instances[i].mName;
-							if (name === gameObject.mName) {
-								// Each instance needs to be re-created exactly as the old one, but as a new class
-								// They also need their name value modified
-								var rend = instances[i].getRenderable();
-								var xf = instances[i].getXform();
-								var newInstance;
-								eval("newInstance = new " + gLastSetName + "(rend);");
-								newInstance.mID = instances[i].mID;
-								var newXf = newInstance.getXform();
-								newXf = xf;
-								instances[i] = newInstance;
-								
-								var newID = value + instances[i].mID.substring(instances[i].mID.indexOf('['), instances[i].mID.length);
-								gGuiBase.InstanceSupport.replaceInMap(instances[i].mID, newID, value);
-					
-								instances[i].mName = value;
-								instances[i].mID = newID;
-								
-								
-							}
-						}
-					}
-                    
-                    // Now update the class itself, where the instances came from
-					gGuiBase.ObjectSupport.replaceInMap(gameObject.mName, value);
-                    //gameObject.mName = value;
-					//gameObject.mID = value;
-					
-					gGuiBase.Core.updateInstanceSelectList();
-					gGuiBase.Core.updateObjectSelectList();
-					
-					gGuiBase.Core.selectDetailsObject(value);
-                    gGuiBase.View.refreshAllTabContent();
-					
-					//console.log(gGuiBase.ObjectSupport.getObjectList());
-					
-                    // The user NEEDS to update his/her own code to match the new name, then save it.
-                    // That save will add it to the system.
-      
-
-                    alert("Remember to update all your code to match the new class name.");
-                } else {
-                    alert("Names must be unique.");
-
-                }
-            }
+		case "lightNameField":
+			light.mID = value;
 			break;
-		case "gameObjectXField":
-			xform.setXPos(value);
+		case "lightXField":
+			light.mPosition[0] = value;
 			break;
-		case "gameObjectYField":
-			xform.setYPos(value);
+		case "lightYField":
+			light.mPosition[1] = value;
 			break;
-		case "gameObjectWField":
-			xform.setWidth(value);
+		case "lightZField":
+			light.mPosition[2] = value;
 			break;
-		case "gameObjectHField":
-			xform.setHeight(value);
+		case "lightXDirField":
+			light.mDirection[0] = value;
 			break;
-		case "gameObjectRotationField":
-			xform.setRotationInDegree(value);
-			$("#gameObjectRotationSlider").slider( "value", value);
-			
+		case "lightYDirField":
+			light.mDirection[1] = value;
+			break;
+		case "lightZDirField":
+			light.mDirection[2] = value;
+			break;
+		case "lightFarField":
+			light.mFar = value;
+			break;
+		case "lightNearField":
+			light.mNear = value;
+			break;
+		case "lightInnerField":
+			light.mInner = value;
+			break;
+		case "lightOuterField":
+			light.mOuter = value;
+			break;
+		case "lightIntensityField":
+			light.mIntensity = value;
+			break;
+		case "lightDropoffField":
+			light.mDropOff = value;
 			break;
 		default:
 			break;
 	}
-	*/
+	
+	console.log(light);
 	
 };
 
-LightTransformContent.prototype.updateFields = function( gameObject ) {
+LightTransformContent.prototype.updateFields = function( light ) {
 	//update these widgets...
 	// set name field
 	/*this.objectName.setText( gameObject.mID );
@@ -265,6 +200,28 @@ LightTransformContent.prototype.updateFields = function( gameObject ) {
 	
 	this.rotationField.setText(xf.getRotationInDegree().toFixed(2));
 	$("#gameObjectRotationSlider").slider("value", xf.getRotationInDegree().toFixed(2));*/
+
+	this.lightName.setText(light.mID);
+	this.lightX.setText(light.mPosition[0]);
+	this.lightY.setText(light.mPosition[1]);
+	this.lightZ.setText(light.mPosition[2]);
+
+	this.lightDirX.setText(light.mDirection[0]);
+	this.lightDirY.setText(light.mDirection[1]);
+	this.lightDirZ.setText(light.mDirection[2]);
+	
+	this.lightFar.setText(light.mFar);
+	this.lightNear.setText(light.mNear);
+	
+	this.lightInner.setText(light.mInner);
+	this.lightOuter.setText(light.mOuter);
+
+	this.lightIntensity.setText(light.mIntensity);
+
+	this.lightDropoff.setText(light.mDropOff);
+
+	//this.lightType = null;
+
 };
 
 

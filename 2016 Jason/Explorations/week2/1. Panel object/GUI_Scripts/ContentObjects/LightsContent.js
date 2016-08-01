@@ -58,7 +58,7 @@ LightsContent.prototype.initializeEventHandling = function () {
 
 // creates a new light when add light button is clicked
 LightsContent.prototype.buttonOnClick = function() {
-	//gGuiBase.Core.addDefaultLight();
+	gGuiBase.Core.addDefaultLight();
 };
 
 // left clicking a light list item will select it in the details panel

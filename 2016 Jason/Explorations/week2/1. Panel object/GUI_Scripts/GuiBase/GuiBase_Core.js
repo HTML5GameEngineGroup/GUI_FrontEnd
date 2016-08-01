@@ -4,6 +4,7 @@ var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been
 gGuiBase.Core = (function() {
 	var selectedGameObject = null;
 	var selectedCamera = null;
+	var selectedLight = null;
 	var gRunning = false;    
 	var gBackup = null;
 	
@@ -40,6 +41,27 @@ gGuiBase.Core = (function() {
 		gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
 		this.selectDetailsCamera(newCamera.mName);
 		gGuiBase.View.refreshAllTabContent();
+	};
+	
+	var addDefaultLight = function() {
+		var light = gGuiBase.LightSupport.createDefaultLight();
+		gGuiBase.View.findWidgetByID("#lightSelectList").rebuildWithArray(gGuiBase.LightSupport.getLightIDList());
+		this.selectDetailsLight(light.mID);
+		gGuiBase.View.refreshAllTabContent();
+	};
+	
+	var selectDetailsLight = function(id) {
+		var detailsTab = gGuiBase.View.findTabByID("#Details");
+		detailsTab.clearContent();
+		var detailsTransform = new LightTransformContent("LightTransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
+		
+		var light = gGuiBase.LightSupport.getLightByID( id );           // get gameObj
+		gGuiBase.Core.selectedLight = light;
+		detailsTransform.updateFields(light);
+		
+		detailsTab.addContent(detailsTransform);
+
+		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
 	};
 
     // updates the details tab with the object whose name is passed as parameter
@@ -250,6 +272,9 @@ gGuiBase.Core = (function() {
 		addInstanceWithName: addInstanceWithName,
 		updateInstanceSelectList: updateInstanceSelectList,
 		selectInstanceDetails: selectInstanceDetails,
+		
+		addDefaultLight: addDefaultLight,
+		selectDetailsLight: selectDetailsLight,
 		
 		emptyDetailsTab: emptyDetailsTab,
 		
