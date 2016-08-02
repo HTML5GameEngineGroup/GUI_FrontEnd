@@ -41,12 +41,12 @@ ColorTextureContent.prototype.initialize = function () {
 	
 	this.normalMapText = new Text("textureText", textStyle, "Normal Map");
 	
-	var normalMaps = gGuiBase.LightSupport.getMaterialNameList();
+	var normalMaps = gGuiBase.LightSupport.getNormalNameList();
 	normalMaps.unshift("None");
 	this.normalMapDropdown = new DropdownList("normalMapDropDown", textFieldStyle, normalMaps);
 	
 	this.materialText = new Text("materialText", textStyle, "Material");
-	var materials = gGuiBase.MaterialSupport.getMaterialList();
+	var materials = gGuiBase.MaterialSupport.getNormalList();
 	materials.unshift("None");
 	this.materialDropdown = new DropdownList("matDropDown", textFieldStyle, materials);
 	

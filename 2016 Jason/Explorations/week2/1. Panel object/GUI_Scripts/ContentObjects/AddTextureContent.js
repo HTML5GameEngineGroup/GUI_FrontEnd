@@ -22,7 +22,7 @@ AddTextureContent.prototype.initialize = function () {
     this.materialInput = new FileInputButton("MaterialInput", GuiTabContent.NO_STYLE, "Add Material");
     this.widgetList.push(this.materialInput);
 
-    var materials = gGuiBase.LightSupport.getMaterialList();
+    var materials = gGuiBase.LightSupport.getNormalList();
     this.materialSelectList = new ImageSelectList("MaterialSelectList", 'list-style-type: none; margin: 0; padding: 0', materials, GuiTabContent.NO_STYLE, "width: 33%; height: auto; width: auto; float: left; min-width: 50px; min-height: 50px; max-width: 100px; max-height: 100px;");
     this.widgetList.push(this.materialSelectList);
 	
@@ -98,7 +98,7 @@ AddTextureContent.prototype.onTextureFileSelect = function() {
 };
 
 AddTextureContent.prototype.onMaterialFileSelect = function() {
-    gEngine.Textures.loadTextureFromFile("MaterialInput", gGuiBase.LightSupport.addMaterial);
+    gEngine.Textures.loadTextureFromFile("MaterialInput", gGuiBase.LightSupport.addNormal);
 
 };
 

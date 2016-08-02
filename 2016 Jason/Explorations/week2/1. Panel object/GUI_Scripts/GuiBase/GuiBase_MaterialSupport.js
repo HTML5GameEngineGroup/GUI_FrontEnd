@@ -60,8 +60,8 @@ gGuiBase.MaterialSupport = (function() {
 	
 
     var mPublic = {
-		addMaterial: addMaterial,
-		getMaterialList: getMaterialList,
+		addNormal: addMaterial,
+		getNormalList: getMaterialList,
 		checkForNameConflict: checkForNameConflict,
 		getMaterialByID: getMaterialByID,
 		setMaterial: setMaterial

@@ -2,32 +2,35 @@
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.LightSupport = (function() {
-	var gMaterials = {};
+	var gNormalMap = {};
 
-	var getMaterialList = function() {
-		var materialList = [];
-		for (var material in gMaterials) {
-			materialList.push(gMaterials[material].src);
+	var getNormalList = function() {
+		var normalList = [];
+		for (var normalName in gNormalMap) {
+			normalList.push(gNormalMap[normalName].src);
 		}
-		return materialList;
+		return normalList;
 	};
 	
-	var getMaterialNameList = function() {
-		var materialList = [];
-		for (var material in gMaterials) {
-			materialList.push(material);
+	var getNormalNameList = function() {
+		var normalNameList = [];
+		for (var normalName in gNormalMap) {
+			normalNameList.push(normalName);
 		}
-		return materialList;
+		return normalNameList;
 	};
 
-	var addMaterial = function ( materialName, img ) {
+	var addNormal = function ( normalName, img ) {
 		//todo check if it is in textures as well
 		// if added already return
-		if(gMaterials[materialName] || materialName == "") return;
+		if(gNormalMap[normalName] || normalName == "") {
+			alert('improper name', normalName);
+			return;
+		}
 		// set this to a reference of img? or get it from engine?
-		gMaterials[materialName] = img;
+		gNormalMap[normalName] = img;
 		// refresh texturelist in view
-		var imageList = getMaterialList();
+		var imageList = getNormalList();
 		gGuiBase.View.findWidgetByID("#MaterialSelectList").rebuildWithArray( imageList );
 		gGuiBase.View.refreshAllTabContent();  // refresh panel
 	};
@@ -171,9 +174,9 @@ gGuiBase.LightSupport = (function() {
 	};
 
     var mPublic = {
-		addMaterial: addMaterial,
-		getMaterialList: getMaterialList,
-		getMaterialNameList: getMaterialNameList,
+		addNormal: addNormal,
+		getNormalList: getNormalList,
+		getNormalNameList: getNormalNameList,
 		createDefaultLight: createDefaultLight,
 		checkForNameConflict: checkForNameConflict,
 		getLightByID: getLightByID,
