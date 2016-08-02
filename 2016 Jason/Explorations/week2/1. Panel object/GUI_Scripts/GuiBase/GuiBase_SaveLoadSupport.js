@@ -177,11 +177,12 @@ gGuiBase.SaveLoadSupport = (function() {
 			//Is it a lightrenderable
 			if (rend instanceof IllumRenderable) {
 				objectData[9] = rend.getMaterial().mID;
-				// objectData[10] = rend.mNormal;
+				objectData[10] = rend.mNormalMap;
+				console.log(rend.mNormalMap);
 			}
 			else {
 				objectData[9] = false;
-				// objectData[10] = false;
+				objectData[10] = false;
 			}
 
 			objects.file(obj.mName + ".json", JSON.stringify(objectData));
@@ -476,8 +477,11 @@ gGuiBase.SaveLoadSupport = (function() {
 				} else {
 					//gGuiBase.TextureSupport.addTexture(texture);
 					if (data[9]) { //If renderable instanceof LightRenderable
-						eval('obj = new ' + className + '(new IllumRenderable("' + texture + '","' + data[9] + '"));');
-						// obj.getRenderable().setMaterial(data[10]);
+						console.log('creating illuminate renderable');
+						console.log('normal is:', data[10]);
+						eval('obj = new ' + className + '(new IllumRenderable("' + texture + '","' + data[10] + '"));');
+						var mat = gGuiBase.MaterialSupport.getMaterialByID(data[9]);
+						obj.getRenderable().setMaterial(mat);
 					} else {
 						eval('obj = new ' + className + '(new TextureRenderable("' + texture + '"));');
 					}
@@ -495,6 +499,9 @@ gGuiBase.SaveLoadSupport = (function() {
 				xf.setHeight(data[6]);
 				xf.setRotationInDegree(data[7]);
 				obj.getRenderable().setColor(data[8]);
+
+				// objectData[9] = rend.getMaterial().mID;
+				// objectData[10] = rend.mNormal;
 				
 				gGuiBase.ObjectSupport.setGameObjectByID(obj.mName, obj);
 				gGuiBase.ObjectSupport.setGameObjectCodeByID(obj.mName, data[1]);
@@ -599,6 +606,7 @@ gGuiBase.SaveLoadSupport = (function() {
 						while (typeof(data[i]) !== "undefined") {
 							var inst;
 							if (window[data[0]].prototype instanceof GameObject) {
+								console.log('createing instance');
 								// eval("inst = new " + data[i + 0] + "(new Renderable())"); // Requires Objects to have been fully processed before this
 								// copy gameObject (this will give correct renderable);
 								var gameObject = gGuiBase.ObjectSupport.getGameObjectByID(data[i + 0]);
@@ -629,7 +637,7 @@ gGuiBase.SaveLoadSupport = (function() {
 						gGuiBase.Core.updateInstanceSelectList();
 						var instancesTab = gGuiBase.View.findTabByID("#Instances");
 						instancesTab.refreshContent();
-	
+						console.log('done createing instance');
 						// gGuiBase.View.refreshAllTabContent()
 					} else if (relativePath.endsWith("lights.json")) {
 						var i = 0;
