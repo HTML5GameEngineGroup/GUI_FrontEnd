@@ -29,6 +29,11 @@ $( document ).ready(function() {
 	lightsTab.addContent(lightsContent);
 	bottomPanel.addTab(lightsTab);
 	
+	var materialsTab = new GuiPanelTab("Materials");
+	var materialsContent = new MaterialContent("MaterialContent");
+	materialsTab.addContent(materialsContent);
+	bottomPanel.addTab(materialsTab);
+	
 	
 	//Create left panel and tabs
     panelID = "#panelLeft";

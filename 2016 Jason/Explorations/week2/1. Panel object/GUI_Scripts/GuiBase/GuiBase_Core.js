@@ -5,6 +5,7 @@ gGuiBase.Core = (function() {
 	var selectedGameObject = null;
 	var selectedCamera = null;
 	var selectedLight = null;
+	var selectedMaterial = null;
 	var gRunning = false;    
 	var gBackup = null;
 	
@@ -69,6 +70,22 @@ gGuiBase.Core = (function() {
 		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
 		detailsTransform.setTypeDropdown();
 		
+	};
+	
+	var selectDetailsMaterial = function(id) {
+		var detailsTab = gGuiBase.View.findTabByID("#Details");
+		detailsTab.clearContent();
+		var materialContent = new MaterialInfoContent("MaterialInfoContent", gGuiBase.View.CONTENT_STYLE, "Material");
+		
+		var material = gGuiBase.MaterialSupport.getMaterialByID( id );
+		gGuiBase.Core.selectedMaterial = material;
+		materialContent.updateFields(material);
+		
+		detailsTab.addContent(materialContent);
+		
+		gGuiBase.DirectManipulationSupport.resetInteraction();
+
+		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
 	};
 
     // updates the details tab with the object whose name is passed as parameter
@@ -291,6 +308,8 @@ gGuiBase.Core = (function() {
 		
 		addDefaultLight: addDefaultLight,
 		selectDetailsLight: selectDetailsLight,
+		
+		selectDetailsMaterial: selectDetailsMaterial,
 		
 		emptyDetailsTab: emptyDetailsTab,
 		
