@@ -173,7 +173,7 @@ gGuiBase.SaveLoadSupport = (function() {
 			objectData[8] = obj.getRenderable().getColor();
 			
 			//Is it a lightrenderable
-			if (rend instanceof LightRenderable)
+			if (rend instanceof IllumRenderable)
 				objectData[9] = true;
 			else
 				objectData[9] = false;
@@ -254,16 +254,12 @@ gGuiBase.SaveLoadSupport = (function() {
 					
 				}
 			}
-			
 			sceneFolder.file("instances.json", JSON.stringify(instanceData));
-			
 			//Finally, lights
 			var lightSet = gGuiBase.SceneSupport.gCurrentScene.mLightSet;
 			var lightData = {};
 			for (var j = 0; j < lightSet.numLights(); j++) {
-			
 				var light = lightSet.getLightAt(j);
-				
 				if (light instanceof Light) {
 					lightData[0 + (j * 13)] = light.mID;
 					lightData[1 + (j * 13)] = light.getColor();
@@ -293,16 +289,10 @@ gGuiBase.SaveLoadSupport = (function() {
 					lightData[11 + (j * 13)] = 0;
 					lightData[12 + (j * 13)] = 0;
 				}
-				
-				
 			}
 			sceneFolder.file("lights.json", JSON.stringify(lightData));
-			
-			
 		}
-		
-		
-		
+
 		// Textures
 		var i;
 		var textureList = gGuiBase.TextureSupport.getTexList();

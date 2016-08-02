@@ -58,6 +58,7 @@ IllumRenderable.prototype.draw = function (aCamera) {
  * @memberOf IllumRenderable
  */
 IllumRenderable.prototype.getMaterial = function () { return this.mMaterial; };
+IllumRenderable.prototype.setMaterial = function ( material ) { this.mMaterial = material };
 //--- end of Public Methods
 
 //</editor-fold>

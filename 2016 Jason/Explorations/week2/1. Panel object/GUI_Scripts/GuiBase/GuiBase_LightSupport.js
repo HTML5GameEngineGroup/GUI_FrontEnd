@@ -107,6 +107,7 @@ gGuiBase.LightSupport = (function() {
 	var addIlluminationToGameObject = function (gameObjectName, textureName, normalMapName) {
 		var gameObject = gGuiBase.ObjectSupport.getGameObjectByID(gameObjectName);
 		var newRenderable = new IllumRenderable(textureName, normalMapName);
+		newRenderable.setMaterial(gGuiBase.MaterialSupport.getMaterialByID("Default"));
 		gGuiBase.TextureSupport.setRenderableForGameObject(gameObject, newRenderable);
 		this.setIllumRenderableForAllInstances(gameObjectName, textureName, normalMapName);
 	};
@@ -120,6 +121,7 @@ gGuiBase.LightSupport = (function() {
 			if (inst.mName === gameObjectName) {
 				// assign appropriate renderable
 				var rend = new IllumRenderable(textureName, normalMapName);
+				rend.setMaterial(gGuiBase.MaterialSupport.getMaterialByID("Default"));
 				gGuiBase.TextureSupport.setRenderableForGameObject(inst, rend);
 			}
 		}

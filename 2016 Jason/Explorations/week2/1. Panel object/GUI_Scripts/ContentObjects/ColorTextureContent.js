@@ -47,7 +47,6 @@ ColorTextureContent.prototype.initialize = function () {
 	
 	this.materialText = new Text("materialText", textStyle, "Material");
 	var materials = gGuiBase.MaterialSupport.getNormalList();
-	materials.unshift("None");
 	this.materialDropdown = new DropdownList("matDropDown", textFieldStyle, materials);
 	
 	
@@ -164,12 +163,8 @@ ColorTextureContent.prototype.onNormalMapSelect = function(value) {
 ColorTextureContent.prototype.onMaterialSelect = function(value) {
 	var gameObject = gGuiBase.Core.selectedGameObject; 
 	console.log(value);
-	if (value === "None") {
-		gGuiBase.MaterialSupport.setMaterial(gameObject.mName, new Material());
-	} else {
-		gGuiBase.MaterialSupport.setMaterial(gameObject.mName,
-											gGuiBase.MaterialSupport.getMaterialByID(value));
-	}
+	gGuiBase.MaterialSupport.setMaterial(gameObject.mName, new Material());
+	console.log('afterset', gameObject);
 };
 
 ColorTextureContent.prototype.onDialogClose = function() {

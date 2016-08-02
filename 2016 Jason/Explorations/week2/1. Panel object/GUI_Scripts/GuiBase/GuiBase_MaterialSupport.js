@@ -3,6 +3,9 @@ var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been
 
 gGuiBase.MaterialSupport = (function() {
 	var gMaterials = {};
+	gMaterials["Default"] = new Material();
+	gMaterials["Default"].mID = "Default";
+	console.log(gMaterials);
 
 	var getMaterialList = function() {
 		var materialList = [];
