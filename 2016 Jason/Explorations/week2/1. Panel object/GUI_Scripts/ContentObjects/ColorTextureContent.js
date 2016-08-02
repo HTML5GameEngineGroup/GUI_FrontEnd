@@ -68,7 +68,6 @@ ColorTextureContent.prototype.initialize = function () {
 };
 
 ColorTextureContent.prototype.initializeEventHandling = function () {
-	console.log("hi");
 	this.textureDropDown.setOnSelect(this.onListSelect);
 	this.normalMapDropdown.setOnSelect(this.onNormalMapSelect);
 	this.materialDropdown.setOnSelect(this.onMaterialSelect);
@@ -87,7 +86,6 @@ ColorTextureContent.prototype.initializeEventHandling = function () {
 		$(this.applyLightCheckbox.getID()).prop('checked', true);
 	
 	if (this.applyLightCheckbox.isChecked()) {
-		console.log("hello?");
 		$('#normalMapDropDown').prop('disabled', false);
 		//If we have a normal map (And therefore the renderable is an illumrenderable) allow material change
 		if (this.normalMapDropdown.getSelectedListItem() !== "None") {
