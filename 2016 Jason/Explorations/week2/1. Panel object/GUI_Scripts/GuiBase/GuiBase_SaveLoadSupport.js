@@ -178,13 +178,11 @@ gGuiBase.SaveLoadSupport = (function() {
 			if (rend instanceof IllumRenderable) {
 				objectData[9] = rend.getMaterial().mID;
 				objectData[10] = rend.mNormalMap;
-				console.log(rend.mNormalMap);
 			}
 			else {
 				objectData[9] = false;
 				objectData[10] = false;
 			}
-
 			objects.file(obj.mName + ".json", JSON.stringify(objectData));
 		}
 
@@ -468,30 +466,27 @@ gGuiBase.SaveLoadSupport = (function() {
 				var data = JSON.parse(content);
 				var obj;
 				// Put code in system so it can recognize it before making objects
-				eval(data[1]);
+				var code = data[1];
+				eval(code);
 				var className = relativePath.substring(0, relativePath.lastIndexOf(".")); // Just get rid of .json
 				var texture = data[2];
-
-				if (texture == "None") {
+				if (texture == "None") {	// no texture, must be a renderable
 					eval("obj = new " + className + "(new Renderable());");
 				} else {
 					//gGuiBase.TextureSupport.addTexture(texture);
-					if (data[9]) { //If renderable instanceof LightRenderable
-						console.log('creating illuminate renderable');
-						console.log('normal is:', data[10]);
-						eval('obj = new ' + className + '(new IllumRenderable("' + texture + '","' + data[10] + '"));');
-						var mat = gGuiBase.MaterialSupport.getMaterialByID(data[9]);
+					var materialName = data[9];	// already loaded in previously
+					if (materialName) { //If materialname is set then it must be illumrenderable
+						var normalMap = data[10];
+						eval('obj = new ' + className + '(new IllumRenderable("' + texture + '","' + normalMap + '"));');
+						var mat = gGuiBase.MaterialSupport.getMaterialByID(materialName);
 						obj.getRenderable().setMaterial(mat);
-					} else {
+					} else {	// else it is a texture renderable
 						eval('obj = new ' + className + '(new TextureRenderable("' + texture + '"));');
 					}
 					
 				}
-				//var entry = [obj, data[1], data[2]];
-				
 				obj.mID = data[0];
 				obj.mName = className;
-
 				var xf = obj.getXform();
 				xf.setXPos(data[3]);
 				xf.setYPos(data[4]);
@@ -500,9 +495,6 @@ gGuiBase.SaveLoadSupport = (function() {
 				xf.setRotationInDegree(data[7]);
 				obj.getRenderable().setColor(data[8]);
 
-				// objectData[9] = rend.getMaterial().mID;
-				// objectData[10] = rend.mNormal;
-				
 				gGuiBase.ObjectSupport.setGameObjectByID(obj.mName, obj);
 				gGuiBase.ObjectSupport.setGameObjectCodeByID(obj.mName, data[1]);
 				
@@ -606,9 +598,6 @@ gGuiBase.SaveLoadSupport = (function() {
 						while (typeof(data[i]) !== "undefined") {
 							var inst;
 							if (window[data[0]].prototype instanceof GameObject) {
-								console.log('createing instance');
-								// eval("inst = new " + data[i + 0] + "(new Renderable())"); // Requires Objects to have been fully processed before this
-								// copy gameObject (this will give correct renderable);
 								var gameObject = gGuiBase.ObjectSupport.getGameObjectByID(data[i + 0]);
 								inst = gGuiBase.ObjectSupport.cloneGO(gameObject);
 								// set xf
@@ -628,7 +617,6 @@ gGuiBase.SaveLoadSupport = (function() {
 							inst.mID = data[i + 1];
 							
 							// Add it to the scene
-							//gGameCore.getSceneByName(sceneName).addInstance(inst);
 							var scene = gGuiBase.SceneSupport.getSceneByName(sceneName);
 							gGuiBase.InstanceSupport.addInstance(inst, scene);
 							i += 9;
@@ -637,8 +625,6 @@ gGuiBase.SaveLoadSupport = (function() {
 						gGuiBase.Core.updateInstanceSelectList();
 						var instancesTab = gGuiBase.View.findTabByID("#Instances");
 						instancesTab.refreshContent();
-						console.log('done createing instance');
-						// gGuiBase.View.refreshAllTabContent()
 					} else if (relativePath.endsWith("lights.json")) {
 						var i = 0;
 						while (typeof(data[i]) !== "undefined") {

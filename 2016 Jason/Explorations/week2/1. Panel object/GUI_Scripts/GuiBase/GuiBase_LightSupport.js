@@ -21,7 +21,7 @@ gGuiBase.LightSupport = (function() {
 	};
 
 	var addNormal = function ( normalName, img ) {
-		//todo check if it is in textures as well
+		//todo check if it is in textures as well or just check if it is in the gengine resource map
 		// if added already return
 		if(gNormalMap[normalName] || normalName == "") {
 			alert('improper name', normalName);

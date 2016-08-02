@@ -10,7 +10,7 @@ gGuiBase.TextureSupport = (function() {
 	
     // adds texture to panel
     var addTexture = function ( texName, img ) {
-        // todo check if it is in materials as well
+        // todo check if it is in materials as well check if in gengine resourcemap
         // if added already return
         if(gAllTextures[texName] || texName == "") return;
         gAllTextures[texName] = true;
