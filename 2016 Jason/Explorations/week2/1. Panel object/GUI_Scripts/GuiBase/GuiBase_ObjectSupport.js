@@ -118,6 +118,7 @@ gGuiBase.ObjectSupport = (function() {
 			if (gameObject.getRenderable() instanceof IllumRenderable) {
 				var normal = gameObject.getRenderable().mNormalMap;
 				eval('newGO = new ' + gameObject.mName + '(new IllumRenderable("' + texture + '", "' + normal +  '"));');
+				newGO.getRenderable().mMaterial = gameObject.getRenderable().mMaterial;
 			} else if (gameObject.getRenderable() instanceof LightRenderable) {
 				eval('newGO = new ' + gameObject.mName + '(new LightRenderable("' + texture + '"));');
 			} else {

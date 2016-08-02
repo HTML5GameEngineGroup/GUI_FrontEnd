@@ -165,9 +165,10 @@ ColorTextureContent.prototype.onMaterialSelect = function(value) {
 	var gameObject = gGuiBase.Core.selectedGameObject; 
 	console.log(value);
 	if (value === "None") {
-		gameObject.getRenderable().mMaterial = new Material();
+		gGuiBase.MaterialSupport.setMaterial(gameObject.mName, new Material());
 	} else {
-		gameObject.getRenderable().mMaterial = gGuiBase.MaterialSupport.getMaterialByID(value);
+		gGuiBase.MaterialSupport.setMaterial(gameObject.mName,
+											gGuiBase.MaterialSupport.getMaterialByID(value));
 	}
 };
 

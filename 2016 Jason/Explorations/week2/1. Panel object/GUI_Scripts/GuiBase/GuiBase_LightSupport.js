@@ -133,8 +133,6 @@ gGuiBase.LightSupport = (function() {
 				var rend = new LightRenderable(textureName);
 				gGuiBase.TextureSupport.setRenderableForGameObject(inst, rend);
 			}
-			
-			
 		}
 	};
 	

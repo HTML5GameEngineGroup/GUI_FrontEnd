@@ -42,12 +42,29 @@ gGuiBase.MaterialSupport = (function() {
 		return gMaterials[id];
 	};
 	
+	var setMaterial = function(gameObjectName, material) {
+		var gameObject = gGuiBase.ObjectSupport.getGameObjectByID(gameObjectName);
+		gameObject.getRenderable().mMaterial = material;
+		
+		var instanceNames = gGuiBase.InstanceSupport.getInstanceList();
+		for (var i in instanceNames) {
+			var instanceName = instanceNames[i];
+			// get the instance so you can manipulate it
+			var inst = gGuiBase.InstanceSupport.getInstanceByID(instanceName);
+			if (inst.mName === gameObjectName) {
+				inst.getRenderable().mMaterial = material;
+			}
+		}
+		
+	};
+	
 
     var mPublic = {
 		addMaterial: addMaterial,
 		getMaterialList: getMaterialList,
 		checkForNameConflict: checkForNameConflict,
 		getMaterialByID: getMaterialByID,
+		setMaterial: setMaterial
     };
     return mPublic;
 }());
