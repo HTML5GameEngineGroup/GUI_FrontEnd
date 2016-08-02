@@ -148,19 +148,19 @@ MaterialInfoContent.prototype.onTextFieldFocusOut = function(textField) {
 			
 		case "specularField1":
 			var specular = material.getSpecular();
-			material.setSpecular(vec4.fromValues(value, diffuse[1], diffuse[2], diffuse[3]));
+			material.setSpecular(vec4.fromValues(value, specular[1], specular[2], specular[3]));
 			break;
 		case "specularField2":
 			var specular = material.getSpecular();
-			material.setSpecular(vec4.fromValues(diffuse[0], value, diffuse[2], diffuse[3]));
+			material.setSpecular(vec4.fromValues(specular[0], value, specular[2], specular[3]));
 			break;
 		case "specularField3":
 			var specular = material.getSpecular();
-			material.setSpecular(vec4.fromValues(diffuse[0], diffuse[1], value, diffuse[3]));
+			material.setSpecular(vec4.fromValues(specular[0], specular[1], value, specular[3]));
 			break;	
 		case "specularField4":
 			var specular = material.getSpecular();
-			material.setSpecular(vec4.fromValues(diffuse[0], diffuse[1], diffuse[2], value));
+			material.setSpecular(vec4.fromValues(specular[0], specular[1], specular[2], value));
 			break;	
 		
 		case "shininessField":
