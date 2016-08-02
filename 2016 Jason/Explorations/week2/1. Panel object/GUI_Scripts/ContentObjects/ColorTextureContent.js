@@ -46,7 +46,7 @@ ColorTextureContent.prototype.initialize = function () {
 	this.normalMapDropdown = new DropdownList("normalMapDropDown", textFieldStyle, normalMaps);
 	
 	this.materialText = new Text("materialText", textStyle, "Material");
-	var materials = gGuiBase.MaterialSupport.getNormalList();
+	var materials = gGuiBase.MaterialSupport.getMaterialNameList();
 	this.materialDropdown = new DropdownList("matDropDown", textFieldStyle, materials);
 	
 	this.widgetList.push(this.colorText);

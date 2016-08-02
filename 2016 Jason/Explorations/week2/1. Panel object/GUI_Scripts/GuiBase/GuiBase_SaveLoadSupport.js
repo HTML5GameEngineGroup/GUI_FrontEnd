@@ -85,6 +85,7 @@ gGuiBase.SaveLoadSupport = (function() {
 						// Load everything from the file
 						gRunning = false;
 						$('#menuRun').css('background-color', 'white');
+						loadMaterials(files, gGuiBase.MaterialSupport.setMaterial);
 						loadMisc(files, function() {
 							loadTextures(files, function() {
 								loadObjects(files, function() {
@@ -106,6 +107,7 @@ gGuiBase.SaveLoadSupport = (function() {
 					// Load everything from the file
 					gGuiBase.Core.gRunning = false;
 					$('#menuRun').css('background-color', 'white');
+					loadMaterials(gGuiBase.Core.gBackup, gGuiBase.MaterialSupport.setMaterial);
 					loadMisc(gGuiBase.Core.gBackup, function() {
 						loadTextures(gGuiBase.Core.gBackup, function() {
 							loadObjects(gGuiBase.Core.gBackup, function() {
@@ -135,7 +137,7 @@ gGuiBase.SaveLoadSupport = (function() {
 		var objects = files.folder("Objects");
 		var scenes = files.folder("Scenes");
 		var textures = files.folder("Textures");
-		var normals = files.folder("Normals");
+		var materials = files.folder("Materials");		
 		// JSON files not in folders
 		var globalVars;
 		
@@ -258,7 +260,8 @@ gGuiBase.SaveLoadSupport = (function() {
 				}
 			}
 			sceneFolder.file("instances.json", JSON.stringify(instanceData));
-			//Finally, lights
+			
+			// save lights
 			var lightSet = gGuiBase.SceneSupport.gCurrentScene.mLightSet;
 			var lightData = {};
 			for (var j = 0; j < lightSet.numLights(); j++) {
@@ -296,39 +299,11 @@ gGuiBase.SaveLoadSupport = (function() {
 			sceneFolder.file("lights.json", JSON.stringify(lightData));
 		}
 		// Textures
-		var i;
-		var textureList = gGuiBase.TextureSupport.getTexList();
-		for (i = 0; i < textureList.length; i++) {
-			var textureData = {};
-			var textureName = textureList[i];
-			var textureInfo = gEngine.ResourceMap.retrieveAsset(textureName);
-			var textureImage = gGuiBase.TextureSupport.getImage(textureName);
-			
-			textureData[0] = textureInfo.mName;
-			textureData[1] = textureImage.naturalWidth;
-			textureData[2] = textureImage.naturalHeight;
-			textureData[3] = textureImage.src;
-			textureData[4] = false;	// is normal
-			textures.file(textureInfo.mName + ".json", JSON.stringify(textureData));
-		}
-
+		saveTextures(textures);
 		// normal maps
-		var i;
-		var normalNames = gGuiBase.LightSupport.getNormalNameList();
-		for (i = 0; i < normalNames.length; i++) {
-			var normalData = {};
-			var normalName = normalNames[i];
-			var normalInfo = gEngine.ResourceMap.retrieveAsset(normalName);
-			var normalImage = gGuiBase.LightSupport.getNormal(normalName);
-
-			normalData[0] = normalName;
-			normalData[1] = normalImage.naturalWidth;
-			normalData[2] = normalImage.naturalHeight;
-			normalData[3] = normalImage.src;
-			normalData[4] = true; // is normal
-			textures.file(normalName + ".json", JSON.stringify(normalData));
-		}
+		saveNormals(textures);
 		//todo do materials
+		saveMaterials(materials);
 		
 		if (backup) {
 			gGuiBase.Core.gBackup = files;
@@ -340,6 +315,71 @@ gGuiBase.SaveLoadSupport = (function() {
 			// Use FileSaver to download it to the user's computer
 			saveAs(blob, "my_project.zip");
 		});
+	};
+
+	var saveMaterials = function(fileFolder) {
+		var i;
+		var materialsList = gGuiBase.MaterialSupport.getMaterialList();
+		console.log('materlist', materialsList)
+		for (var i in materialsList) {
+			var materialData = {};
+			console.log(materialsList[i]);
+			var ambient = materialsList[i].getAmbient();
+			var diffuse = materialsList[i].getDiffuse();
+			var specular = materialsList[i].getSpecular();
+			var j = 0;
+			materialData[j++] = materialsList[i].mID;
+			materialData[j++] = materialsList[i].getShininess();
+			for (var k in ambient) {
+				materialData[j] = ambient[k];
+				j++;
+			}
+			for (var k in diffuse) {
+				materialData[j] = diffuse[k];
+				j++;
+			}
+			for (var k in specular) {
+				materialData[j] = specular[k];
+				j++;
+			}
+			console.log(materialData);
+			fileFolder.file(materialsList[i].mID + ".json", JSON.stringify(materialData));
+		}
+	};
+	
+	var saveTextures = function (fileFolder) {
+		var i;
+		var textureList = gGuiBase.TextureSupport.getTexList();
+		for (i = 0; i < textureList.length; i++) {
+			var textureData = {};
+			var textureName = textureList[i];
+			var textureInfo = gEngine.ResourceMap.retrieveAsset(textureName);
+			var textureImage = gGuiBase.TextureSupport.getImage(textureName);
+
+			textureData[0] = textureInfo.mName;
+			textureData[1] = textureImage.naturalWidth;
+			textureData[2] = textureImage.naturalHeight;
+			textureData[3] = textureImage.src;
+			textureData[4] = false;	// is normal
+			fileFolder.file(textureInfo.mName + ".json", JSON.stringify(textureData));
+		}
+	};
+	
+	var saveNormals = function (fileFolder) {
+		var i;
+		var normalNames = gGuiBase.LightSupport.getNormalNameList();
+		for (i = 0; i < normalNames.length; i++) {
+			var normalData = {};
+			var normalName = normalNames[i];
+			var normalImage = gGuiBase.LightSupport.getNormal(normalName);
+
+			normalData[0] = normalName;
+			normalData[1] = normalImage.naturalWidth;
+			normalData[2] = normalImage.naturalHeight;
+			normalData[3] = normalImage.src;
+			normalData[4] = true; // is normal
+			fileFolder.file(normalName + ".json", JSON.stringify(normalData));
+		}
 	};
 	
 
@@ -359,8 +399,42 @@ gGuiBase.SaveLoadSupport = (function() {
 		callback();
 	};
 
+	var loadMaterials = function (files, callback) {
+		var numOutstandingLoads = 0;
+		files.folder("Materials").forEach(function(relativePath, file) {
+			numOutstandingLoads++;
+		});
+		//If there are no files, load the scenes
+		if (numOutstandingLoads === 0) {
+			callback();
+		}
+		files.folder("Materials").forEach(function(relativePath, file) {
+			// Read the ZipObject item as a JSON file, and then store the information where it belongs
+			files.file(file.name).async("string").then(function success(content) {
+				var data = JSON.parse(content);
+				var materialName = data[0];
+				var shinniness = data[1];
+				var ambient = [data[2], data[3], data[4], data[5]];
+				var diffuse = [data[6], data[7], data[8], data[9]];
+				var specular = [data[10], data[11], data[12], data[13]];
+
+				var material = new Material();
+				material.mID = materialName;
+				material.setShininess(shinniness);
+				material.setAmbient(ambient);
+				material.setDiffuse(diffuse);
+				material.setSpecular(specular);
+				console.log(material);
+				console.log(shinniness, ambient, diffuse, specular);
+				console.log(materialName);
+				callback(materialName, material);
+			}, function error(error) {
+				throw "loadMaterials: There were issues with loading your file.\n\nErrors:\n" + error;
+			});
+		});
+	};
+
 	var loadTextures = function(files, callback) {
-		var textureNames = [];
 		//Get the number of files we need to load
 		var numOutstandingLoads = 0;
 		files.folder("Textures").forEach(function(relativePath, file) {
@@ -378,11 +452,10 @@ gGuiBase.SaveLoadSupport = (function() {
 				var data = JSON.parse(content);
 				var textureName = data[0];
 				var imageSrc = data[3];
-				textureNames.push(data[0]);
 				if(!data[4]) // is normalmap
 					gEngine.Textures.loadTextureFromImageSrc(textureName, imageSrc, gGuiBase.TextureSupport.addTexture);
 				else
-					gEngine.Textures.loadTextureFromImageSrc(textureName, imageSrc, gGuiBase.LightSupport.addNormal);
+					gEngine.Textures.loadTextureFromImageSrc(textureName, imageSrc, gGuiBase.LightSupport.addMaterial);
 			
 				//Are all the loads done? If so, callback.
 				while (true) {

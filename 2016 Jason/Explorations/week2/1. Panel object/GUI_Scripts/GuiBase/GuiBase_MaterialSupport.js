@@ -7,10 +7,18 @@ gGuiBase.MaterialSupport = (function() {
 	gMaterials["Default"].mID = "Default";
 	console.log(gMaterials);
 
+	var getMaterialNameList = function() {
+		var materialNameList = [];
+		for (var material in gMaterials) {
+			materialNameList.push(material);
+		}
+		return materialNameList;
+	};
+
 	var getMaterialList = function() {
 		var materialList = [];
-		for (var material in gMaterials) {
-			materialList.push(material);
+		for (var materialName in gMaterials) {
+			materialList.push(gMaterials[materialName]);
 		}
 		return materialList;
 	};
@@ -22,9 +30,13 @@ gGuiBase.MaterialSupport = (function() {
 		
 		gMaterials[name] = material;
 		
-		var matList = getMaterialList();
+		var matList = getMaterialNameList();
 		gGuiBase.View.findWidgetByID("#materialSelectList1").rebuildWithArray( matList );
 		gGuiBase.View.refreshAllTabContent();  // refresh panel
+	};
+	
+	var setMaterial = function (materialName, material) {
+		gMaterials[materialName] = material;
 	};
 	
 	var checkForNameConflict = function(name) {
@@ -63,8 +75,9 @@ gGuiBase.MaterialSupport = (function() {
 	
 
     var mPublic = {
-		addNormal: addMaterial,
-		getNormalList: getMaterialList,
+		addMaterial: addMaterial,
+		getMaterialNameList: getMaterialNameList,
+		getMaterialList: getMaterialList,
 		checkForNameConflict: checkForNameConflict,
 		getMaterialByID: getMaterialByID,
 		setMaterial: setMaterial

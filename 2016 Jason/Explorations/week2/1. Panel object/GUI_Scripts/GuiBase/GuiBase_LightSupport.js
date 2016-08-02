@@ -180,9 +180,9 @@ gGuiBase.LightSupport = (function() {
 	};
 
     var mPublic = {
-		addNormal: addNormal,
+		addMaterial: addNormal,
 		getNormal: getNormal,
-		getNormalList: getNormalList,
+		getMaterialNameList: getNormalList,
 		getNormalNameList: getNormalNameList,
 		createDefaultLight: createDefaultLight,
 		checkForNameConflict: checkForNameConflict,
