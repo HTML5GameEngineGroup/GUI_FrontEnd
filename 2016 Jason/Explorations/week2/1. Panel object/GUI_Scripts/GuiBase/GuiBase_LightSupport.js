@@ -11,6 +11,14 @@ gGuiBase.LightSupport = (function() {
 		}
 		return materialList;
 	};
+	
+	var getMaterialNameList = function() {
+		var materialList = [];
+		for (var material in gMaterials) {
+			materialList.push(material);
+		}
+		return materialList;
+	};
 
 	var addMaterial = function ( materialName, img ) {
 		//todo check if it is in textures as well
@@ -149,6 +157,7 @@ gGuiBase.LightSupport = (function() {
     var mPublic = {
 		addMaterial: addMaterial,
 		getMaterialList: getMaterialList,
+		getMaterialNameList: getMaterialNameList,
 		createDefaultLight: createDefaultLight,
 		checkForNameConflict: checkForNameConflict,
 		getLightByID: getLightByID,

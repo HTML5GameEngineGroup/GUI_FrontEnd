@@ -17,6 +17,11 @@ Checkbox.prototype.initializeWidget = function () {
 
 };
 
+Checkbox.prototype.isChecked = function() {
+	var cbox = $(this.getID());
+	if (cbox.is(':checked')) return true;
+	return false;
+};
 
 Checkbox.prototype.setOnChecked = function (onCheck) {
 	var cbox = $(this.getID());
