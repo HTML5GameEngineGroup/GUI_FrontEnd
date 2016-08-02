@@ -78,7 +78,7 @@ gGuiBase.SaveLoadSupport = (function() {
 					if (!confirm("Loading a file will erase current work.  Load anyways?")) {
 						return;
 					}
-					
+
 					try {
 						// Clears everything to an empty state
 						gGuiBase.Core.cleanUpGameCore();
@@ -88,13 +88,13 @@ gGuiBase.SaveLoadSupport = (function() {
 						loadMisc(files, function() {
 							loadTextures(files, function() {
 								loadObjects(files, function() {
-									loadScenes(files, function(){ });
+									loadScenes(files, function () {});
 								});
 							});
 						});
 						
 					} catch (error) {
-						alert("There were issues with loading your file.\n\nErrors:\n" + error);
+						alert("FileOpen(file): There were issues with loading your file.\n\nErrors:\n" + error);
 						gGuiBase.Core.cleanUpGameCore();
 					}
 				};
@@ -114,7 +114,7 @@ gGuiBase.SaveLoadSupport = (function() {
 						});
 					});
 				} catch (error) {
-					alert("There were issues with loading your file.\n\nErrors:\n" + error);
+					alert("FileOpen(backup): There were issues with loading your file.\n\nErrors:\n" + error);
 					gGuiBase.Core.cleanUpGameCore();
 				}
 			} else {
@@ -135,7 +135,7 @@ gGuiBase.SaveLoadSupport = (function() {
 		var objects = files.folder("Objects");
 		var scenes = files.folder("Scenes");
 		var textures = files.folder("Textures");
-		
+		var normals = files.folder("Normals");
 		// JSON files not in folders
 		var globalVars;
 		
@@ -173,15 +173,18 @@ gGuiBase.SaveLoadSupport = (function() {
 			objectData[8] = obj.getRenderable().getColor();
 			
 			//Is it a lightrenderable
-			if (rend instanceof IllumRenderable)
-				objectData[9] = true;
-			else
+			if (rend instanceof IllumRenderable) {
+				objectData[9] = rend.getMaterial().mID;
+				// objectData[10] = rend.mNormal;
+			}
+			else {
 				objectData[9] = false;
-			
+				// objectData[10] = false;
+			}
+
 			objects.file(obj.mName + ".json", JSON.stringify(objectData));
 		}
-		
-		
+
 		// Scenes
 		var sceneList = gGuiBase.SceneSupport.getSceneList();
 		for (i = 0; i < sceneList.length; i++) {
@@ -292,7 +295,6 @@ gGuiBase.SaveLoadSupport = (function() {
 			}
 			sceneFolder.file("lights.json", JSON.stringify(lightData));
 		}
-
 		// Textures
 		var i;
 		var textureList = gGuiBase.TextureSupport.getTexList();
@@ -306,8 +308,27 @@ gGuiBase.SaveLoadSupport = (function() {
 			textureData[1] = textureImage.naturalWidth;
 			textureData[2] = textureImage.naturalHeight;
 			textureData[3] = textureImage.src;
+			textureData[4] = false;	// is normal
 			textures.file(textureInfo.mName + ".json", JSON.stringify(textureData));
 		}
+
+		// normal maps
+		var i;
+		var normalNames = gGuiBase.LightSupport.getNormalNameList();
+		for (i = 0; i < normalNames.length; i++) {
+			var normalData = {};
+			var normalName = normalNames[i];
+			var normalInfo = gEngine.ResourceMap.retrieveAsset(normalName);
+			var normalImage = gGuiBase.LightSupport.getNormal(normalName);
+
+			normalData[0] = normalName;
+			normalData[1] = normalImage.naturalWidth;
+			normalData[2] = normalImage.naturalHeight;
+			normalData[3] = normalImage.src;
+			normalData[4] = true; // is normal
+			textures.file(normalName + ".json", JSON.stringify(normalData));
+		}
+		//todo do materials
 		
 		if (backup) {
 			gGuiBase.Core.gBackup = files;
@@ -332,7 +353,7 @@ gGuiBase.SaveLoadSupport = (function() {
 				gGuiBase.InstanceSupport.mNextInstID = data[1];
 				gGuiBase.SceneSupport.mNextSceneID = data[2];
 			}, function error(error) {
-				throw "There were issues with loading your file.\n\nErrors:\n" + error;
+				throw "LoadMisc: There were issues with loading your file.\n\nErrors:\n" + error;
 			});
 		});
 		callback();
@@ -340,19 +361,15 @@ gGuiBase.SaveLoadSupport = (function() {
 
 	var loadTextures = function(files, callback) {
 		var textureNames = [];
-		
 		//Get the number of files we need to load
 		var numOutstandingLoads = 0;
 		files.folder("Textures").forEach(function(relativePath, file) {
 			numOutstandingLoads++;
 		});
-		
 		//If there are no files, load the scenes
 		if (numOutstandingLoads === 0) {
 			callback();
 		}
-		
-		
 		files.folder("Textures").forEach(function(relativePath, file) {
 
 			// Read the ZipObject item as a JSON file, and then store the information where it belongs
@@ -361,10 +378,11 @@ gGuiBase.SaveLoadSupport = (function() {
 				var data = JSON.parse(content);
 				var textureName = data[0];
 				var imageSrc = data[3];
-				
 				textureNames.push(data[0]);
-
-				gEngine.Textures.loadTextureFromImageSrc(textureName, imageSrc, gGuiBase.TextureSupport.addTexture);
+				if(!data[4]) // is normalmap
+					gEngine.Textures.loadTextureFromImageSrc(textureName, imageSrc, gGuiBase.TextureSupport.addTexture);
+				else
+					gEngine.Textures.loadTextureFromImageSrc(textureName, imageSrc, gGuiBase.LightSupport.addNormal);
 			
 				//Are all the loads done? If so, callback.
 				while (true) {
@@ -375,13 +393,13 @@ gGuiBase.SaveLoadSupport = (function() {
 					}
 				}
 			}, function error(error) {
-				throw "There were issues with loading your file.\n\nErrors:\n" + error;
+				throw "LoadTextures: There were issues with loading your file.\n\nErrors:\n" + error;
 			});
 		});
 	};
 
+
 	var loadObjects = function(files, callback) {
-	
 		files.folder("Objects").forEach(function(relativePath, file) {
 
 			// Read the ZipObject item as a JSON file, and then store the information where it belongs
@@ -399,7 +417,8 @@ gGuiBase.SaveLoadSupport = (function() {
 				} else {
 					//gGuiBase.TextureSupport.addTexture(texture);
 					if (data[9]) { //If renderable instanceof LightRenderable
-						eval('obj = new ' + className + '(new LightRenderable("' + texture + '"));');
+						eval('obj = new ' + className + '(new IllumRenderable("' + texture + '","' + data[9] + '"));');
+						// obj.getRenderable().setMaterial(data[10]);
 					} else {
 						eval('obj = new ' + className + '(new TextureRenderable("' + texture + '"));');
 					}
@@ -423,7 +442,7 @@ gGuiBase.SaveLoadSupport = (function() {
 				
 				gGuiBase.Core.updateObjectSelectList();
 			}, function error(error) {
-				throw "There were issues with loading your file.\n\nErrors:\n" + error;
+				throw "LoadObjects: There were issues with loading your file.\n\nErrors:\n" + error;
 			});
 		});
 		callback();
@@ -535,7 +554,6 @@ gGuiBase.SaveLoadSupport = (function() {
 								var rend = inst.getRenderable();
 								rend.setColor(data[i + 7]);
 								inst.mOrderInLayer = data[i + 8];
-								console.log(data);
 							} else {
 								eval("inst = new " + data[i + 0] + "()");
 							}
@@ -589,7 +607,7 @@ gGuiBase.SaveLoadSupport = (function() {
 						
 					}
 				}, function error(error) {
-					throw "There were issues with loading your file.\n\nErrors:\n" + error;
+					throw "LoadScenes: There were issues with loading your file.\n\nErrors:\n" + error;
 				});
 			}        
 		});

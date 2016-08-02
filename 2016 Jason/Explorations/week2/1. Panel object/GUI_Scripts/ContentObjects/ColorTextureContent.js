@@ -49,7 +49,6 @@ ColorTextureContent.prototype.initialize = function () {
 	var materials = gGuiBase.MaterialSupport.getNormalList();
 	this.materialDropdown = new DropdownList("matDropDown", textFieldStyle, materials);
 	
-	
 	this.widgetList.push(this.colorText);
 	this.widgetList.push(this.colorField);
 	this.widgetList.push(this.textureText);
@@ -61,9 +60,6 @@ ColorTextureContent.prototype.initialize = function () {
 	this.widgetList.push(this.normalMapDropdown);
 	this.widgetList.push(this.materialText);
 	this.widgetList.push(this.materialDropdown);
-	
-	
-	// if (gGuiBase.Core.selectedGameObject) this.setDropdownToSelectedGO();
 };
 
 ColorTextureContent.prototype.initializeEventHandling = function () {
@@ -163,7 +159,8 @@ ColorTextureContent.prototype.onNormalMapSelect = function(value) {
 ColorTextureContent.prototype.onMaterialSelect = function(value) {
 	var gameObject = gGuiBase.Core.selectedGameObject; 
 	console.log(value);
-	gGuiBase.MaterialSupport.setMaterial(gameObject.mName, new Material());
+	//todo need to make sure default value's name cannot be changed
+	gGuiBase.MaterialSupport.setMaterial(gameObject.mName, gGuiBase.MaterialSupport.getMaterialByID(value));
 	console.log('afterset', gameObject);
 };
 

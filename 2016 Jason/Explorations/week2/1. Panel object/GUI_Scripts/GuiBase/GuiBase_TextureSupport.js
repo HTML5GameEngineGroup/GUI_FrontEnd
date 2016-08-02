@@ -112,9 +112,7 @@ gGuiBase.TextureSupport = (function() {
 		
 		
 		while (gEngine.ResourceMap.unloadAsset(texName) !== 0);
-
-		gGuiBase.TextureSupport.loadTexturesToScene();
-		
+        
 		var imageList = gGuiBase.TextureSupport.getImageList();
 		gGuiBase.View.findWidgetByID("#TextureSelectList").rebuildWithArray(imageList);
 		var texTab = gGuiBase.View.findTabByID("#Textures");

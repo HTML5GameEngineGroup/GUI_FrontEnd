@@ -73,6 +73,7 @@ gEngine.Textures = (function () {
         gl.bindTexture(gl.TEXTURE_2D, null);
 		
         var texInfo = new TextureInfo(textureName, image.naturalWidth, image.naturalHeight, textureID);
+        console.log(texInfo);
 		//console.log(image);
         gEngine.ResourceMap.asyncLoadCompleted(textureName, texInfo);
     };
@@ -136,6 +137,7 @@ gEngine.Textures = (function () {
 			
 			img.onload = function() {
 				_processLoadedImage(textureName, img);
+                console.log('precallback');
 				callback(textureName, img);
 			}
 			

@@ -34,6 +34,10 @@ gGuiBase.LightSupport = (function() {
 		gGuiBase.View.findWidgetByID("#MaterialSelectList").rebuildWithArray( imageList );
 		gGuiBase.View.refreshAllTabContent();  // refresh panel
 	};
+	
+	var getNormal = function ( normalName ) {
+		return gNormalMap[normalName];
+	};
 
 	var createDefaultLight = function() {
 		var light = new Light();
@@ -177,6 +181,7 @@ gGuiBase.LightSupport = (function() {
 
     var mPublic = {
 		addNormal: addNormal,
+		getNormal: getNormal,
 		getNormalList: getNormalList,
 		getNormalNameList: getNormalNameList,
 		createDefaultLight: createDefaultLight,
