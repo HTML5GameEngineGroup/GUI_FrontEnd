@@ -101,15 +101,33 @@ gGuiBase.LightSupport = (function() {
 
 	};
 	
+	var addIlluminationToGameObject = function (gameObjectName, textureName, normalMapName) {
+		var gameObject = gGuiBase.ObjectSupport.getGameObjectByID(gameObjectName);
+		var newRenderable = new IllumRenderable(textureName, normalMapName);
+		gGuiBase.TextureSupport.setRenderableForGameObject(gameObject, newRenderable);
+		this.setIllumRenderableForAllInstances(gameObjectName, textureName, normalMapName);
+	};
+	
+	var setIllumRenderableForAllInstances = function(gameObjectName, textureName, normalMapName) {
+		var instanceNames = gGuiBase.InstanceSupport.getInstanceList();
+		for (var i in instanceNames) {
+			var instanceName = instanceNames[i];
+			// get the instance so you can manipulate it
+			var inst = gGuiBase.InstanceSupport.getInstanceByID(instanceName);
+			if (inst.mName === gameObjectName) {
+				// assign appropriate renderable
+				var rend = new IllumRenderable(textureName, normalMapName);
+				gGuiBase.TextureSupport.setRenderableForGameObject(inst, rend);
+			}
+		}
+	};
+	
 	var setLightRenderableForAllInstancesOfObject = function(gameObjectName, textureName) {
 		var instanceNames = gGuiBase.InstanceSupport.getInstanceList();
 		for (var i in instanceNames) {
 			var instanceName = instanceNames[i];
-			console.log(instanceName);
 			// get the instance so you can manipulate it
 			var inst = gGuiBase.InstanceSupport.getInstanceByID(instanceName);
-			console.log(inst);
-			console.log(gameObjectName);
 			if (inst.mName === gameObjectName) {
 				// assign appropriate renderable
 				var rend = new LightRenderable(textureName);
@@ -164,6 +182,8 @@ gGuiBase.LightSupport = (function() {
 		getLightIDList: getLightIDList,
 		addLightingToGameObject: addLightingToGameObject,
 		setLightRenderableForAllInstancesOfObject: setLightRenderableForAllInstancesOfObject,
+		addIlluminationToGameObject: addIlluminationToGameObject,
+		setIllumRenderableForAllInstances: setIllumRenderableForAllInstances,
 		addLightsToInstances: addLightsToInstances,
 		addLight: addLight,
 		removeLightReferences: removeLightReferences

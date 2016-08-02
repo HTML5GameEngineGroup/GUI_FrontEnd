@@ -105,14 +105,9 @@ ColorTextureContent.prototype.initializeEventHandling = function () {
 	
 	this.setDropdownToSelectedGO();
 	this.setNormalMapDropdown();
-	
-	
-	
-	
-	
+	this.setMaterialDropdown();
+
 	this.textureButton.setOnClick(this.onButtonClick);
-	
-	
 
 };
 
@@ -149,21 +144,31 @@ ColorTextureContent.prototype.onListSelect = function(value) {
 };
 
 ColorTextureContent.prototype.onNormalMapSelect = function(value) {
-	console.log(value);
-	
+	var gameObject = gGuiBase.Core.selectedGameObject;
+	var colorTextureContent = gGuiBase.View.findTabContentByID("#ColorTextureContent");
+	var textureName = colorTextureContent.getDropdownTexName();
 	if (value == "None") {
 		//gGuiBase.TextureSupport.removeTextureFromGameObject(gameObjectName);
-		
+		gGuiBase.LightSupport.addLightingToGameObject(gameObject.mName, textureName);
+		gGuiBase.LightSupport.addLightsToInstances();
 		$('#matDropDown').prop('disabled', true);
 	} else {
 		//gGuiBase.TextureSupport.addTextureToGameObject(gameObjectName, textureName);
-		
+		gGuiBase.LightSupport.addIlluminationToGameObject(gameObject.mName, textureName, value);
+		gGuiBase.LightSupport.addLightsToInstances();
 		$('#matDropDown').prop('disabled', false);
+		console.log(gameObject);
 	}
 };
 
 ColorTextureContent.prototype.onMaterialSelect = function(value) {
+	var gameObject = gGuiBase.Core.selectedGameObject; 
 	console.log(value);
+	if (value === "None") {
+		gameObject.getRenderable().mMaterial = new Material();
+	} else {
+		gameObject.getRenderable().mMaterial = gGuiBase.MaterialSupport.getMaterialByID(value);
+	}
 };
 
 ColorTextureContent.prototype.onDialogClose = function() {
@@ -213,6 +218,16 @@ ColorTextureContent.prototype.setNormalMapDropdown = function() {
 	} else {
 		$('#normalMapDropDown').val("None");
 		$('#matDropDown').prop('disabled', true);
+	}
+};
+
+ColorTextureContent.prototype.setMaterialDropdown = function() {
+	var renderable = gGuiBase.Core.selectedGameObject.getRenderable();
+	if (renderable instanceof IllumRenderable) {
+		$('#matDropDown').val(renderable.mMaterial.mID);
+		console.log(renderable.mMaterial);
+	} else {
+		$('#matDropDown').val("None");
 	}
 };
 
