@@ -5,17 +5,16 @@
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.TextureSupport = (function() {
-    //todo add ability to remove textures
-    
     var gAllTextures = {};
 	var gImageMap = {};
 	
     // adds texture to panel
-    var addTexture = function ( texName ) {
+    var addTexture = function ( texName, img ) {
+        // todo check if it is in materials as well
         // if added already return
         if(gAllTextures[texName] || texName == "") return;
         gAllTextures[texName] = true;
-        loadTexturesToScene();
+        gImageMap[texName] = img;
         // refresh texturelist in view
 		var imageList = gGuiBase.TextureSupport.getImageList();
 		gGuiBase.View.findWidgetByID("#TextureSelectList").rebuildWithArray( imageList );
@@ -29,14 +28,6 @@ gGuiBase.TextureSupport = (function() {
 	var getImage = function(texName) {
 		return gImageMap[texName];
 	};
-
-    // loads the texture into the engine via the scene
-    var loadTexturesToScene = function () {
-        // add texture to scene
-        gEngine.GameLoop.stop();
-        gEngine.View.startScene(gGuiBase.SceneSupport.gCurrentScene);
-        gGuiBase.Core.reinitializeCameraTab();
-    };
 
     // texture must be already added to texture support!
     var addTextureToGameObject = function(gameObjectName, textureName) {
@@ -169,7 +160,6 @@ gGuiBase.TextureSupport = (function() {
         setRenderableForAllInstancesOfObject: setRenderableForAllInstancesOfObject,
         addTextureObject: addTextureObject,
         addTexture: addTexture,
-        loadTexturesToScene: loadTexturesToScene,
         removeTexture: removeTexture,
         getTexList: getTexList,
 		removeTextureFromAll: removeTextureFromAll,

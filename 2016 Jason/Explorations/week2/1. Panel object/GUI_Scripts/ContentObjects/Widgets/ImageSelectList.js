@@ -55,7 +55,7 @@ ImageSelectList.prototype.addElement = function(listElement) {
 ImageSelectList.prototype.rebuildWithArray = function(list) {
 	this.list = list;
 	this.setHTML();
-}
+};
 
 ImageSelectList.prototype.addListClass = function(className) {
 	var list = $(this.getID() + ' li');

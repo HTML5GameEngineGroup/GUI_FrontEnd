@@ -2,7 +2,28 @@
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.LightSupport = (function() {
-	
+	var gMaterials = {};
+
+	var getMaterialList = function() {
+		var materialList = [];
+		for (var material in gMaterials) {
+			materialList.push(gMaterials[material].src);
+		}
+		return materialList;
+	};
+
+	var addMaterial = function ( materialName, img ) {
+		//todo check if it is in textures as well
+		// if added already return
+		if(gMaterials[materialName] || materialName == "") return;
+		// set this to a reference of img? or get it from engine?
+		gMaterials[materialName] = img;
+		// refresh texturelist in view
+		var imageList = getMaterialList();
+		gGuiBase.View.findWidgetByID("#MaterialSelectList").rebuildWithArray( imageList );
+		gGuiBase.View.refreshAllTabContent();  // refresh panel
+	};
+
 	var createDefaultLight = function() {
 		var light = new Light();
 		light.mID = findUniqueID();
@@ -10,13 +31,11 @@ gGuiBase.LightSupport = (function() {
 		light.setYPos(60);
 		gGuiBase.SceneSupport.gCurrentScene.mLightSet.addToSet(light);
 		this.addLightsToInstances();
-		
 		return light;
 	};
 	
 	var addLight = function(light) {
 		gGuiBase.SceneSupport.gCurrentScene.mLightSet.addToSet(light);
-		
 		this.addLightsToInstances();
 		gGuiBase.View.findWidgetByID("#lightSelectList").rebuildWithArray(gGuiBase.LightSupport.getLightIDList());
 	};
@@ -128,6 +147,8 @@ gGuiBase.LightSupport = (function() {
 	};
 
     var mPublic = {
+		addMaterial: addMaterial,
+		getMaterialList: getMaterialList,
 		createDefaultLight: createDefaultLight,
 		checkForNameConflict: checkForNameConflict,
 		getLightByID: getLightByID,
@@ -136,7 +157,7 @@ gGuiBase.LightSupport = (function() {
 		setLightRenderableForAllInstancesOfObject: setLightRenderableForAllInstancesOfObject,
 		addLightsToInstances: addLightsToInstances,
 		addLight: addLight,
-		removeLightReferences: removeLightReferences,
+		removeLightReferences: removeLightReferences
     };
     return mPublic;
 }());

@@ -30,10 +30,8 @@ TextureSelectDialog.prototype.initializeEventHandling = function() {
 		resizable: false,
 		height: "auto",
 		width: 400,
-		modal: true,
-		
+		modal: true
 	});
-	
 	
 	var widgetSelector = '#' + this.widgetID;
 
@@ -64,7 +62,6 @@ TextureSelectDialog.prototype.initializeEventHandling = function() {
 //Set jquery ui button click function
 TextureSelectDialog.prototype.setOnClose = function (onCloseFunction) {
 	$('#' + this.widgetID).dialog({
-		close: onCloseFunction,
-
+		close: onCloseFunction
     });
 };

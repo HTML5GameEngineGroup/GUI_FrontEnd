@@ -71,7 +71,6 @@ gEngine.Textures = (function () {
 
         // Tells WebGL that we are done manipulating data at the mGL.TEXTURE_2D target.
         gl.bindTexture(gl.TEXTURE_2D, null);
-		gGuiBase.TextureSupport.addTextureToImageMap(textureName, image);
 		
         var texInfo = new TextureInfo(textureName, image.naturalWidth, image.naturalHeight, textureID);
 		//console.log(image);
@@ -118,8 +117,8 @@ gEngine.Textures = (function () {
 			};
 			
 			img.onload = function() {
-				_processLoadedImage(texName, img);
-				callback(texName);
+                _processLoadedImage(texName, img);
+				callback(texName, img);
 			};
 			
 			fr.readAsDataURL(document.getElementById(targetDivName).files[0]);
@@ -137,7 +136,7 @@ gEngine.Textures = (function () {
 			
 			img.onload = function() {
 				_processLoadedImage(textureName, img);
-				callback(textureName);
+				callback(textureName, img);
 			}
 			
 		} else {
