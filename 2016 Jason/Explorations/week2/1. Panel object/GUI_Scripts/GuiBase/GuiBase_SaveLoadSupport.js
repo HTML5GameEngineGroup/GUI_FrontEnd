@@ -320,16 +320,15 @@ gGuiBase.SaveLoadSupport = (function() {
 	var saveMaterials = function(fileFolder) {
 		var i;
 		var materialsList = gGuiBase.MaterialSupport.getMaterialList();
-		console.log('materlist', materialsList)
 		for (var i in materialsList) {
 			var materialData = {};
-			console.log(materialsList[i]);
 			var ambient = materialsList[i].getAmbient();
 			var diffuse = materialsList[i].getDiffuse();
 			var specular = materialsList[i].getSpecular();
 			var j = 0;
 			materialData[j++] = materialsList[i].mID;
 			materialData[j++] = materialsList[i].getShininess();
+			// this is hardcoded in load
 			for (var k in ambient) {
 				materialData[j] = ambient[k];
 				j++;
@@ -342,7 +341,6 @@ gGuiBase.SaveLoadSupport = (function() {
 				materialData[j] = specular[k];
 				j++;
 			}
-			console.log(materialData);
 			fileFolder.file(materialsList[i].mID + ".json", JSON.stringify(materialData));
 		}
 	};
@@ -400,14 +398,6 @@ gGuiBase.SaveLoadSupport = (function() {
 	};
 
 	var loadMaterials = function (files, callback) {
-		var numOutstandingLoads = 0;
-		files.folder("Materials").forEach(function(relativePath, file) {
-			numOutstandingLoads++;
-		});
-		//If there are no files, load the scenes
-		if (numOutstandingLoads === 0) {
-			callback();
-		}
 		files.folder("Materials").forEach(function(relativePath, file) {
 			// Read the ZipObject item as a JSON file, and then store the information where it belongs
 			files.file(file.name).async("string").then(function success(content) {
@@ -417,16 +407,12 @@ gGuiBase.SaveLoadSupport = (function() {
 				var ambient = [data[2], data[3], data[4], data[5]];
 				var diffuse = [data[6], data[7], data[8], data[9]];
 				var specular = [data[10], data[11], data[12], data[13]];
-
 				var material = new Material();
 				material.mID = materialName;
 				material.setShininess(shinniness);
 				material.setAmbient(ambient);
 				material.setDiffuse(diffuse);
 				material.setSpecular(specular);
-				console.log(material);
-				console.log(shinniness, ambient, diffuse, specular);
-				console.log(materialName);
 				callback(materialName, material);
 			}, function error(error) {
 				throw "loadMaterials: There were issues with loading your file.\n\nErrors:\n" + error;
