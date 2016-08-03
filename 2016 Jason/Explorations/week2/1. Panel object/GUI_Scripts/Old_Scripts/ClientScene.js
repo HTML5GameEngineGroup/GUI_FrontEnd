@@ -40,7 +40,8 @@ function ClientScene(number) {
 gEngine.View.inheritPrototype(ClientScene, Scene);
 
 ClientScene.prototype.loadScene = function() {
-
+    console.log(gEngine.DefaultResources.getGlobalAmbientColor());
+    console.log(gEngine.DefaultResources.getGlobalAmbientIntensity());
 };
 
 ClientScene.prototype.unloadScene = function() {

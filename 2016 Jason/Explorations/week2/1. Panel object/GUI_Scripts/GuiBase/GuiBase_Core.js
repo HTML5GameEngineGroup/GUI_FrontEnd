@@ -124,7 +124,7 @@ gGuiBase.Core = (function() {
 	var selectDetailsScene = function (sceneName) {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		detailsTab.clearContent();
-		var detailsTransform = new SceneTransformContent("SceneTransformContent", gGuiBase.View.CONTENT_STYLE, "Scene");
+		var detailsTransform = new SceneInfo("SceneTransformContent", gGuiBase.View.CONTENT_STYLE, "Scene");
 		
 		var scene = gGuiBase.SceneSupport.getSceneByName(sceneName);
 		detailsTransform.updateFields(scene);
