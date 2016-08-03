@@ -122,15 +122,17 @@ gGuiBase.Core = (function() {
 	};
 
 	var selectDetailsScene = function (sceneName) {
+		var scene = gGuiBase.SceneSupport.getSceneByName(sceneName);
+		gGuiBase.SceneSupport.selectSceneByName(sceneName);
+
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		detailsTab.clearContent();
 		var detailsTransform = new SceneInfo("SceneTransformContent", gGuiBase.View.CONTENT_STYLE, "Scene");
 		
-		var scene = gGuiBase.SceneSupport.getSceneByName(sceneName);
 		detailsTransform.updateFields(scene);
 		
-		gGuiBase.SceneSupport.selectSceneByName(sceneName);
-		
+		// gEngine.DefaultResources.setGlobalAmbientColor( gGuiBase.SceneSupport.gCurrentScene.mAmbientColor );
+		// gEngine.DefaultResources.setGlobalAmbientIntensity( gGuiBase.SceneSupport.gCurrentScene.mAmbientIntensity );
 		detailsTab.addContent(detailsTransform);
 		this.updateInstanceSelectList();
 		this.reinitializeLightsTab();

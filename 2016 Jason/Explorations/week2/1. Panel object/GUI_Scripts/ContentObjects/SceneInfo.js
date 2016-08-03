@@ -16,14 +16,16 @@ SceneInfo.prototype.initialize = function () {
 	this.objectNameText = new Text("sceneNameText", textStyle, "Name");
 	this.objectName = new TextField("sceneNameField", textFieldStyle, "Scene0");
 
+	var ambientLighting = gGuiBase.SceneSupport.gCurrentScene.getAmbientColor();
 	this.ambientLightLabel = new Text("ambientLightLabel", textStyle, "Ambient Lighting RGBO");
-	this.ambientRed = new TextField("ambientRedField", textFieldStyle, "0.3");
-	this.ambientGreen = new TextField("ambientGreenField", textFieldStyle, "0.3");
-	this.ambientBlue = new TextField("ambientBlueField", textFieldStyle, "0.3");
-	this.ambientOpacity = new TextField("ambientOpacityField", textFieldStyle, "1");
+	this.ambientRed = new TextField("ambientRedField", textFieldStyle, ambientLighting[0]);
+	this.ambientGreen = new TextField("ambientGreenField", textFieldStyle, ambientLighting[1]);
+	this.ambientBlue = new TextField("ambientBlueField", textFieldStyle, ambientLighting[2]);
+	this.ambientOpacity = new TextField("ambientOpacityField", textFieldStyle, ambientLighting[3]);
 
+	var globalAmbientIntensity = gGuiBase.SceneSupport.gCurrentScene.getAmbientIntensity();
 	this.ambientIntensityLabel = new Text("ambientIntensityLabel", textStyle, "Ambient Intensity");
-	this.ambientIntensity = new TextField("ambientIntensityField", textFieldStyle, "1");
+	this.ambientIntensity = new TextField("ambientIntensityField", textFieldStyle, globalAmbientIntensity);
 
 	this.widgetList.push(this.objectNameText);
 	this.widgetList.push(this.objectName);
@@ -74,14 +76,17 @@ SceneInfo.prototype.onTextFieldFocusOut = function(textField) {
 								$('#ambientGreenField').val(),
 								$('#ambientBlueField').val(),
 								$('#ambientOpacityField').val()];
-			gEngine.DefaultResources.setGlobalAmbientColor(ambientColor);
+			gGuiBase.SceneSupport.gCurrentScene.setAmbientColor(ambientColor);
+
+			// gEngine.DefaultResources.setGlobalAmbientColor(ambientColor);
 			console.log(ambientColor);
 			console.log(gEngine.DefaultResources.getGlobalAmbientColor());
 			break;
 		case "ambientIntensityField":
 			var ambientIntensity = textField.val();
 			console.log("ambientIntensity:", ambientIntensity);
-			gEngine.DefaultResources.setGlobalAmbientIntensity(ambientIntensity);
+			// gEngine.DefaultResources.setGlobalAmbientIntensity(ambientIntensity);
+			gGuiBase.SceneSupport.gCurrentScene.setAmbientIntensity(ambientIntensity);
 			console.log(gEngine.DefaultResources.getGlobalAmbientIntensity());
 			break;
 		default:
@@ -91,9 +96,7 @@ SceneInfo.prototype.onTextFieldFocusOut = function(textField) {
 };
 
 SceneInfo.prototype.updateFields = function(scene) {
-	//console.log(scene);
 	this.objectName.setText(scene.mName);
-
 };
 
 

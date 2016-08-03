@@ -36,12 +36,31 @@ function ClientScene(number) {
 	this.rotationObject = null;
 	this.sceneViewCamera = null;
 	this.cameraObjects = [];
+
+    this.mAmbientColor = [1, 1, 1, 1];
+    this.mAmbientIntensity = 1;
 }
 gEngine.View.inheritPrototype(ClientScene, Scene);
 
 ClientScene.prototype.loadScene = function() {
+    gEngine.DefaultResources.setGlobalAmbientColor( this.mAmbientColor );
+    gEngine.DefaultResources.setGlobalAmbientIntensity( this.mAmbientIntensity );
     console.log(gEngine.DefaultResources.getGlobalAmbientColor());
     console.log(gEngine.DefaultResources.getGlobalAmbientIntensity());
+};
+
+ClientScene.prototype.getAmbientColor = function () { return this.mAmbientColor; };
+
+ClientScene.prototype.setAmbientColor = function ( ambientColor ) {
+    this.mAmbientColor = ambientColor;
+    gEngine.DefaultResources.setGlobalAmbientColor( ambientColor );
+};
+
+ClientScene.prototype.getAmbientIntensity = function () { return this.mAmbientIntensity; };
+
+ClientScene.prototype.setAmbientIntensity = function ( ambientIntensity ) {
+    this.mAmbientIntensity = ambientIntensity;
+    gEngine.DefaultResources.setGlobalAmbientColor( ambientIntensity );
 };
 
 ClientScene.prototype.unloadScene = function() {
