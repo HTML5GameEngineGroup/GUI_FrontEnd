@@ -311,13 +311,13 @@ gGuiBase.DirectManipulationSupport = (function() {
 				gGuiBase.Core.selectedGameObject = instances[i];
 				var selectObject = new SelectionObject(xform.getXPos(), xform.getYPos(), xform.getWidth(), xform.getHeight());
 				selectObject.update();
-				mouseInXform = selectObject.mousePosOnTopLeftCorner(xform, mouseX, mouseY)
+				mouseInXform = selectObject.mousePosOnTopLeftCorner(xform, mouseX, mouseY);
 				if (mouseInXform) break;
-				mouseInXform = selectObject.mousePosOnTopRightCorner(xform, mouseX, mouseY)
+				mouseInXform = selectObject.mousePosOnTopRightCorner(xform, mouseX, mouseY);
 				if (mouseInXform) break;
-				mouseInXform = selectObject.mousePosOnBottomLeftCorner(xform, mouseX, mouseY)
+				mouseInXform = selectObject.mousePosOnBottomLeftCorner(xform, mouseX, mouseY);
 				if (mouseInXform) break;
-				mouseInXform = selectObject.mousePosOnBottomRightCorner(xform, mouseX, mouseY)
+				mouseInXform = selectObject.mousePosOnBottomRightCorner(xform, mouseX, mouseY);
 				if (mouseInXform) break;
 			}
 			
@@ -543,7 +543,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 		state = InteractionState.NONE;
 		gGuiBase.Core.selectedGameObject = null;
 		
-	}
+	};
 	
     var mPublic = {
        mouseInBound: mouseInBound,
