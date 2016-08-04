@@ -261,7 +261,7 @@ gGuiBase.SaveLoadSupport = (function() {
 			sceneFolder.file("instances.json", JSON.stringify(instanceData));
 			
 			// save lights
-			var lightSet = gGuiBase.SceneSupport.gCurrentScene.mLightSet;
+			var lightSet = scene.mLightSet;
 			var lightData = {};
 			for (var j = 0; j < lightSet.numLights(); j++) {
 				var light = lightSet.getLightAt(j);
@@ -627,6 +627,8 @@ gGuiBase.SaveLoadSupport = (function() {
 						var instancesTab = gGuiBase.View.findTabByID("#Instances");
 						instancesTab.refreshContent();
 					} else if (relativePath.endsWith("lights.json")) {
+						var idx = gGuiBase.SceneSupport.getSceneIndex(sceneName);
+						gGuiBase.SceneSupport.selectScene(idx);
 						var i = 0;
 						while (typeof(data[i]) !== "undefined") {
 							var light = new Light();
@@ -643,7 +645,8 @@ gGuiBase.SaveLoadSupport = (function() {
 							light.mLightType = data[i + 10];
 							light.mIsOn = data[i + 11];
 							light.mCastShadow = data[i + 12];
-	
+							
+							
 							gGuiBase.LightSupport.addLight(light);
 							var lightObject = new LightObject(light);
 							gGuiBase.SceneSupport.gCurrentScene.lightObjects.push(lightObject);
@@ -651,6 +654,7 @@ gGuiBase.SaveLoadSupport = (function() {
 						}
 						
 						gGuiBase.Core.reinitializeLightsTab();
+						
 						var lightsTab = gGuiBase.View.findTabByID("#Lights");
 						lightsTab.refreshContent();
 						

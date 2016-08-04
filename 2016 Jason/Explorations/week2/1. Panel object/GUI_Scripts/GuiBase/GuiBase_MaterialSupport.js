@@ -35,6 +35,31 @@ gGuiBase.MaterialSupport = (function() {
 		gGuiBase.View.refreshAllTabContent();  // refresh panel
 	};
 	
+	var removeMaterial = function(id) {
+		var material = gMaterials[id];
+		replaceMaterialReferences(id);
+		delete gMaterials[id];
+		
+		gGuiBase.Core.reinitializeMaterialsTab();
+	};
+	
+	//Sets all references to the given material to default
+	var replaceMaterialReferences = function(id) {
+		var sceneList = gGuiBase.SceneSupport.getSceneList();
+		
+		for (var j = 0; j < sceneList.length; j++) {
+			// First update all instances with the new name and class
+			var instances = sceneList[j].getInstanceList();
+			for (i = 0; i < instances.length; i++) {
+				var renderable = instances[i].getRenderable();
+				if (renderable instanceof IllumRenderable &&
+					renderable.mMaterial.mID === id) {
+					renderable.mMaterial = gMaterials["Default"];
+				}
+			}
+		}
+	};
+	
 	var setMaterial = function (materialName, material) {
 		gMaterials[materialName] = material;
 	};
@@ -80,7 +105,8 @@ gGuiBase.MaterialSupport = (function() {
 		getMaterialList: getMaterialList,
 		checkForNameConflict: checkForNameConflict,
 		getMaterialByID: getMaterialByID,
-		setMaterial: setMaterial
+		setMaterial: setMaterial,
+		removeMaterial: removeMaterial
     };
     return mPublic;
 }());

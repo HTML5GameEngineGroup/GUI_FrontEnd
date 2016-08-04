@@ -40,7 +40,10 @@ MaterialContent.prototype.initializeEventHandling = function () {
 					gGuiBase.Core.selectDetailsMaterial(ui.target.text());
 					break;
 				case 'delete':
-                    //gGuiBase.SceneSupport.deleteScene(ui.target.text());
+					if (ui.target.text() !== "Default")
+						gGuiBase.MaterialSupport.removeMaterial(ui.target.text());
+					else 
+						alert ("Cannot delete default material");
 					break;
 			}
 		}

@@ -175,6 +175,11 @@ gGuiBase.Core = (function() {
 		gGuiBase.View.refreshAllTabContent();
 	};
 	
+	var reinitializeMaterialsTab = function() {
+		gGuiBase.View.findWidgetByID("#materialSelectList1").rebuildWithArray(gGuiBase.MaterialSupport.getMaterialNameList());
+		gGuiBase.View.refreshAllTabContent();
+	};
+	
 	var emptyDetailsTab = function () {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		detailsTab.clearContent();
@@ -305,6 +310,7 @@ gGuiBase.Core = (function() {
 		reinitializeSceneTab: reinitializeSceneTab,
 		reinitializeTabs: reinitializeTabs,
 		reinitializeLightsTab: reinitializeLightsTab,
+		reinitializeMaterialsTab: reinitializeMaterialsTab,
 		
 		addInstance: addInstance,
 		addInstanceWithName: addInstanceWithName,

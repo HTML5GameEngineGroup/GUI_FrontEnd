@@ -264,6 +264,15 @@ ClientScene.prototype.getCameraObjectList = function() {
 	return this.cameraObjects;
 };
 
+ClientScene.prototype.removeLightObject = function(lightID) {
+	for (var i = 0; i < this.lightObjects.length; i++) {
+		if (lightID === this.lightObjects[i].lightRef.mID) {
+			delete this.lightObjects[i];
+			this.lightObjects.splice(i, 1);
+		}
+	}
+};
+
 ClientScene.prototype.clearCameras = function () {
     for (var layerIndex = this.MIN_CAMERA_LAYER; layerIndex <= this.MAX_CAMERA_LAYER; layerIndex++) {
         if (this.mAllCamera[layerIndex]) {

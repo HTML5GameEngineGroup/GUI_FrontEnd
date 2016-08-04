@@ -59,6 +59,15 @@ gGuiBase.LightSupport = (function() {
 		gGuiBase.View.findWidgetByID("#lightSelectList").rebuildWithArray(gGuiBase.LightSupport.getLightIDList());
 	};
 	
+	var removeLight = function(lightID) {
+		var light = getLightByID(lightID);
+		removeRefToLight(light);
+		gGuiBase.SceneSupport.gCurrentScene.mLightSet.removeLight(light);
+		gGuiBase.SceneSupport.gCurrentScene.removeLightObject(light.mID);
+		
+		gGuiBase.Core.reinitializeLightsTab();
+	};
+	
 	var checkForNameConflict = function(name) {
 		var lightSet = gGuiBase.SceneSupport.gCurrentScene.mLightSet;
         var result = false;
@@ -169,6 +178,20 @@ gGuiBase.LightSupport = (function() {
 		}
 	};
 	
+	var removeRefToLight = function(light) {
+		var sceneList = gGuiBase.SceneSupport.getSceneList();
+		for (var j = 0; j < sceneList.length; j++) {
+			// First update all instances with the new name and class
+			var instances = sceneList[j].getInstanceList();
+			for (i = 0; i < instances.length; i++) {
+				var renderable = instances[i].getRenderable();
+				if (renderable instanceof LightRenderable) {
+					renderable.removeLight(light);
+				}
+			}
+		}
+	};
+	
 	var removeLightReferences = function() {
 		var sceneList = gGuiBase.SceneSupport.getSceneList();
 		for (var j = 0; j < sceneList.length; j++) {
@@ -198,7 +221,8 @@ gGuiBase.LightSupport = (function() {
 		setIllumRenderableForAllInstances: setIllumRenderableForAllInstances,
 		addLightsToInstances: addLightsToInstances,
 		addLight: addLight,
-		removeLightReferences: removeLightReferences
+		removeLightReferences: removeLightReferences,
+		removeLight: removeLight,
     };
     return mPublic;
 }());

@@ -49,3 +49,12 @@ LightSet.prototype.getSet = function() {
 	return this.mSet;
 };
 
+LightSet.prototype.removeLight = function(light) {
+	for (var i = 0; i < this.mSet.length; i++) {
+		if (this.mSet[i].mID === light.mID) {
+			delete this.mSet[i];
+			this.mSet.splice(i, 1);
+		}
+	}
+};
+

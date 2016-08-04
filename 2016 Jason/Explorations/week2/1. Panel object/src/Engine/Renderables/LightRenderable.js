@@ -71,6 +71,15 @@ LightRenderable.prototype.addLight = function (l) {
     this.mLights.push(l);
 };
 
+LightRenderable.prototype.removeLight = function(l) {
+	for (var i = 0; i < this.mLights.length; i++) {
+		if (l.mID === this.mLights[i].mID) {
+			delete this.mLights[i];
+			this.mLights.splice(i, 1);
+		}
+	}
+};
+
 LightRenderable.prototype.deleteAllLights = function() {
 	this.mLights = [];
 };

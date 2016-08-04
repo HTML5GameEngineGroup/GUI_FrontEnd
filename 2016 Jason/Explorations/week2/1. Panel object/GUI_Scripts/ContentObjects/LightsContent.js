@@ -34,22 +34,17 @@ LightsContent.prototype.initializeEventHandling = function () {
 		delegate: ".lightListMenu",
 		menu: [
 			{title: "Details", cmd: "details", uiIcon: "ui-icon-info"},
-			{title: "Edit code", cmd: "edit", uiIcon: "ui-icon-pencil"},
 			{title: "Delete", cmd: "delete", uiIcon: "ui-icon-closethick"}
 		],
 		select: function(event, ui) {
 			var lightName = ui.target.text();
 			switch (ui.cmd) {
 				case 'details':
-					//gGuiBase.Core.selectDetailsLight( lightName );
-					break;
-				case 'edit':
-					//console.log(ui.target.text());
-					//gGuiBase.EditorSupport.createFloatingEditor( lightName );
+					gGuiBase.Core.selectDetailsLight( lightName );
 					break;
 				case 'delete':
-                    //gGuiBase.LightSupport.deleteLight( lightName );
-					//break;
+                    gGuiBase.LightSupport.removeLight( lightName );
+					break;
 			}
 		}
 	});
