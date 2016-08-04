@@ -53,6 +53,13 @@ LightTransformContent.prototype.initialize = function () {
 	this.lightY = new TextField("lightYField", textFieldStyle, "60");
 	this.lightZ = new TextField("lightZField", textFieldStyle, "5");
 	
+	this.lightTypeText = new Text("lightTypeText", textStyle, "Type");
+	var types = ["Point", "Directional", "Spotlight"];
+	this.lightType = new DropdownList("lightTypeDropdown", textFieldStyle, types);
+	
+	this.lightIntensityText = new Text("lightIntensityText", textStyle, "Intensity");
+	this.lightIntensity = new TextField("lightIntensityField", textFieldStyle, "1");
+	
 	this.lightDirectionText = new Text("lightDirText", textStyle, "Direction X / Y / Z");
 	this.lightDirX = new TextField("lightXDirField", textFieldStyle, "20");
 	this.lightDirY = new TextField("lightYDirField", textFieldStyle, "60");
@@ -68,14 +75,10 @@ LightTransformContent.prototype.initialize = function () {
 	this.lightOuterText = new Text("lightOuterText", textStyle, "Outer");
 	this.lightOuter = new TextField("lightOuterField", textFieldStyle, "0.3");
 	
-	this.lightIntensityText = new Text("lightIntensityText", textStyle, "Intensity");
-	this.lightIntensity = new TextField("lightIntensityField", textFieldStyle, "1");
 	this.lightDropoffText = new Text("lightDropoffText", textStyle, "Dropoff");
 	this.lightDropoff = new TextField("lightDropoffField", textFieldStyle, "1");
 	
-	this.lightTypeText = new Text("lightTypeText", textStyle, "Type");
-	var types = ["Point", "Directional", "Spotlight"];
-	this.lightType = new DropdownList("lightTypeDropdown", textFieldStyle, types);
+	
 	
 	this.lightOnText = new Text("lightOnText", textStyle, "Light on/off");
 	this.lightOn = new Checkbox("lightOn", textStyle);
@@ -83,12 +86,52 @@ LightTransformContent.prototype.initialize = function () {
 	this.lightCastShadowText = new Text("lightCastShadowText", textStyle, "Cast shadow");
 	this.lightCastShadow = new Checkbox("lightCastShadow", textStyle);
 	
+	this.addSharedWidgets();
+	
+	var type = this.setTypeDropdown();
+
+	switch(type) {
+		case "Point": this.addPointLightWidgets(); break;
+		case "Directional": this.addDirectionalLightWidgets(); break;
+		case "Spotlight": this.addSpotLightWidgets(); break;
+	}
+	
+
+};
+
+LightTransformContent.prototype.addSharedWidgets = function() {
 	this.widgetList.push(this.lightNameText);
 	this.widgetList.push(this.lightName);
 	this.widgetList.push(this.lightXYZ);
 	this.widgetList.push(this.lightX);
 	this.widgetList.push(this.lightY);
 	this.widgetList.push(this.lightZ);
+	this.widgetList.push(this.lightIntensityText);
+	this.widgetList.push(this.lightIntensity);
+	this.widgetList.push(this.lightOnText);
+	this.widgetList.push(this.lightOn);
+	this.widgetList.push(this.lightCastShadowText);
+	this.widgetList.push(this.lightCastShadow);
+	this.widgetList.push(this.lightTypeText);
+	this.widgetList.push(this.lightType);
+
+};
+
+LightTransformContent.prototype.addPointLightWidgets = function() {
+	this.widgetList.push(this.lightFarText);
+	this.widgetList.push(this.lightFar);
+	this.widgetList.push(this.lightNearText);
+	this.widgetList.push(this.lightNear);
+};
+
+LightTransformContent.prototype.addDirectionalLightWidgets = function() {
+	this.widgetList.push(this.lightDirectionText);
+	this.widgetList.push(this.lightDirX);
+	this.widgetList.push(this.lightDirY);
+	this.widgetList.push(this.lightDirZ);
+};
+
+LightTransformContent.prototype.addSpotLightWidgets = function() {
 	this.widgetList.push(this.lightDirectionText);
 	this.widgetList.push(this.lightDirX);
 	this.widgetList.push(this.lightDirY);
@@ -101,18 +144,8 @@ LightTransformContent.prototype.initialize = function () {
 	this.widgetList.push(this.lightInner);
 	this.widgetList.push(this.lightOuterText);
 	this.widgetList.push(this.lightOuter);
-	this.widgetList.push(this.lightIntensityText);
-	this.widgetList.push(this.lightIntensity);
 	this.widgetList.push(this.lightDropoffText);
 	this.widgetList.push(this.lightDropoff);
-	this.widgetList.push(this.lightTypeText);
-	this.widgetList.push(this.lightType);
-	this.widgetList.push(this.lightOnText);
-	this.widgetList.push(this.lightOn);
-	this.widgetList.push(this.lightCastShadowText);
-	this.widgetList.push(this.lightCastShadow);
-	
-	
 };
 
 LightTransformContent.prototype.initializeEventHandling = function () {
@@ -134,6 +167,19 @@ LightTransformContent.prototype.initializeEventHandling = function () {
 	this.lightCastShadow.setOnChecked(this.lightCastShadowOnCheck);
 	
 	this.lightType.setOnSelect(this.onListSelect);
+	this.setTypeDropdown();
+	/*this.widgetList = [];
+	this.addSharedWidgets();
+	
+	
+	
+	$(this.getID()).empty();
+	$(this.getID()).append(this.getWidgetHTMLContent());
+	*/
+	var light = gGuiBase.Core.selectedLight;
+	if (light.mIsOn) 
+		$(this.lightOn.getID()).prop('checked', true);
+	
 	
 };
 
@@ -185,9 +231,6 @@ LightTransformContent.prototype.onTextFieldFocusOut = function(textField) {
 		default:
 			break;
 	}
-	
-	console.log(light);
-	
 };
 
 LightTransformContent.prototype.updateFields = function( light ) {
@@ -225,6 +268,7 @@ LightTransformContent.prototype.updateFields = function( light ) {
 
 	this.lightDropoff.setText(light.mDropOff);
 	
+	
 
 	//this.lightType = null;
 
@@ -234,24 +278,50 @@ LightTransformContent.prototype.setTypeDropdown = function() {
 	var light = gGuiBase.Core.selectedLight;
 	var type;
 	switch (light.mLightType) {
-		case Light.eLightType.ePointLight: type = "Point"; break;
-		case Light.eLightType.eDirectionalLight: type = "Directional"; break;
-		case Light.eLightType.eSpotLight: type = "Spotlight"; break;
+		case Light.eLightType.ePointLight: 
+			type = "Point"; 
+			break;
+		case Light.eLightType.eDirectionalLight: 
+			type = "Directional"; 
+			break;
+		case Light.eLightType.eSpotLight:
+			type = "Spotlight";
+			break;
 		default: console.log("Invalid light type");
 	}
+
 	$('#lightTypeDropdown').val(type);
+	return type;
 };
 
 LightTransformContent.prototype.onListSelect = function(value) {
 	var light = gGuiBase.Core.selectedLight;
 	var content = gGuiBase.View.findTabContentByID("#LightTransformContent");
 	var type = content.getDropdownTexName();
-	
+
 	switch(type) {
-		case "Point": light.mLightType = Light.eLightType.ePointLight; break;
-		case "Directional": light.mLightType = Light.eLightType.eDirectionalLight; break;
-		case "Spotlight": light.mLightType = Light.eLightType.eSpotLight; break;
+		case "Point": 
+			light.mLightType = Light.eLightType.ePointLight;
+			content.widgetList = [];
+			content.addSharedWidgets();
+			content.addPointLightWidgets();
+			break;
+		case "Directional": 
+			light.mLightType = Light.eLightType.eDirectionalLight; 
+			content.widgetList = [];
+			content.addSharedWidgets();
+			content.addDirectionalLightWidgets();
+			break;
+		case "Spotlight": 
+			light.mLightType = Light.eLightType.eSpotLight; 
+			content.widgetList = [];
+			content.addSharedWidgets();
+			content.addSpotLightWidgets();
+			break;
 	}
+	$(content.getID()).empty();
+	$(content.getID()).append(content.getWidgetHTMLContent());
+	content.initializeEventHandling();
 };
 
 LightTransformContent.prototype.getDropdownTexName = function() {

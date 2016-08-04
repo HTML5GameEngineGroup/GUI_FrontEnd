@@ -55,13 +55,16 @@ gGuiBase.Core = (function() {
 	var selectDetailsLight = function(id) {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		detailsTab.clearContent();
-		var detailsTransform = new LightTransformContent("LightTransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
-		var color = new ColorLightContent("ColorLightContent", gGuiBase.View.CONTENT_STYLE, "Color");
 		
 		var light = gGuiBase.LightSupport.getLightByID( id );           // get gameObj
 		gGuiBase.Core.selectedLight = light;
-		detailsTransform.updateFields(light);
+	
 		
+		var detailsTransform = new LightTransformContent("LightTransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
+		var color = new ColorLightContent("ColorLightContent", gGuiBase.View.CONTENT_STYLE, "Color");
+		
+		
+		detailsTransform.updateFields(light);
 		detailsTab.addContent(detailsTransform);
 		detailsTab.addContent(color);
 		
