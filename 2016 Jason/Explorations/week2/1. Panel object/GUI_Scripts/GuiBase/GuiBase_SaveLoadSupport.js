@@ -299,9 +299,9 @@ gGuiBase.SaveLoadSupport = (function() {
 		}
 		// Textures
 		saveTextures(textures);
-		// normal maps
+		// Normal maps
 		saveNormals(textures);
-		//todo do materials
+		// Materials
 		saveMaterials(materials);
 		
 		if (backup) {
@@ -317,9 +317,9 @@ gGuiBase.SaveLoadSupport = (function() {
 	};
 
 	var saveMaterials = function(fileFolder) {
-		var i;
 		var materialsList = gGuiBase.MaterialSupport.getMaterialList();
-		for (var i in materialsList) {
+		var i;
+		for (i in materialsList) {
 			var materialData = {};
 			var ambient = materialsList[i].getAmbient();
 			var diffuse = materialsList[i].getDiffuse();
@@ -328,15 +328,16 @@ gGuiBase.SaveLoadSupport = (function() {
 			materialData[j++] = materialsList[i].mID;
 			materialData[j++] = materialsList[i].getShininess();
 			// this is hardcoded in load
-			for (var k in ambient) {
+			var k;
+			for (k in ambient) {
 				materialData[j] = ambient[k];
 				j++;
 			}
-			for (var k in diffuse) {
+			for (k in diffuse) {
 				materialData[j] = diffuse[k];
 				j++;
 			}
-			for (var k in specular) {
+			for (k in specular) {
 				materialData[j] = specular[k];
 				j++;
 			}
@@ -345,8 +346,8 @@ gGuiBase.SaveLoadSupport = (function() {
 	};
 	
 	var saveTextures = function (fileFolder) {
-		var i;
 		var textureList = gGuiBase.TextureSupport.getTexList();
+		var i;
 		for (i = 0; i < textureList.length; i++) {
 			var textureData = {};
 			var textureName = textureList[i];

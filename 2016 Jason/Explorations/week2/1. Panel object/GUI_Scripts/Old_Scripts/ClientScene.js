@@ -163,7 +163,6 @@ ClientScene.prototype.draw = function() {
 // The update function, updates the application state. Make sure to _NOT_ draw
 // anything from this function!
 ClientScene.prototype.update = function() {
-    var i;
     if (gGuiBase.Core.gRunning) {
         // for (i = 0; i < this.mAllCamera.length; i++) {
         //     this.mAllCamera[i].update();
@@ -178,7 +177,7 @@ ClientScene.prototype.update = function() {
                 }
             }
         }
-
+        var i;
         for (i = 0; i < this.mInstanceList.length; i++) {
             if (this.mInstanceList[i] instanceof GameObject) {
                 if (this.mInstanceList[i].mDestroy) { // uses this variable to destroy from external pointer
