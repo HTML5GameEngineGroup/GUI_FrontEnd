@@ -49,11 +49,13 @@ LightObject.prototype.initializeIconRenderable = function() {
 };
 
 LightObject.prototype.mouseInIcon = function(mouseX, mouseY) {
+	if (this.lightRef.mLightType === Light.eLightType.eDirectionalLight) return false;
 	return gGuiBase.DirectManipulationSupport.mouseInBound(mouseX, mouseY, 
 		this.lightRef.mPosition[0], this.lightRef.mPosition[1], 5);
 };
 
 LightObject.prototype.mouseInResizeSquare = function(mouseX, mouseY) {
+	if (this.lightRef.mLightType === Light.eLightType.eDirectionalLight) return false;
 	return gGuiBase.DirectManipulationSupport.mouseInBound(mouseX, mouseY, 
 		this.lightRef.mPosition[0] + this.radius, this.lightRef.mPosition[1], this.boxSize);
 };

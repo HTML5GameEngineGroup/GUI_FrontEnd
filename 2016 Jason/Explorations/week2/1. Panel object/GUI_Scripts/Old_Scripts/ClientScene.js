@@ -139,7 +139,8 @@ ClientScene.prototype.draw = function() {
 		}
 		
 		for(var i = 0; i < this.lightObjects.length; i++) {
-			this.lightObjects[i].draw(this.sceneViewCamera);
+			if (this.lightObjects[i].lightRef.mLightType !== Light.eLightType.eDirectionalLight)
+				this.lightObjects[i].draw(this.sceneViewCamera);
 		}
 		
 	} else {
@@ -201,7 +202,8 @@ ClientScene.prototype.update = function() {
         this.cameraObjects[i].update();
     }
 	 for (i = 0; i < this.lightObjects.length; i++) {
-        this.lightObjects[i].update();
+		if (this.lightObjects[i].lightRef.mLightType !== Light.eLightType.eDirectionalLight)
+			this.lightObjects[i].update();
     }
     this.sceneViewCamera.update();
 };
