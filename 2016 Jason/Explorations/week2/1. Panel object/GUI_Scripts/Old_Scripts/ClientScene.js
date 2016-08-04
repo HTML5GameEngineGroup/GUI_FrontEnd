@@ -36,6 +36,7 @@ function ClientScene(number) {
 	this.rotationObject = null;
 	this.sceneViewCamera = null;
 	this.cameraObjects = [];
+	this.lightObjects = [];
 
     this.mAmbientColor = [1, 1, 1, 1];
     this.mAmbientIntensity = 1;
@@ -137,6 +138,10 @@ ClientScene.prototype.draw = function() {
 			this.cameraObjects[i].draw(this.sceneViewCamera);
 		}
 		
+		for(var i = 0; i < this.lightObjects.length; i++) {
+			this.lightObjects[i].draw(this.sceneViewCamera);
+		}
+		
 	} else {
         for (var layerIndex = this.MAX_CAMERA_LAYER; layerIndex >= this.MIN_CAMERA_LAYER; layerIndex--) {
             if (this.mAllCamera[layerIndex]) {
@@ -195,6 +200,9 @@ ClientScene.prototype.update = function() {
 
     for (i = 0; i < this.cameraObjects.length; i++) {
         this.cameraObjects[i].update();
+    }
+	 for (i = 0; i < this.lightObjects.length; i++) {
+        this.lightObjects[i].update();
     }
     this.sceneViewCamera.update();
 };

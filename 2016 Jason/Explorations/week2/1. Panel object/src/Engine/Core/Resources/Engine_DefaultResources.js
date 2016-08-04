@@ -210,7 +210,7 @@ gEngine.DefaultResources = (function () {
         // loading gui will initialize a scene -> which then initializes the engine -> so this must be called prior to intializing the engine
         // load assets for GUI <- this should be part of the gui but, cant load gui until after engine is initialized?
         gEngine.Textures.loadTexture("assets/cameraicon.png");
-
+		gEngine.Textures.loadTexture("assets/lighticon.png");
         gEngine.ResourceMap.setLoadCompleteCallback(function s() {_createShaders(callBackFunction); });
     };
 

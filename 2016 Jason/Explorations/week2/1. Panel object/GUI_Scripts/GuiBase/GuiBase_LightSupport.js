@@ -46,6 +46,10 @@ gGuiBase.LightSupport = (function() {
 		light.setYPos(60);
 		gGuiBase.SceneSupport.gCurrentScene.mLightSet.addToSet(light);
 		this.addLightsToInstances();
+		
+		var lightObject = new LightObject(light);
+		gGuiBase.SceneSupport.gCurrentScene.lightObjects.push(lightObject);
+		
 		return light;
 	};
 	
