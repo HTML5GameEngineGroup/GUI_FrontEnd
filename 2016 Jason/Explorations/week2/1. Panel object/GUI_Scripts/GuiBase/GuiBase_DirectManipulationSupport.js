@@ -19,7 +19,9 @@ gGuiBase.DirectManipulationSupport = (function() {
 		OBJECT_DRAG_CORNER: 3,
 		CAMERA_DRAG_CORNER: 4,
 		SCENECAMERA_DRAG: 5,
-		OBJECT_DRAG_ROTATE: 6
+		OBJECT_DRAG_ROTATE: 6,
+		LIGHT_DRAG: 7,
+		LIGHT_DRAG_CORNER: 8
 	});
 	
 	var state = InteractionState.NONE;
@@ -120,7 +122,18 @@ gGuiBase.DirectManipulationSupport = (function() {
 							state = InteractionState.SCENECAMERA_DRAG;
 						}
 					}
-				} else { //Nothing selected -- try to select
+				} else if (selected !== null && selected instanceof LightObject) {
+					
+					if (selected.mouseInIcon(mouseX, mouseY)) {
+						state = InteractionState.LIGHT_DRAG;
+					} else {
+						trySelect();
+						if (selected === null) {
+							state = InteractionState.SCENECAMERA_DRAG;
+						}
+					}
+					
+				}else { //Nothing selected -- try to select
 					//Only try to select on initial click
 					if (prevMouseDownState === false) {
 						trySelect();
@@ -144,6 +157,8 @@ gGuiBase.DirectManipulationSupport = (function() {
 				dragCameraEdge();
 			} else if (state === InteractionState.SCENECAMERA_DRAG) {
 				dragSceneCamera();
+			} else if (state === InteractionState.LIGHT_DRAG) {
+				dragLight();
 			}
 			
 			//Record the current state of the mouse before the next call of this function
@@ -292,6 +307,13 @@ gGuiBase.DirectManipulationSupport = (function() {
 		camera.setWCCenter(dx, dy);
 	};
 	
+	var dragLight = function() {
+		var light = selected.lightRef;
+		light.mPosition = vec3.fromValues(mouseX, mouseY, light.mPosition[2]);
+		refreshLightTransform();	
+		
+	};
+	
 	//Selects gameobject or camera
 	var trySelect = function() {
 		//Try to find an instance
@@ -343,6 +365,25 @@ gGuiBase.DirectManipulationSupport = (function() {
 				if (mouseInCameraIcon) break;
 			}
 		}
+		
+		var mouseInLightIcon = false;
+		var lights = gGuiBase.SceneSupport.gCurrentScene.lightObjects;
+		var k = 0;
+		for (k = 0; k < lights.length; k++) {
+			mouseInLightIcon = lights[k].mouseInIcon(mouseX, mouseY);
+			if (mouseInLightIcon) break;
+			
+			/*if (selected instanceof CameraObject && cameras[j] === selected) {
+				mouseInCameraIcon = cameras[j].mouseOnTopBox(mouseX, mouseY);
+				if (mouseInCameraIcon) break;
+				mouseInCameraIcon = cameras[j].mouseOnBotBox(mouseX, mouseY);
+				if (mouseInCameraIcon) break;
+				mouseInCameraIcon = cameras[j].mouseOnLeftBox(mouseX, mouseY);
+				if (mouseInCameraIcon) break;
+				mouseInCameraIcon = cameras[j].mouseOnRightBox(mouseX, mouseY);
+				if (mouseInCameraIcon) break;
+			}*/
+		}
 	
 		//If a camera was found
 		if (mouseInCameraIcon) {
@@ -352,7 +393,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 				gGuiBase.SceneSupport.gCurrentScene.setRotationObject(null);
 			}
 			
-			if (selected instanceof CameraObject) {
+			if (selected instanceof CameraObject || selected instanceof LightObject) {
 				selected.toggleDrawBorder(false);
 			}
 
@@ -360,11 +401,24 @@ gGuiBase.DirectManipulationSupport = (function() {
 			selected = cameras[j];
 			
 			cameras[j].toggleDrawBorder(true);
-		
+		//If a light was found
+		} else if (mouseInLightIcon) {
+			if (selected instanceof GameObject) {
+				gGuiBase.SceneSupport.gCurrentScene.setSelectObject(null);
+				gGuiBase.SceneSupport.gCurrentScene.setRotationObject(null);
+			}
+			
+			if (selected instanceof CameraObject || selected instanceof LightObject) {
+				selected.toggleDrawBorder(false);
+			}
+			
+			gGuiBase.Core.selectDetailsLight(lights[k].lightRef.mID);
+			selected = lights[k];
+			lights[k].toggleDrawBorder(true);
 		//If a gameobject was found
 		} else if (mouseInXform) {
 		
-			if (selected instanceof CameraObject) {
+			if (selected instanceof CameraObject || selected instanceof LightObject) {
 				selected.toggleDrawBorder(false);
 			}
 			
@@ -384,7 +438,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 		
 		//If nothing was found, clear
 		} else { //Clicked on empty
-			if (selected instanceof CameraObject) {
+			if (selected instanceof CameraObject || selected instanceof LightObject) {
 				selected.toggleDrawBorder(false);
 			}
 			gGuiBase.Core.selectedGameObject = null;
@@ -407,6 +461,14 @@ gGuiBase.DirectManipulationSupport = (function() {
 		detailsTransform.updateFields(selected.cameraRef);
 		detailsTab.refreshSpecificContent("#CameraTransformContent");
 	};
+	
+	var refreshLightTransform = function() {
+		var detailsTab = gGuiBase.View.findTabByID("#Details");
+		var detailsTransform = detailsTab.getContentObject("#LightTransformContent");
+		detailsTransform.updateFields(selected.lightRef);
+		detailsTab.refreshSpecificContent("#LightTransformContent");
+	};
+	
 	
 	
 	//Checks if the mouse position is within the object transform
