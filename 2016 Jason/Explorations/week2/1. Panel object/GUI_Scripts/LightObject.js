@@ -5,7 +5,7 @@ function LightObject(light) {
 	this.lightRef = light;
 	this.lightIcon = null;
 
-	this.drawSelection = true;
+	this.drawSelection = false;
 	
 	var xPos = this.lightRef.mPosition[0];
 	var yPos = this.lightRef.mPosition[1];
@@ -25,6 +25,18 @@ function LightObject(light) {
 	this.mBotLine = new LineRenderable(xPos - this.radius, yPos - this.radius, xPos + this.radius, yPos - this.radius);
 	this.mBotLine.setColor([1, 1, 1, 1]);
 	
+	var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
+	var camW = camera.getWCWidth();
+	this.boxSize = camW / 50 * 0.75;
+	
+	this.mResizeSquare = new Renderable();
+	var xform = this.mResizeSquare.getXform();
+	xform.setXPos(xPos + this.radius);
+	xform.setYPos(yPos);
+	xform.setWidth(this.boxSize);
+	xform.setHeight(this.boxSize);
+	this.mResizeSquare.setColor([1, 0, 0, 1]);
+	
 }
 
 LightObject.prototype.initializeIconRenderable = function() {
@@ -39,6 +51,11 @@ LightObject.prototype.initializeIconRenderable = function() {
 LightObject.prototype.mouseInIcon = function(mouseX, mouseY) {
 	return gGuiBase.DirectManipulationSupport.mouseInBound(mouseX, mouseY, 
 		this.lightRef.mPosition[0], this.lightRef.mPosition[1], 5);
+};
+
+LightObject.prototype.mouseInResizeSquare = function(mouseX, mouseY) {
+	return gGuiBase.DirectManipulationSupport.mouseInBound(mouseX, mouseY, 
+		this.lightRef.mPosition[0] + this.radius, this.lightRef.mPosition[1], this.boxSize);
 };
 
 LightObject.prototype.toggleDrawBorder = function(toggle) {
@@ -57,6 +74,7 @@ LightObject.prototype.draw = function(aCamera) {
 		this.mLeftLine.draw(aCamera);
 		this.mRightLine.draw(aCamera);
 		this.mBotLine.draw(aCamera);
+		this.mResizeSquare.draw(aCamera);
 	}
 };
 
@@ -66,6 +84,8 @@ LightObject.prototype.update = function() {
 		this.initializeIconRenderable();
 		this.iconLoaded = true;
 	}
+	
+	
 	
 	var xPos = this.lightRef.mPosition[0];
 	var yPos = this.lightRef.mPosition[1];
@@ -84,6 +104,17 @@ LightObject.prototype.update = function() {
 		this.mRightLine.setSecondVertex(xPos + this.radius, yPos + this.radius);
 		this.mBotLine.setFirstVertex(xPos - this.radius, yPos - this.radius);
 		this.mBotLine.setSecondVertex(xPos + this.radius, yPos - this.radius);
+		
+		var camera = gGuiBase.SceneSupport.gCurrentScene.getSceneCamera();
+		var camW = camera.getWCWidth();
+		this.boxSize = camW / 50 * 0.75;
+		
+		var xform = this.mResizeSquare.getXform();
+		xform.setXPos(xPos + this.radius);
+		xform.setYPos(yPos);
+		xform.setWidth(this.boxSize);
+		xform.setHeight(this.boxSize);
+		
 	}
 
 	if (this.iconLoaded) {

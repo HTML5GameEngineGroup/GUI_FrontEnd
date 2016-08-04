@@ -123,8 +123,9 @@ gGuiBase.DirectManipulationSupport = (function() {
 						}
 					}
 				} else if (selected !== null && selected instanceof LightObject) {
-					
-					if (selected.mouseInIcon(mouseX, mouseY)) {
+					if (selected.mouseInResizeSquare(mouseX, mouseY)) {
+						state = InteractionState.LIGHT_DRAG_CORNER;
+					} else if (selected.mouseInIcon(mouseX, mouseY)) {
 						state = InteractionState.LIGHT_DRAG;
 					} else {
 						trySelect();
@@ -159,6 +160,8 @@ gGuiBase.DirectManipulationSupport = (function() {
 				dragSceneCamera();
 			} else if (state === InteractionState.LIGHT_DRAG) {
 				dragLight();
+			} else if (state === InteractionState.LIGHT_DRAG_CORNER) {
+				dragLightResize();
 			}
 			
 			//Record the current state of the mouse before the next call of this function
@@ -314,6 +317,16 @@ gGuiBase.DirectManipulationSupport = (function() {
 		
 	};
 	
+	var dragLightResize = function() {
+		var radius = mouseX - selected.lightRef.mPosition[0];
+		//Far radius = sqrt(radius^2 + z position^2)
+		var previousRadius = selected.lightRef.mFar;
+		selected.lightRef.mFar = Math.sqrt((radius*radius) + selected.lightRef.mPosition[2]);
+		var ratio = selected.lightRef.mFar / previousRadius;
+		selected.lightRef.mNear = selected.lightRef.mNear * ratio;
+		refreshLightTransform();
+	};
+	
 	//Selects gameobject or camera
 	var trySelect = function() {
 		//Try to find an instance
@@ -373,16 +386,10 @@ gGuiBase.DirectManipulationSupport = (function() {
 			mouseInLightIcon = lights[k].mouseInIcon(mouseX, mouseY);
 			if (mouseInLightIcon) break;
 			
-			/*if (selected instanceof CameraObject && cameras[j] === selected) {
-				mouseInCameraIcon = cameras[j].mouseOnTopBox(mouseX, mouseY);
-				if (mouseInCameraIcon) break;
-				mouseInCameraIcon = cameras[j].mouseOnBotBox(mouseX, mouseY);
-				if (mouseInCameraIcon) break;
-				mouseInCameraIcon = cameras[j].mouseOnLeftBox(mouseX, mouseY);
-				if (mouseInCameraIcon) break;
-				mouseInCameraIcon = cameras[j].mouseOnRightBox(mouseX, mouseY);
-				if (mouseInCameraIcon) break;
-			}*/
+			if (selected instanceof LightObject && lights[k] === selected) {
+				mouseInLightIcon = lights[k].mouseInResizeSquare(mouseX, mouseY);
+				if (mouseInLightIcon) break;
+			}
 		}
 	
 		//If a camera was found
