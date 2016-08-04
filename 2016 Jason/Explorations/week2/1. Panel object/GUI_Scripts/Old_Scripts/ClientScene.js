@@ -46,8 +46,6 @@ gEngine.View.inheritPrototype(ClientScene, Scene);
 ClientScene.prototype.loadScene = function() {
     gEngine.DefaultResources.setGlobalAmbientColor( this.mAmbientColor );
     gEngine.DefaultResources.setGlobalAmbientIntensity( this.mAmbientIntensity );
-    console.log(gEngine.DefaultResources.getGlobalAmbientColor());
-    console.log(gEngine.DefaultResources.getGlobalAmbientIntensity());
 };
 
 ClientScene.prototype.getAmbientColor = function () { return this.mAmbientColor; };

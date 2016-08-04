@@ -645,6 +645,8 @@ gGuiBase.SaveLoadSupport = (function() {
 							light.mCastShadow = data[i + 12];
 	
 							gGuiBase.LightSupport.addLight(light);
+							var lightObject = new LightObject(light);
+							gGuiBase.SceneSupport.gCurrentScene.lightObjects.push(lightObject);
 							i += 13;
 						}
 						
