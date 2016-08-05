@@ -17,6 +17,10 @@ ControlArm.prototype.createControllerSquare = function (xPos, yPos, length) {
     return resizeSquare;
 };
 
+ControlArm.prototype.setSquareColor = function ( color ) {
+    this.mControllerSquare.setColor(color);
+};
+
 // draw icon
 ControlArm.prototype.draw = function(aCamera) {
     this.mArm.draw(aCamera);
@@ -50,7 +54,7 @@ ControlArm.prototype.getBoxSize = function () {
     return boxSize;
 };
 
-ControlArm.prototype.mouseInResizeSquare = function (mouseX, mouseY) {
+ControlArm.prototype.mouseInControl = function (mouseX, mouseY) {
     var pos = this.mControllerSquare.getXform().getPosition();
     return gGuiBase.DirectManipulationSupport.mouseInBound(mouseX, mouseY,
         pos[0], pos[1], this.mSquareSize);
