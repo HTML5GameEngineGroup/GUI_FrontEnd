@@ -54,8 +54,8 @@ gGuiBase.Core = (function() {
 	
 	var selectDetailsLight = function(id) {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
-		detailsTab.clearContent();
-		
+		emptyDetailsTab();
+
 		var light = gGuiBase.LightSupport.getLightByID( id );           // get gameObj
 		gGuiBase.Core.selectedLight = light;
 	
@@ -77,7 +77,7 @@ gGuiBase.Core = (function() {
 	
 	var selectDetailsMaterial = function(id) {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
-		detailsTab.clearContent();
+		emptyDetailsTab();
 		var materialContent = new MaterialInfoContent("MaterialInfoContent", gGuiBase.View.CONTENT_STYLE, "Material");
 		
 		var material = gGuiBase.MaterialSupport.getMaterialByID( id );
@@ -94,7 +94,7 @@ gGuiBase.Core = (function() {
     // updates the details tab with the object whose name is passed as parameter
     var selectDetailsObject = function ( objName ) {
         var detailsTab = gGuiBase.View.findTabByID("#Details");
-		detailsTab.clearContent();
+		emptyDetailsTab();
 		var detailsTransform = new TransformContent("TransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
 		var detailsColorTexture = new ColorTextureContent("ColorTextureContent", gGuiBase.View.CONTENT_STYLE, "Color");
 
@@ -129,7 +129,7 @@ gGuiBase.Core = (function() {
 		gGuiBase.SceneSupport.selectSceneByName(sceneName);
 
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
-		detailsTab.clearContent();
+		emptyDetailsTab();
 		var detailsTransform = new SceneInfo("SceneTransformContent", gGuiBase.View.CONTENT_STYLE, "Scene");
 		
 		detailsTransform.updateFields(scene);
@@ -145,7 +145,7 @@ gGuiBase.Core = (function() {
 	// ************* CAMERA SUPPORT ****************
 	var selectDetailsCamera = function (cameraName) {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
-		detailsTab.clearContent();
+		emptyDetailsTab();
 		var detailsTransform = new CameraTransformContent("CameraTransformContent", gGuiBase.View.CONTENT_STYLE, "Camera Transform");
 		var detailsColor = new ColorCameraContent("ColorCameraContent", gGuiBase.View.CONTENT_STYLE, "Camera Color");
 		
@@ -215,7 +215,7 @@ gGuiBase.Core = (function() {
 
 	var selectInstanceDetails = function ( instanceID ) {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
-		detailsTab.clearContent();
+		emptyDetailsTab();
 		var detailsTransform = new TransformContent("TransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
 		var detailsColorTexture = new ColorTextureContent("ColorTextureContent", gGuiBase.View.CONTENT_STYLE, "Texture");
 		
