@@ -17,8 +17,9 @@ gGuiBase.View.inheritPrototype(MaterialContent, GuiTabContent);
 MaterialContent.prototype.initialize = function () {
 	this.materialAddButton = new Button("materialAddButton", GuiTabContent.NO_STYLE, "+Material");
 	this.widgetList.push(this.materialAddButton);
-	
-	this.materialSelectList = new SelectList(this.selectListID, 'list-style-type: none; margin: 0; padding: 0', [], 'display: inline; margin: 5px');
+
+	var materials = gGuiBase.MaterialSupport.getMaterialNameList();
+	this.materialSelectList = new SelectList(this.selectListID, 'list-style-type: none; margin: 0; padding: 0', materials, 'display: inline; margin: 5px');
 	this.widgetList.push(this.materialSelectList);
 };
 
@@ -32,7 +33,7 @@ MaterialContent.prototype.initializeEventHandling = function () {
 		delegate: ".materialListMenu",
 		menu: [
 			{title: "Details", cmd: "details", uiIcon: "ui-icon-info"},
-			{title: "Delete", cmd: "delete", uiIcon: "ui-icon-closethick"},
+			{title: "Delete", cmd: "delete", uiIcon: "ui-icon-closethick"}
 			],
 		select: function(event, ui) {
 			switch (ui.cmd) {
@@ -56,7 +57,6 @@ MaterialContent.prototype.buttonOnClick = function() {
 };
 
 MaterialContent.prototype.onListSelect = function(ui) {
-
 	var selectedMatName = ui["selected"]["id"];
 	gGuiBase.Core.selectDetailsMaterial( selectedMatName );
 
