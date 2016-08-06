@@ -53,7 +53,7 @@ MaterialContent.prototype.initializeEventHandling = function () {
 };
 
 MaterialContent.prototype.buttonOnClick = function() {
-	gGuiBase.MaterialSupport.addMaterial();
+	gGuiBase.MaterialSupport.addNormal();
 };
 
 MaterialContent.prototype.onListSelect = function(ui) {

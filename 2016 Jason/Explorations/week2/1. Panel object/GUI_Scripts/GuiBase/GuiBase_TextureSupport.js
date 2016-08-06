@@ -13,6 +13,7 @@ gGuiBase.TextureSupport = (function() {
         // todo check if it is in materials as well check if in gengine resourcemap
         // if added already return
         if(gAllTextures[texName] || texName == "") return;
+        gGuiBase.Core.emptyDetailsTab();
         gAllTextures[texName] = true;
         gImageMap[texName] = img;
         // refresh texturelist in view

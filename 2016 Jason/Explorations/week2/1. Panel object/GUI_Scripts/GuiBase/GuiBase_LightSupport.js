@@ -27,6 +27,7 @@ gGuiBase.LightSupport = (function() {
 			alert('improper name', normalName);
 			return;
 		}
+		gGuiBase.Core.emptyDetailsTab();
 		// set this to a reference of img? or get it from engine?
 		gNormalMap[normalName] = img;
 		// refresh texturelist in view
@@ -207,7 +208,7 @@ gGuiBase.LightSupport = (function() {
 	};
 
     var mPublic = {
-		addMaterial: addNormal,
+		addNormal: addNormal,
 		getNormal: getNormal,
 		getMaterialNameList: getNormalList,
 		getNormalNameList: getNormalNameList,

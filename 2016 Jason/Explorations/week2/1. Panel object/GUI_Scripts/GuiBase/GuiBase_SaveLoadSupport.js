@@ -442,7 +442,7 @@ gGuiBase.SaveLoadSupport = (function() {
 				if(!data[4]) // is normalmap
 					gEngine.Textures.loadTextureFromImageSrc(textureName, imageSrc, gGuiBase.TextureSupport.addTexture);
 				else
-					gEngine.Textures.loadTextureFromImageSrc(textureName, imageSrc, gGuiBase.LightSupport.addMaterial);
+					gEngine.Textures.loadTextureFromImageSrc(textureName, imageSrc, gGuiBase.LightSupport.addNormal);
 			
 				//Are all the loads done? If so, callback.
 				while (true) {

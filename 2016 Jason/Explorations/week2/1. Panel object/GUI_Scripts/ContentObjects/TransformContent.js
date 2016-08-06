@@ -101,7 +101,6 @@ TransformContent.prototype.onTextFieldFocusOut = function(textField) {
                     for (i = 0; i < objs.length; i++) { //Find the old code
                         if (objs[i].mName === gameObject.mName) {
 							code = objCode[i];
-                            
                         }
                     }
 					
@@ -149,13 +148,9 @@ TransformContent.prototype.onTextFieldFocusOut = function(textField) {
 					
 					gGuiBase.Core.selectDetailsObject(value);
                     gGuiBase.View.refreshAllTabContent();
-					
-					//console.log(gGuiBase.ObjectSupport.getObjectList());
-					
+
                     // The user NEEDS to update his/her own code to match the new name, then save it.
                     // That save will add it to the system.
-      
-
                     alert("Remember to update all your code to match the new class name.");
                 } else {
                     alert("Names must be unique.");

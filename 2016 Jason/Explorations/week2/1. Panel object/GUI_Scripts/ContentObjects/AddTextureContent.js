@@ -69,13 +69,10 @@ AddTextureContent.prototype.initializeEventHandling = function () {
             {title: "Delete", cmd: "delete", uiIcon: "ui-icon-closethick"}
         ],
         select: function(event, ui) {
-
             var imageName = gGuiBase.TextureSupport.getImageName(ui.target[0].currentSrc);
             switch (ui.cmd) {
                 case 'details':
                     alert('to be implemented');
-                    break;
-
                     break;
                 case 'delete':
                     //todo implement delete
@@ -98,7 +95,7 @@ AddTextureContent.prototype.onTextureFileSelect = function() {
 };
 
 AddTextureContent.prototype.onMaterialFileSelect = function() {
-    gEngine.Textures.loadTextureFromFile("MaterialInput", gGuiBase.LightSupport.addMaterial);
+    gEngine.Textures.loadTextureFromFile("MaterialInput", gGuiBase.LightSupport.addNormal);
 
 };
 
