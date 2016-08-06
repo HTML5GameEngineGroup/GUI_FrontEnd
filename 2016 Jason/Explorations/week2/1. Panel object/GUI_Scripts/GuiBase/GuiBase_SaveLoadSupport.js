@@ -31,7 +31,7 @@ gGuiBase.SaveLoadSupport = (function() {
 		if (gGuiBase.Core.gRunning) {
 			//Back up game state
 			fileSave(true);
-
+			gGuiBase.DirectManipulationSupport.setPreventInteraction(true);
 			$('#menuRun').css('background-color', 'grey');
 			gGuiBase.Core.emptyDetailsTab();
 			gGuiBase.Core.selectedGameObject = null;
@@ -41,9 +41,10 @@ gGuiBase.SaveLoadSupport = (function() {
 			gGuiBase.SaveLoadSupport.fileOpen(true);
 
 			$('#menuRun').css('background-color', 'white');
+			gGuiBase.DirectManipulationSupport.resetInteraction();
 		}
 		
-		gGuiBase.DirectManipulationSupport.resetInteraction();
+		
 	});
 		
 	var fileOpen = function(backup) {

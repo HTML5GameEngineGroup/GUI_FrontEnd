@@ -386,8 +386,8 @@ gGuiBase.DirectManipulationSupport = (function() {
 		var instances = gGuiBase.SceneSupport.gCurrentScene.getInstanceList();
 		var selectedGameObject = gGuiBase.Core.selectedGameObject;
 		var mouseInXform = false;
-		var i = 0;
-		for (i = 0; i < instances.length; i++) {
+		var i = instances.length-1;
+		for (i = instances.length-1; i >= 0; i--) { //Loop backwards since the last drawn object should be the first selected
 			var xform = instances[i].getXform();
 			mouseInXform = mousePosInTransform(xform, mouseX, mouseY);
 			if (mouseInXform) break;
