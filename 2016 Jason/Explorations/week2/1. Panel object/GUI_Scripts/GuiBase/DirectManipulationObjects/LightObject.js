@@ -37,8 +37,8 @@ LightObject.prototype.toggleDrawBorder = function(toggle) {
 
 LightObject.prototype.draw = function(aCamera) {
 	this.mSelector.draw(aCamera);
-	
-	if (this.drawSelection) {
+	var selectedObj = gGuiBase.DirectManipulationSupport.getSelected();
+	if ( selectedObj == this) {
 		var xPos = this.lightRef.mPosition[0];
 		var yPos = this.lightRef.mPosition[1];
 

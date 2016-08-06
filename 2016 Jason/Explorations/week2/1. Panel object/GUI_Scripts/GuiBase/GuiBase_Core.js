@@ -181,6 +181,7 @@ gGuiBase.Core = (function() {
 	};
 	
 	var emptyDetailsTab = function () {
+		gGuiBase.DirectManipulationSupport.resetInteraction();
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		detailsTab.clearContent();
 	};

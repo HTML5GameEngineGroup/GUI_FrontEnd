@@ -44,6 +44,10 @@ gGuiBase.DirectManipulationSupport = (function() {
 	var draggingBotCamera = false;
 	var draggingLeftCamera = false;
 	var draggingRightCamera = false;
+
+	var getSelected = function () {
+		return selected;
+	};
 	
 	var handleMouseInput = function() {
 		if (!preventInteraction) {
@@ -314,6 +318,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 	};
 	
 	var dragLight = function() {
+		console.log(selected.lightRef);
 		var light = selected.lightRef;
 		light.mPosition = vec3.fromValues(mouseX, mouseY, light.mPosition[2]);
 		refreshLightTransform();
@@ -664,16 +669,16 @@ gGuiBase.DirectManipulationSupport = (function() {
 		draggingLeft = false;
 		state = InteractionState.NONE;
 		gGuiBase.Core.selectedGameObject = null;
-		
 	};
 	
     var mPublic = {
-       mouseInBound: mouseInBound,
-	   rotatePoint: rotatePoint,
-	   //currentCameraObject: currentCameraObject,
-	   setPreventInteraction: setPreventInteraction,
-	   resetInteraction: resetInteraction,
-	   clearForSceneSwap: clearForSceneSwap
+		getSelected: getSelected,
+       	mouseInBound: mouseInBound,
+	   	rotatePoint: rotatePoint,
+	   	//currentCameraObject: currentCameraObject,
+	   	setPreventInteraction: setPreventInteraction,
+	   	resetInteraction: resetInteraction,
+	   	clearForSceneSwap: clearForSceneSwap
     };
     return mPublic;
 }());
