@@ -10,11 +10,9 @@ gGuiBase.TextureSupport = (function() {
 	
     // adds texture to panel
     var addTexture = function ( texName, img ) {
+        // todo check if done in resource map properly
         // if added already return
-        if (gEngine.ResourceMap.isAssetLoaded(texName)) {
-            alert(texName, " already leaded, rename the texture or remove previous texture");
-            return;
-        }
+        if(gAllTextures[texName] || texName == "") return;
         gGuiBase.Core.emptyDetailsTab();
         gAllTextures[texName] = true;
         gImageMap[texName] = img;
@@ -108,6 +106,7 @@ gGuiBase.TextureSupport = (function() {
 					gGuiBase.TextureSupport.removeTextureFromGameObject(instances[i].mName);
 			}
 		}
+
 		gEngine.Textures.unloadTexture(texName);
 		gGuiBase.TextureSupport.removeTexture(texName);
 		

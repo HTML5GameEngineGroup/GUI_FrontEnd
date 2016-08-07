@@ -21,9 +21,11 @@ gGuiBase.LightSupport = (function() {
 	};
 
 	var addNormal = function ( normalName, img ) {
+		//todo check if done in resourcemap
 		// if added already return
-		if (gEngine.ResourceMap.isAssetLoaded(texName)) {
-			alert(texName, " already leaded, rename the texture or remove previous texture");
+		if(gNormalMap[normalName] || normalName == "") {
+			alert('improper name', normalName);
+			return;
 		}
 		gGuiBase.Core.emptyDetailsTab();
 		// set this to a reference of img? or get it from engine?
