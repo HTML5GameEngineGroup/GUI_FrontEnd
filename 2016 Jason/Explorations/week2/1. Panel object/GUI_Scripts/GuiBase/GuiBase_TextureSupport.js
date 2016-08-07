@@ -10,9 +10,11 @@ gGuiBase.TextureSupport = (function() {
 	
     // adds texture to panel
     var addTexture = function ( texName, img ) {
-        // todo check if it is in materials as well check if in gengine resourcemap
         // if added already return
-        if(gAllTextures[texName] || texName == "") return;
+        if (gEngine.ResourceMap.isAssetLoaded(texName)) {
+            alert(texName, " already leaded, rename the texture or remove previous texture");
+            return;
+        }
         gGuiBase.Core.emptyDetailsTab();
         gAllTextures[texName] = true;
         gImageMap[texName] = img;
@@ -56,7 +58,6 @@ gGuiBase.TextureSupport = (function() {
         //console.log(gameObject);
         gGuiBase.ObjectSupport.copyTransformOnTransforms(newTextureTransform, gameObjectTransform);
         gameObject.setRenderable(newRenderable);
-        //console.log(gameObject);
     };
 
     // replaces all instances of gameObjects renderable with the texture named textureName (None = no texture);
@@ -107,10 +108,8 @@ gGuiBase.TextureSupport = (function() {
 					gGuiBase.TextureSupport.removeTextureFromGameObject(instances[i].mName);
 			}
 		}
-		
 		gEngine.Textures.unloadTexture(texName);
 		gGuiBase.TextureSupport.removeTexture(texName);
-		
 		
 		while (gEngine.ResourceMap.unloadAsset(texName) !== 0);
         
@@ -118,7 +117,6 @@ gGuiBase.TextureSupport = (function() {
 		gGuiBase.View.findWidgetByID("#TextureSelectList").rebuildWithArray(imageList);
 		var texTab = gGuiBase.View.findTabByID("#Textures");
 		texTab.refreshContent();
-					
 	};
 
     var getTexList = function () {

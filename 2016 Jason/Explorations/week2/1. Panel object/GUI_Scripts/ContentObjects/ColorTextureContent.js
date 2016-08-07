@@ -189,12 +189,6 @@ ColorTextureContent.prototype.getDropdownTexName = function() {
 
 ColorTextureContent.prototype.setDropdownToSelectedGO = function() {
 	var renderable = gGuiBase.Core.selectedGameObject.getRenderable();
-	
-	// console.log(selectedGameObject);
-	// console.log("isntance of:", selectedGameObject.getRenderable() instanceof TextureRenderable);
-	//console.log('instance of:', renderable instanceof TextureRenderable);
-	// var texture = gGuiBase.Core.selectedGameObject.getRenderable().getTexture();
-	//console.log(renderable);
 	if (renderable instanceof TextureRenderable || renderable instanceof LightRenderable) {
 		var texName = renderable.getTexture();
 		$('#textureDropDown').val(texName);
