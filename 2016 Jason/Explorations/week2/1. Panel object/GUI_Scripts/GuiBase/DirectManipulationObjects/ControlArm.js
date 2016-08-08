@@ -1,16 +1,23 @@
-function ControlArm( xPos, yPos, length ) {
+function ControlArm( xPos, yPos, length, verticle ) {
     this.mControllerSquare = this.createControllerSquare(xPos, yPos, length); // is a renderable
     this.mArm;  // set in update
     this.mSquareSize = this.getBoxSize();
     this.updateArm(xPos, yPos, length);
+    this.verticle = verticle;
+
 }
 
 ControlArm.prototype.createControllerSquare = function (xPos, yPos, length) {
     var boxSize = this.mSquareSize;
     var resizeSquare = new Renderable();
     var xform = resizeSquare.getXform();
-    xform.setXPos(xPos + length);
-    xform.setYPos(yPos);
+    if (this.verticle) {
+        xform.setXPos(xPos);
+        xform.setYPos(yPos + length);
+    } else {
+        xform.setXPos(xPos + length);
+        xform.setYPos(yPos);
+    }
     xform.setWidth(boxSize);
     xform.setHeight(boxSize);
     resizeSquare.setColor([1, 0, 0, 1]);
@@ -34,15 +41,24 @@ ControlArm.prototype.update = function(xPos, yPos, length) {
 };
 
 ControlArm.prototype.updateArm = function (xPos, yPos, length) {
-    this.mArm = new LineRenderable(xPos, yPos, (xPos + length), yPos);
+    if (this.verticle) {
+        this.mArm = new LineRenderable(xPos, yPos, xPos, (yPos + length));
+    } else {
+        this.mArm = new LineRenderable(xPos, yPos, (xPos + length), yPos);
+    }
     this.mArm.setColor([1, 1, 1, 1]);
 };
 
 ControlArm.prototype.updateControllerSquare = function (xPos, yPos, length) {
     this.mSquareSize = this.getBoxSize();
     var xform = this.mControllerSquare.getXform();
-    xform.setXPos(xPos + length);
-    xform.setYPos(yPos);
+    if (this.verticle) {
+        xform.setXPos(xPos);
+        xform.setYPos(yPos + length);
+    } else {
+        xform.setXPos(xPos + length);
+        xform.setYPos(yPos);
+    }
     xform.setWidth(this.mSquareSize);
     xform.setHeight(this.mSquareSize);
 };
