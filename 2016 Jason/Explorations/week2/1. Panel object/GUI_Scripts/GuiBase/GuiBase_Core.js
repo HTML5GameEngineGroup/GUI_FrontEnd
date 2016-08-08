@@ -1,4 +1,9 @@
-//  Supports the addition of gameObjects
+/*-----------------------------------------------------------------------------
+//	GUIBase.Core
+//	Controls addition and selection of gameObjects, cameras, instances, lights,
+/ 	and materials
+//	Author: Jonathan Earl & Jason Herold
+-----------------------------------------------------------------------------*/
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.Core = (function() {
@@ -24,6 +29,7 @@ gGuiBase.Core = (function() {
 		return gGuiBase.ObjectSupport.getObjectList();
 	};
 	
+	//Updates the object select list (The Objects tab)
 	var updateObjectSelectList = function() {
 		var objectInstances = gGuiBase.ObjectSupport.getObjectNameList();
 		gGuiBase.View.findWidgetByID("#objectSelectList1").rebuildWithArray( objectInstances );
@@ -51,36 +57,36 @@ gGuiBase.Core = (function() {
 		gGuiBase.View.refreshAllTabContent();
 	};
 	
-	
+	// Rebuilds the details tab to contain LightTransformContent/ColorLightContent
 	var selectDetailsLight = function(id) {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		emptyDetailsTab();
 
-		var light = gGuiBase.LightSupport.getLightByID( id );           // get gameObj
-		gGuiBase.Core.selectedLight = light;
+		var light = gGuiBase.LightSupport.getLightByID( id ); //Get the light
+		gGuiBase.Core.selectedLight = light; // Select light
 	
-		
+		// Create the content
 		var detailsTransform = new LightTransformContent("LightTransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
 		var color = new ColorLightContent("ColorLightContent", gGuiBase.View.CONTENT_STYLE, "Color");
 		
-		
-		detailsTransform.updateFields(light);
+		detailsTransform.updateFields(light); // Using the light object, update the details content
 		detailsTab.addContent(detailsTransform);
 		detailsTab.addContent(color);
 		
-		gGuiBase.DirectManipulationSupport.resetInteraction();
+		gGuiBase.DirectManipulationSupport.resetInteraction(); // Reset 
 
-		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
+		gGuiBase.View.refreshAllTabContent(); // Refresh
 		detailsTransform.setTypeDropdown();
 		
 	};
 	
+	// Rebuilds the details tab to contain MaterialInfoContent 
 	var selectDetailsMaterial = function(id) {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		emptyDetailsTab();
 		var materialContent = new MaterialInfoContent("MaterialInfoContent", gGuiBase.View.CONTENT_STYLE, "Material");
 		
-		var material = gGuiBase.MaterialSupport.getMaterialByID( id );
+		var material = gGuiBase.MaterialSupport.getMaterialByID( id ); // Get the material
 		gGuiBase.Core.selectedMaterial = material;
 		materialContent.updateFields(material);
 		
@@ -91,7 +97,7 @@ gGuiBase.Core = (function() {
 		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
 	};
 
-    // updates the details tab with the object whose name is passed as parameter
+    // Rebuilds the details tab for a GameObject (Not an instance)
     var selectDetailsObject = function ( objName ) {
         var detailsTab = gGuiBase.View.findTabByID("#Details");
 		emptyDetailsTab();
@@ -105,25 +111,13 @@ gGuiBase.Core = (function() {
 		detailsTab.addContent(detailsTransform);
 		detailsTab.addContent(detailsColorTexture);
 
-		//var transformContent = gGuiBase.View.findTabContentByID("#TransformContent");
-		//transformContent.updateFields(gameObject);
-		// set the texture in details
-
 		gGuiBase.View.refreshAllTabContent();                                           // refresh panel
 		gGuiBase.View.findTabContentByID('#ColorTextureContent').setDropdownToSelectedGO();
 	};
 
 	// ************* SCENE SUPPORT ****************
-	var initializeInitialScene = function() {
-		// gGuiBase.SceneSupport.gCurrentScene.initialize();
-		
-		//gEngine.Core.startScene(gGuiBase.SceneSupport.gCurrentScene);
-		// gGuiBase.View.findWidgetByID("#sceneSelectList1").rebuildWithArray(gGuiBase.SceneSupport.getSceneListNames());
-		// //
-		// gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
-		// gGuiBase.View.refreshAllTabContent();
-	};
 
+	// Rebuilds the details tab for Scene content
 	var selectDetailsScene = function (sceneName) {
 		var scene = gGuiBase.SceneSupport.getSceneByName(sceneName);
 		gGuiBase.SceneSupport.selectSceneByName(sceneName);
@@ -134,8 +128,6 @@ gGuiBase.Core = (function() {
 		
 		detailsTransform.updateFields(scene);
 		
-		// gEngine.DefaultResources.setGlobalAmbientColor( gGuiBase.SceneSupport.gCurrentScene.mAmbientColor );
-		// gEngine.DefaultResources.setGlobalAmbientIntensity( gGuiBase.SceneSupport.gCurrentScene.mAmbientIntensity );
 		detailsTab.addContent(detailsTransform);
 		this.updateInstanceSelectList();
 		this.reinitializeLightsTab();
@@ -144,6 +136,7 @@ gGuiBase.Core = (function() {
 
 	// ************* CAMERA SUPPORT ****************
 	var selectDetailsCamera = function (cameraName) {
+		// Rebuilds the details tab for Camera content
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		emptyDetailsTab();
 		var detailsTransform = new CameraTransformContent("CameraTransformContent", gGuiBase.View.CONTENT_STYLE, "Camera Transform");
@@ -303,7 +296,6 @@ gGuiBase.Core = (function() {
 
 		addDefaultScene: addDefaultScene,
 		selectDetailsScene: selectDetailsScene,
-		initializeInitialScene: initializeInitialScene,
 
 		addDefaultCamera: addDefaultCamera,
 		selectDetailsCamera: selectDetailsCamera,

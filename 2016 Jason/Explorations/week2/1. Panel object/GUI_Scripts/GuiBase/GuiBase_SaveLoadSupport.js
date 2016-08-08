@@ -1,10 +1,16 @@
+/*-----------------------------------------------------------------------------
+//	Save/load support
+//	Saves editor and game state, controls running of the game
+//	Author: Jason Herold, Jonathan Earl, Dexter Hu
+-----------------------------------------------------------------------------*/
+
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.SaveLoadSupport = (function() {
     
 	$('#menuFileOpenInput').hide();
 	
-	$('#menuFileNew').click(function(event) {
+	$('#menuFileNew').click(function(event) { // Reset everything
 		gGuiBase.Core.cleanUpGameCore();
 		
 		gGuiBase.SceneSupport.gCurrentScene = new ClientScene(0);
@@ -22,22 +28,22 @@ gGuiBase.SaveLoadSupport = (function() {
 		$('#menuFileOpenInput').trigger('click');
 	});
 		
-	$('#menuFileSave').click(function() {
+	$('#menuFileSave').click(function() { // File save menu
 		gGuiBase.SaveLoadSupport.fileSave();
 	});
 	
-	$('#menuRun').click(function() {
+	$('#menuRun').click(function() { // Run menu button
 		gGuiBase.Core.gRunning = !gGuiBase.Core.gRunning;
 		if (gGuiBase.Core.gRunning) {
 			//Back up game state
 			fileSave(true);
-			gGuiBase.DirectManipulationSupport.setPreventInteraction(true);
+			gGuiBase.DirectManipulationSupport.setPreventInteraction(true); // Don't allow direct editing while game is running
 			$('#menuRun').css('background-color', 'grey');
 			gGuiBase.Core.emptyDetailsTab();
 			gGuiBase.Core.selectedGameObject = null;
 		} else {
 			//Load the backed-up game state
-			gGuiBase.LightSupport.removeLightReferences();
+			gGuiBase.LightSupport.removeLightReferences(); // Clear any light references from instances of LightRenderable/IllumRenderable
 			gGuiBase.SaveLoadSupport.fileOpen(true);
 
 			$('#menuRun').css('background-color', 'white');

@@ -1,4 +1,8 @@
-//  Supports the addition of gameObjects
+/*-----------------------------------------------------------------------------
+//	GUIBase.CameraSupport
+//  Provides functions for adding/deleting cameras
+//	Author: Jonathan Earl
+-----------------------------------------------------------------------------*/
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.CameraSupport = (function() {
@@ -26,6 +30,7 @@ gGuiBase.CameraSupport = (function() {
 		gGuiBase.View.refreshAllTabContent();
 	};
 
+	//Get camera index from camera list
 	var getCameraIndex = function(cameraName) {
 		var list = getCameraList();
 		for (var i = 0; i < list.length; i++) {
@@ -151,13 +156,10 @@ gGuiBase.CameraSupport = (function() {
 	};
 
     var mPublic = {
-		//selectCamera: selectCamera,
 		getCameraList: getCameraList,
 		checkForNameConflict: checkForNameConflict,
 		checkForObjectConflict: checkForObjectConflict,
-		// createDefaultCamera: createDefaultCamera,
 		getCameraListNames: getCameraListNames,
-		// getCameraByName: getCameraByName,
 		deleteCamera: deleteCamera,
 		clearCameras: clearCameras,
 

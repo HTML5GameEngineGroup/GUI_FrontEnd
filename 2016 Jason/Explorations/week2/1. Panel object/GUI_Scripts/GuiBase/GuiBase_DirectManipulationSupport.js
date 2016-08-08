@@ -37,7 +37,8 @@ gGuiBase.DirectManipulationSupport = (function() {
 
 	var preventInteraction = false;
 
-	var draggingTop = false;
+	// Drag booleans for an instance
+	var draggingTop = false; 
 	var draggingLeft = false;
 
 	var draggingTopCamera = false;
@@ -48,6 +49,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 	var getSelected = function () {
 		return selected;
 	};
+	
 	
 	var handleMouseInput = function() {
 		if (!preventInteraction) {
@@ -297,10 +299,11 @@ gGuiBase.DirectManipulationSupport = (function() {
 		refreshGameObjectTransform();
 	};
 	
+	// Moves the scene camera around
 	var dragSceneCamera = function() {
 		var cameraCenter = camera.getWCCenter();
-		var dx = (mouseX - prevX) + cameraCenter[0];
-		var dy = (mouseY - prevY) + cameraCenter[1];
+		//var dx = (mouseX - prevX) + cameraCenter[0];
+		//var dy = (mouseY - prevY) + cameraCenter[1];
 		
 		var mouseXPixel = gEngine.Input.getMousePosX();
 		var mouseYPixel = gEngine.Input.getMousePosY();
@@ -317,8 +320,8 @@ gGuiBase.DirectManipulationSupport = (function() {
 		camera.setWCCenter(dx, dy);
 	};
 	
+	// Handle dragging a light icon
 	var dragLight = function() {
-		console.log(selected.lightRef);
 		var light = selected.lightRef;
 		light.mPosition = vec3.fromValues(mouseX, mouseY, light.mPosition[2]);
 		refreshLightTransform();
@@ -397,11 +400,10 @@ gGuiBase.DirectManipulationSupport = (function() {
 			mouseInXform = mousePosInTransform(xform, mouseX, mouseY);
 			if (mouseInXform) break;
 
-			//Workaround
 			if (selected instanceof GameObject && selected === instances[i]) {
 				mouseInXform = mousePosOnRotationSquare(xform, mouseX, mouseY);
 				if (mouseInXform) break;
-				gGuiBase.Core.selectedGameObject = instances[i];
+				gGuiBase.Core.selectedGameObject = instances[i]; //Workaround
 				var selectObject = new SelectionObject(xform.getXPos(), xform.getYPos(), xform.getWidth(), xform.getHeight());
 				selectObject.update();
 				mouseInXform = selectObject.mousePosOnTopLeftCorner(xform, mouseX, mouseY);
@@ -437,6 +439,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 			}
 		}
 		
+		//Try to find a light
 		var mouseInLightIcon = false;
 		var lights = gGuiBase.SceneSupport.gCurrentScene.lightObjects;
 		var k = 0;
@@ -457,7 +460,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 				gGuiBase.SceneSupport.gCurrentScene.setSelectObject(null);
 				gGuiBase.SceneSupport.gCurrentScene.setRotationObject(null);
 			}
-			
+			//If we previously had a camera/light, stop drawing things that only display while selected
 			if (selected instanceof CameraObject || selected instanceof LightObject) {
 				selected.toggleDrawBorder(false);
 			}
@@ -468,6 +471,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 			cameras[j].toggleDrawBorder(true);
 		//If a light was found
 		} else if (mouseInLightIcon) {
+			// If we previously had a gameobject selected, deselect
 			if (selected instanceof GameObject) {
 				gGuiBase.SceneSupport.gCurrentScene.setSelectObject(null);
 				gGuiBase.SceneSupport.gCurrentScene.setRotationObject(null);
@@ -490,6 +494,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 			gGuiBase.Core.selectInstanceDetails(instances[i].mID);
 			selected = instances[i];
 			
+			//Make a new selection object and rotation object
 			var selectObject = gGuiBase.SceneSupport.gCurrentScene.getSelectObject();
 			var xform = gGuiBase.Core.selectedGameObject.getXform();
 			selectObject = new SelectionObject(xform.getXPos(), xform.getYPos(), xform.getWidth(), xform.getHeight());
@@ -513,6 +518,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 		}
 	};
 	
+	//Update the details TransformContent. Only call this when a GameObject is selected
 	var refreshGameObjectTransform = function() {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		var detailsTransform = detailsTab.getContentObject("#TransformContent");
@@ -520,6 +526,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 		detailsTab.refreshSpecificContent("#TransformContent");
 	};
 	
+	//Update the details CameraTransformContent. Only call this when a Camera is selected
 	var refreshCameraTransform = function() {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		var detailsTransform = detailsTab.getContentObject("#CameraTransformContent");
@@ -527,14 +534,13 @@ gGuiBase.DirectManipulationSupport = (function() {
 		detailsTab.refreshSpecificContent("#CameraTransformContent");
 	};
 	
+	//Update the details LightTransformContent. Only call this when a Light is selected
 	var refreshLightTransform = function() {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		var detailsTransform = detailsTab.getContentObject("#LightTransformContent");
 		detailsTransform.updateFields(selected.lightRef);
 		detailsTab.refreshSpecificContent("#LightTransformContent");
 	};
-	
-	
 	
 	//Checks if the mouse position is within the object transform
 	var mousePosInTransform = function(xform, mouseX, mouseY) {
@@ -544,13 +550,15 @@ gGuiBase.DirectManipulationSupport = (function() {
 		var w = xform.getWidth();
 		var h = xform.getHeight();
 		var r = xform.getRotationInRad();
-		var radius = Math.sqrt((w/2)*(w/2) + (h/2)*(h/2));
+		var radius = Math.sqrt((w/2)*(w/2) + (h/2)*(h/2)); //Get the radius of the containing circle for this gameobject
 		
-		var angleToTopRight = Math.atan2(h/2, w/2)
+		//Get the angle to each of the four corners of the gameobject
+		var angleToTopRight = Math.atan2(h/2, w/2);
 		var angleToTopLeft = Math.PI - angleToTopRight;
 		var angleToBotLeft = Math.PI + angleToTopRight;
 		var angleToBotRight = -angleToTopRight;
 		
+		// Get the location of the four corners of the gameobject
 		var topLeftX = Math.cos(r + (angleToTopLeft)) * radius + x;
 		var topLeftY = Math.sin(r + (angleToTopLeft)) * radius + y;
 		
@@ -606,6 +614,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 		
 	};
 	
+	//Checks if the mouse is within a camera icon (For selection)
 	var mouseInCameraObject = function(cameraObject, mouseX, mouseY) {
 		var camera = cameraObject.cameraRef;
 		
@@ -616,6 +625,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 		return mouseInBound(mouseX, mouseY, x, y, width);
 	};
 	
+	//General function for checking if mouse is within a bound and not rotated
 	var mouseInBound = function (mouseX, mouseY, x, y, width) {
 		if ((mouseX > (x - width / 2)) && (mouseX < (x + width / 2)) &&
 			(mouseY < (y + width / 2)) && (mouseY > (y - width / 2))) {
@@ -624,6 +634,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 		return false;
 	};
 	
+	//Rotates a point around a given origin and angle
 	var rotatePoint = function (originX, originY, angle, point) {
 		var s = Math.sin(angle);
 		var c = Math.cos(angle);

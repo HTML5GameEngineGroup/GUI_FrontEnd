@@ -1,3 +1,9 @@
+/*-----------------------------------------------------------------------------
+//	Scene support
+//	Supports addition and removal of scenes
+//	Author: Jason Herold
+-----------------------------------------------------------------------------*/
+
 //  Supports the addition of gameObjects
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
@@ -7,9 +13,11 @@ gGuiBase.SceneSupport = (function() {
     var mSceneList = [];
     var mNextSceneID = 0;
     
+	//Create the initial scene
 	mSceneList.push(gCurrentScene);
     gEngine.View.initializeEngineCore('GLCanvas', gCurrentScene);
 	
+	// Select a scene and start it
 	var selectScene = function(index) {
 		gEngine.GameLoop.stop();	// this unloads anything in scene.unload
 		if (index !== null) {

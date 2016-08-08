@@ -1,12 +1,16 @@
-
+/*-----------------------------------------------------------------------------
+//	Material support
+//	Supports additional and removal of materials
+//	Author: Jason Herold/Thoof
+-----------------------------------------------------------------------------*/
 var gGuiBase = gGuiBase || { }; //Create the singleton if it hasn't already been created
 
 gGuiBase.MaterialSupport = (function() {
 	var gMaterials = {};
 	gMaterials["Default"] = new Material();
 	gMaterials["Default"].mID = "Default";
-	console.log(gMaterials);
 
+	// Get list of material names
 	var getMaterialNameList = function() {
 		var materialNameList = [];
 		for (var material in gMaterials) {
@@ -15,6 +19,7 @@ gGuiBase.MaterialSupport = (function() {
 		return materialNameList;
 	};
 
+	// Get list of material objects
 	var getMaterialList = function() {
 		var materialList = [];
 		for (var materialName in gMaterials) {
@@ -23,6 +28,7 @@ gGuiBase.MaterialSupport = (function() {
 		return materialList;
 	};
 
+	// Add a material
 	var addMaterial = function () {
 		var name = findUniqueID();
 		var material = new Material();
@@ -35,9 +41,10 @@ gGuiBase.MaterialSupport = (function() {
 		gGuiBase.View.refreshAllTabContent();  // refresh panel
 	};
 	
+	// Remove material given ID
 	var removeMaterial = function(id) {
 		var material = gMaterials[id];
-		replaceMaterialReferences(id);
+		replaceMaterialReferences(id); // Set to default
 		delete gMaterials[id];
 		
 		gGuiBase.Core.reinitializeMaterialsTab();
@@ -48,12 +55,11 @@ gGuiBase.MaterialSupport = (function() {
 		var sceneList = gGuiBase.SceneSupport.getSceneList();
 		
 		for (var j = 0; j < sceneList.length; j++) {
-			// First update all instances with the new name and class
 			var instances = sceneList[j].getInstanceList();
 			for (i = 0; i < instances.length; i++) {
 				var renderable = instances[i].getRenderable();
 				if (renderable instanceof IllumRenderable &&
-					renderable.mMaterial.mID === id) {
+					renderable.mMaterial.mID === id) { // If the material has the same ID, replace it with default material
 					renderable.mMaterial = gMaterials["Default"];
 				}
 			}
