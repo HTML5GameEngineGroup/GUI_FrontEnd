@@ -3,7 +3,9 @@ function ControlArm( xPos, yPos, length, verticle ) {
     this.mArm;  // set in update
     this.mSquareSize = this.getBoxSize();
     this.updateArm(xPos, yPos, length);
-    this.verticle = verticle;
+    if (verticle === undefined) this.verticle = false;
+    else this.verticle = verticle;
+    console.log('is verticle', this.verticle);
 
 }
 
@@ -50,7 +52,6 @@ ControlArm.prototype.updateArm = function (xPos, yPos, length) {
 };
 
 ControlArm.prototype.updateControllerSquare = function (xPos, yPos, length) {
-    this.mSquareSize = this.getBoxSize();
     var xform = this.mControllerSquare.getXform();
     if (this.verticle) {
         xform.setXPos(xPos);
@@ -59,6 +60,7 @@ ControlArm.prototype.updateControllerSquare = function (xPos, yPos, length) {
         xform.setXPos(xPos + length);
         xform.setYPos(yPos);
     }
+    this.mSquareSize = this.getBoxSize();
     xform.setWidth(this.mSquareSize);
     xform.setHeight(this.mSquareSize);
 };

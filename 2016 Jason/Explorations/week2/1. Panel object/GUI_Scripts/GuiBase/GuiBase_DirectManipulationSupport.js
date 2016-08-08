@@ -133,10 +133,13 @@ gGuiBase.DirectManipulationSupport = (function() {
 					}
 				} else if (selected !== null && selected instanceof LightObject) {
 					if (selected.mouseInOuterSquare(mouseX, mouseY)) {
+						console.log('outer true');
 						state = InteractionState.LIGHT_DRAG_OUTER;
 					} else if (selected.mouseInInnerSquare(mouseX, mouseY)) {
+						console.log('inner true');
 						state = InteractionState.LIGHT_DRAG_INNER;
 					} else if (selected.mouseInFarSquare(mouseX, mouseY)) {
+						console.log('far true');
 						state = InteractionState.LIGHT_DRAG_FAR;
 					} else if (selected.mouseInNearSquare(mouseX, mouseY)) {
 						state = InteractionState.LIGHT_DRAG_NEAR;
@@ -175,9 +178,9 @@ gGuiBase.DirectManipulationSupport = (function() {
 			} else if (state === InteractionState.LIGHT_DRAG) {
 				dragLight();
 			} else if (state === InteractionState.LIGHT_DRAG_OUTER) {
-				dragLightResizeOuter();
+				resizeLightOuter();
 			} else if (state === InteractionState.LIGHT_DRAG_INNER) {
-				dragLightResizeInner();
+				resizeLightInner();
 			} else if (state === InteractionState.LIGHT_DRAG_FAR) {
 				resizeLightFar();
 			} else if (state === InteractionState.LIGHT_DRAG_NEAR) {
@@ -335,15 +338,11 @@ gGuiBase.DirectManipulationSupport = (function() {
 		light.mPosition = vec3.fromValues(mouseX, mouseY, light.mPosition[2]);
 		refreshLightTransform();
 	};
-	
-	var dragLightResizeInner = function() {
-		resizeLightInner();
-		refreshLightTransform();
-	};
 
 	var resizeLightInner = function () {
+		console.log("inner");
 		if (mouseX > selected.lightRef.mPosition[0]) return;
-		var radius = Math.abs(mouseX - selected.lightRef.mPosition[0]);
+		var radius = Math.abs(mouseY - selected.lightRef.mPosition[1]);
 		if (radius > selected.lightRef.mOuter) {
 			radius = selected.lightRef.mOuter;
 		}
@@ -351,11 +350,23 @@ gGuiBase.DirectManipulationSupport = (function() {
 			radius = 0.01
 		}
 		selected.lightRef.mInner = radius;
+		refreshLightTransform();
+	};
+
+	var resizeLightOuter = function () {
+		if (mouseX < selected.lightRef.mPosition[0])
+			return; // do not go past middle
+		var radius = Math.abs(mouseY - selected.lightRef.mPosition[1]);
+		// error check
+		if (radius < selected.lightRef.mInner)
+			radius = selected.lightRef.mInner;
+		selected.lightRef.mOuter = radius;
+		refreshLightTransform();
 	};
 
 	var resizeLightNear = function () {
 		// if (mouseX > selected.lightRef.mPosition[1]) return;
-		var radius = Math.abs(mouseY - selected.lightRef.mPosition[1]);
+		var radius = Math.abs(mouseX - selected.lightRef.mPosition[0]);
 		if (radius > selected.lightRef.mFar) {
 			radius = selected.lightRef.mFar;
 		} else if (radius < 0.01) {
@@ -365,31 +376,15 @@ gGuiBase.DirectManipulationSupport = (function() {
 		refreshLightTransform();
 	};
 	
-	var dragLightResizeOuter = function() {
-		if (mouseX < selected.lightRef.mPosition[0])
-			return; // do not go past middle
-		resizeLightOuter();
-		refreshLightTransform();	
-	};
-
 	var resizeLightFar = function () {
 		// if (mouseX < selected.lightRef.mPosition[0]) return; // do not go past middle
-		var radius = Math.abs(mouseY - selected.lightRef.mPosition[1]);
+		var radius = Math.abs(mouseX - selected.lightRef.mPosition[0]);
 		// error check
 		if (radius < selected.lightRef.mNear)
 			radius = selected.lightRef.mNear;
 		selected.lightRef.mFar = radius;
 		refreshLightTransform();
 	};
-
-	var resizeLightOuter = function () {
-		var radius = Math.abs(mouseX - selected.lightRef.mPosition[0]);
-		// error check
-		if (radius < selected.lightRef.mInner)
-			radius = selected.lightRef.mInner;
-		selected.lightRef.mOuter = radius;
-	};
-
 	
 	//Selects gameobject or camera
 	var trySelect = function() {
