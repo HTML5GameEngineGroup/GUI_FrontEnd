@@ -142,8 +142,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 							state = InteractionState.SCENECAMERA_DRAG;
 						}
 					}
-					
-				}else { //Nothing selected -- try to select
+				} else { //Nothing selected -- try to select
 					//Only try to select on initial click
 					if (prevMouseDownState === false) {
 						trySelect();
