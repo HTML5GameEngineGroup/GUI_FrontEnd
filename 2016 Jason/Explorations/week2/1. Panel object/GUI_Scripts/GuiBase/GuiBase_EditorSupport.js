@@ -8,7 +8,6 @@ gGuiBase.EditorSupport = (function() {
     var DETAILS_OBJECTS_OFFSETS = [150, 75, 120];
     
     var createFloatingEditor = function( selectedName ) {
-        console.log(selectedName);
         var indexToAdd = gZIndex;
         var editorName = "floatingEditor" + indexToAdd;
 
@@ -60,8 +59,6 @@ gGuiBase.EditorSupport = (function() {
         codeEditor.append('<ul class="floating-panel-body" id="' + bodyName + '"></ul>');
 
         // Create a separate area within the panel for the editor
-        console.log(typeof(window[selectedName]));
-
         var isGameObject = true;
         var code = gGuiBase.ObjectSupport.getGameObjectCodeByID(selectedName);
         if (code == undefined) {
@@ -149,10 +146,12 @@ gGuiBase.EditorSupport = (function() {
                     eval(result);
 
                     // todo remove direct access to scene data structure
+                    // todo use the same function as the saveload, createCamera
                     var sceneList = gGuiBase.SceneSupport.getSceneList();
                     for (var j = 0; j < sceneList.length; j++) {
                         // First update all instances with the new name and class
                         var cameraInstances = sceneList[j].getCameraList();
+                        var i;
                         for (i = 0; i < cameraInstances.length; i++) {
                             var name = cameraInstances[i].mName;
                             if (name === selectedName) {
