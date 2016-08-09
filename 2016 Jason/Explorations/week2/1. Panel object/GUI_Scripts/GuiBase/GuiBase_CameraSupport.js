@@ -9,7 +9,7 @@ gGuiBase.CameraSupport = (function() {
 	var mSelectedCamera = null;
 	var mCamera = {}; 				// a reference to all cameras 		Key: cameraName Value: Camera
 	var mCameraCode = {};			// a reference to all cameras code	Key: cameraName Value: Code (string)
-
+	
 	// remove a camera from GUI and Game, via its name
 	var deleteCamera = function(cameraName) {
 		// clean up details panel if it contains deleted camera

@@ -557,6 +557,7 @@ gGuiBase.SaveLoadSupport = (function() {
 							// add sceneCam to scene
 							if (data[i+1] === "SceneViewCamera") {
 								var name = data[i];
+								console.log('loading camera', name);
 								var cam = new Camera(
 									vec2.fromValues(data[i + 2][0], data[i + 2][1]),    // position of the camera
 									data[i + 3],                                        // width of camera
@@ -569,6 +570,7 @@ gGuiBase.SaveLoadSupport = (function() {
 							}
 							// add camera to scene
 							else {
+								console.log('loading camera', name);
 								var name = data[i];
 								var wcCenter = vec2.fromValues(data[i + 2][0], data[i + 2][1]);
 								var wcWidth = data[i + 3];

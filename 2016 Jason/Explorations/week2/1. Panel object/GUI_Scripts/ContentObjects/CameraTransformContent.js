@@ -99,16 +99,59 @@ CameraTransformContent.prototype.onTextFieldFocusOut = function(textField) {
 	switch(textField.attr("id")) {
 		case "cameraNameField":
 			if (value == camera.mName) break;
-			
-			if (!gGuiBase.CameraSupport.checkForNameConflict(textField.val())) {
-				camera.mName = textField.val();
+			var lastSetName = camera.mName;
+			console.log('lastname', lastSetName);
+			if (!gGuiBase.CameraSupport.checkForNameConflict(value)) {
+				console.log('setting new name:', value);
+
+
+
+
+				var oldCam = gGuiBase.CameraSupport.getCameraByName(lastSetName);
+				var wcCenter = camera.getWCCenter();   // position of the camera
+				var wcWidth = camera.getWCWidth();                        // width of camera
+				var viewportArray = camera.getViewport();       // viewport (orgX, orgY, width, height)
+				var bound = undefined;
+				console.log(oldCam);
+				console.log(wcCenter);
+				console.log(wcWidth);
+				console.log(viewportArray);
+				window[value] = function(wcCenter, wcWidth, viewportArray, bound) {
+					Camera.call(this, wcCenter, wcWidth, viewportArray, bound);
+				};
+				gEngine.View.inheritPrototype(window[value], window["Camera"]);
+
+
+				var code = gGuiBase.CameraSupport.getCameraCodeByName(lastSetName);
+				console.log(code);
+				gGuiBase.Core.replaceObjectNameInCode(code, lastSetName, value);
+				console.log(code);
+				eval(code);
+
+				var layer = camera.mLayer;
+				var id = camera.mID;
+				var newCam;
+				eval('newCam = new ' + value + '(wcCenter, wcWidth, viewportArray, bound);');
+				//todo make a function to copy values from camera use for save and load and here
+				newCam.mName = value;
+				newCam.mLayer = layer;
+				newCam.mID = id;
+				console.log('this is new cam', newCam);
+				// add cam to scene and gui
+				var cameraObject = new CameraObject(newCam);
+				gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
+				gGuiBase.SceneSupport.gCurrentScene.addCamera(newCam);
+				gGuiBase.CameraSupport.setCameraByName(newCam.mName, newCam);
+				gGuiBase.CameraSupport.setCameraCodeByName(newCam.mName, code);
+				// remove from gui and scene
+				gGuiBase.CameraSupport.deleteCamera(lastSetName);
+				console.log(camera);
 				gGuiBase.Core.reinitializeCameraTab();
-				gGuiBase.Core.selectDetailsCamera(camera.mName);
+				gGuiBase.Core.selectDetailsCamera(newCam.mName);
 			} else {
-				$(this).val(gLastSetName);
+				$(this).val(lastSetName);
 				alert("Names must be unique.");
 			}
-
 			break;
 		case "wcx":
 			camera.setWCCenter(value, center[1]);
@@ -146,6 +189,7 @@ CameraTransformContent.prototype.onTextFieldFocusOut = function(textField) {
 
 // sets transforms fields to the selected cameras
 CameraTransformContent.prototype.updateFields = function( camera ) {
+	console.log(camera);
 	this.objectName.setText( camera.mName );
 	var wc = camera.getWCCenter();
 	var vp = camera.getViewport();
