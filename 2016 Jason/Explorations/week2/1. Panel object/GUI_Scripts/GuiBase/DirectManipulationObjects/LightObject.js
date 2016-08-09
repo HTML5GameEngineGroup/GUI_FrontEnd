@@ -24,12 +24,12 @@ LightObject.prototype.mouseInIcon = function(mouseX, mouseY) {
 };
 
 LightObject.prototype.mouseInOuterSquare = function(mouseX, mouseY) {
-	if (this.lightRef.mLightType === Light.eLightType.eDirectionalLight) return false;
+	if (this.lightRef.mLightType !== Light.eLightType.eSpotLight) return false;
 	return this.mOuterControl.mouseInControl(mouseX, mouseY);
 };
 
 LightObject.prototype.mouseInInnerSquare = function(mouseX, mouseY) {
-	if (this.lightRef.mLightType === Light.eLightType.eDirectionalLight) return false;
+	if (this.lightRef.mLightType !== Light.eLightType.eSpotLight) return false;
 	console.log(this.mInnerControl.mouseInControl(mouseX, mouseY));
 	return this.mInnerControl.mouseInControl(mouseX, mouseY);
 };

@@ -341,7 +341,10 @@ gGuiBase.DirectManipulationSupport = (function() {
 
 	var resizeLightInner = function () {
 		console.log("inner");
-		if (mouseX > selected.lightRef.mPosition[0]) return;
+		if (mouseY > selected.lightRef.mPosition[1]) {
+			selected.lightRef.mInner = 0.01;
+			return;
+		}
 		var radius = Math.abs(mouseY - selected.lightRef.mPosition[1]);
 		if (radius > selected.lightRef.mOuter) {
 			radius = selected.lightRef.mOuter;
@@ -354,7 +357,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 	};
 
 	var resizeLightOuter = function () {
-		if (mouseX < selected.lightRef.mPosition[0])
+		if (mouseY < selected.lightRef.mPosition[1])
 			return; // do not go past middle
 		var radius = Math.abs(mouseY - selected.lightRef.mPosition[1]);
 		// error check
@@ -365,7 +368,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 	};
 
 	var resizeLightNear = function () {
-		// if (mouseX > selected.lightRef.mPosition[1]) return;
+		if (mouseX > selected.lightRef.mPosition[0]) return;
 		var radius = Math.abs(mouseX - selected.lightRef.mPosition[0]);
 		if (radius > selected.lightRef.mFar) {
 			radius = selected.lightRef.mFar;
@@ -377,7 +380,7 @@ gGuiBase.DirectManipulationSupport = (function() {
 	};
 	
 	var resizeLightFar = function () {
-		// if (mouseX < selected.lightRef.mPosition[0]) return; // do not go past middle
+		if (mouseX < selected.lightRef.mPosition[0]) return; // do not go past middle
 		var radius = Math.abs(mouseX - selected.lightRef.mPosition[0]);
 		// error check
 		if (radius < selected.lightRef.mNear)
