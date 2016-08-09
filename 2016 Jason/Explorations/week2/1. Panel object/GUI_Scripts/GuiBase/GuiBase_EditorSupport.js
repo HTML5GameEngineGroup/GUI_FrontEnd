@@ -139,39 +139,46 @@ gGuiBase.EditorSupport = (function() {
                 }
             } else {
                 // Process camera code changes
-                gGuiBase.CameraSupport.setCameraCodeByName(selectedName, result);
                 var msg = "";
                 try {
                     // Puts code into system
-                    eval(result);
-
                     // todo remove direct access to scene data structure
                     // todo use the same function as the saveload, createCamera
-                    var sceneList = gGuiBase.SceneSupport.getSceneList();
-                    for (var j = 0; j < sceneList.length; j++) {
-                        // First update all instances with the new name and class
-                        var cameraInstances = sceneList[j].getCameraList();
-                        var i;
-                        for (i = 0; i < cameraInstances.length; i++) {
-                            var name = cameraInstances[i].mName;
-                            if (name === selectedName) {
-                                // Each instance needs to be re-created exactly as the old one, but as a new class
-                                // They also need their name value modified
-                                var center = cameraInstances[i].getWCCenter();
-                                var width = cameraInstances[i].getWCWidth();
-                                var viewport = cameraInstances[i].getViewport();
-                                var bgColor = cameraInstances[i].getBackgroundColor();
-                                var bound = undefined;
-                                var newInstance;
-                                eval("newInstance = new " + name + "(center, width, viewport, bound);");
-                                newInstance.mID = cameraInstances[i].mID;
-                                newInstance.mName = cameraInstances[i].mName;
-                                newInstance.setBackgroundColor(bgColor);
-                                cameraInstances[i] = newInstance;
-                            }
-                        }
-                    }
+
+                    var cam = gGuiBase.CameraSupport.getCameraByName(selectedName);
+                    gGuiBase.CameraSupport.deleteCamera(selectedName);
+
+                    var center = cam.getWCCenter();
+                    var width = cam.getWCWidth();
+                    var viewport = cam.getViewport();
+                    var bgColor = cam.getBackgroundColor();
+                    var bound = undefined;
+
+                    // window[selectedName] = function(center, width, viewport, bound) {
+                    //     Camera.call(this, center, width, viewport, bound);
+                    // };
+                    // gEngine.View.inheritPrototype(window[selectedName], window["Camera"]);
+                    eval(result);
+
+                    var newCam;
+                    eval("newCam = new " + selectedName + "(center, width, viewport, bound);");
+                    newCam.mID = cam.mID;
+                    newCam.mName = cam.mName;
+                    newCam.setBackgroundColor(bgColor);
+                    newCam.mLayer = cam.mLayer;
+                    console.log('old cam', cam);
+                    console.log('new cam', newCam);
+                    gGuiBase.CameraSupport.setCameraByName(selectedName, newCam);
+                    gGuiBase.CameraSupport.setCameraCodeByName(selectedName, result);
+                    var cameraObject = new CameraObject(newCam);
+                    // add cameras to the scene
+                    gGuiBase.SceneSupport.gCurrentScene.cameraObjects.push(cameraObject);
+                    gGuiBase.SceneSupport.gCurrentScene.addCamera(newCam);
                     msg = "Code saved!";
+                    // refresh panel
+                    gGuiBase.View.findWidgetByID("#cameraSelectList").rebuildWithArray(gGuiBase.CameraSupport.getCameraListNames());
+                    gGuiBase.View.refreshAllTabContent();
+                    gGuiBase.Core.selectDetailsCamera(selectedName);
                 } catch (error) {
                     msg = "Your code contains an error.  Please review.\n\n" + error;
                 }
