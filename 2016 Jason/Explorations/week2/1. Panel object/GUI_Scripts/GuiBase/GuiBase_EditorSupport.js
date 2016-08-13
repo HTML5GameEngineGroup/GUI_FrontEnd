@@ -8,6 +8,7 @@ gGuiBase.EditorSupport = (function() {
     var DETAILS_OBJECTS_OFFSETS = [150, 75, 120];
     
     var createFloatingEditor = function( selectedName ) {
+        gGuiBase.DirectManipulationSupport.setPreventInteraction(true); // Turn off direct manipulation when editing!
         var indexToAdd = gZIndex;
         var editorName = "floatingEditor" + indexToAdd;
 
@@ -188,6 +189,7 @@ gGuiBase.EditorSupport = (function() {
             codeEditor.remove();
             delete gEditorMap[selectedName];
             alert(msg);
+            gGuiBase.DirectManipulationSupport.setPreventInteraction(false); // turn direct manipulation back on!
         });
         
         // remove editor
@@ -195,6 +197,7 @@ gGuiBase.EditorSupport = (function() {
             // Remove the editor
             codeEditor.remove();
             delete gEditorMap[selectedName];
+            gGuiBase.DirectManipulationSupport.setPreventInteraction(false); // turn direct manipulation back on!
         });
     };
 

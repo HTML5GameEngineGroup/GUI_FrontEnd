@@ -130,7 +130,6 @@ ColorTextureContent.prototype.onListSelect = function(value) {
 	var gameObjectName = gGuiBase.Core.selectedGameObject.mName;
 	var colorTextureContent = gGuiBase.View.findTabContentByID("#ColorTextureContent");
 	var textureName = colorTextureContent.getDropdownTexName();
-	console.log("selecting this texture:", textureName);
 	if (textureName == "None") {
 		gGuiBase.TextureSupport.removeTextureFromGameObject(gameObjectName);
 	} else {
@@ -152,16 +151,13 @@ ColorTextureContent.prototype.onNormalMapSelect = function(value) {
 		gGuiBase.LightSupport.addIlluminationToGameObject(gameObject.mName, textureName, value);
 		gGuiBase.LightSupport.addLightsToInstances();
 		$('#matDropDown').prop('disabled', false);
-		console.log(gameObject);
 	}
 };
 
 ColorTextureContent.prototype.onMaterialSelect = function(value) {
 	var gameObject = gGuiBase.Core.selectedGameObject; 
-	console.log(value);
 	//todo need to make sure default value's name cannot be changed
 	gGuiBase.MaterialSupport.setMaterial(gameObject.mName, gGuiBase.MaterialSupport.getMaterialByID(value));
-	console.log('afterset', gameObject);
 };
 
 ColorTextureContent.prototype.onDialogClose = function() {
@@ -212,7 +208,6 @@ ColorTextureContent.prototype.setMaterialDropdown = function() {
 	var renderable = gGuiBase.Core.selectedGameObject.getRenderable();
 	if (renderable instanceof IllumRenderable) {
 		$('#matDropDown').val(renderable.mMaterial.mID);
-		console.log(renderable.mMaterial);
 	} else {
 		$('#matDropDown').val("None");
 	}

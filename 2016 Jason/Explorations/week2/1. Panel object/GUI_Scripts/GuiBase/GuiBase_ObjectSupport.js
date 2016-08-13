@@ -112,16 +112,13 @@ gGuiBase.ObjectSupport = (function() {
 	
     // returns a new GameObject who is a copy of gameObject
     var cloneGO = function ( gameObject ) {
-        console.log("cloning");
         var newGO;
         var texture = gameObject.getRenderable().mTexture;
         if (texture) {
 			if (gameObject.getRenderable() instanceof IllumRenderable) {
 				var normal = gameObject.getRenderable().mNormalMap;
 				eval('newGO = new ' + gameObject.mName + '(new IllumRenderable("' + texture + '", "' + normal +  '"));');
-                console.log('gameObject', gameObject);
 				newGO.getRenderable().mMaterial = gameObject.getRenderable().mMaterial;
-                console.log('clone', newGO);
             } else if (gameObject.getRenderable() instanceof LightRenderable) {
 				eval('newGO = new ' + gameObject.mName + '(new LightRenderable("' + texture + '"));');
 			} else {
