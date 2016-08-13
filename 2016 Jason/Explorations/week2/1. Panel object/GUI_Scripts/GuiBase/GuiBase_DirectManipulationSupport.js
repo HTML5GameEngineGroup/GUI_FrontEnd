@@ -133,13 +133,10 @@ gGuiBase.DirectManipulationSupport = (function() {
 					}
 				} else if (selected !== null && selected instanceof LightObject) {
 					if (selected.mouseInOuterSquare(mouseX, mouseY)) {
-						console.log('outer true');
 						state = InteractionState.LIGHT_DRAG_OUTER;
 					} else if (selected.mouseInInnerSquare(mouseX, mouseY)) {
-						console.log('inner true');
 						state = InteractionState.LIGHT_DRAG_INNER;
 					} else if (selected.mouseInFarSquare(mouseX, mouseY)) {
-						console.log('far true');
 						state = InteractionState.LIGHT_DRAG_FAR;
 					} else if (selected.mouseInNearSquare(mouseX, mouseY)) {
 						state = InteractionState.LIGHT_DRAG_NEAR;
@@ -340,7 +337,6 @@ gGuiBase.DirectManipulationSupport = (function() {
 	};
 
 	var resizeLightInner = function () {
-		console.log("inner");
 		if (mouseY > selected.lightRef.mPosition[1]) {
 			selected.lightRef.mInner = 0.01;
 			return;

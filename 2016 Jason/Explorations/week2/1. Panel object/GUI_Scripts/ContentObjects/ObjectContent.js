@@ -69,5 +69,4 @@ ObjectContent.prototype.selectObject = function( ui ) {
 	// get objectName/objectID
 	var selectedObjectName = ui["selected"]["id"];
 	gGuiBase.Core.selectDetailsObject( selectedObjectName );
-	console.log(gGuiBase.ObjectSupport.getGameObjectByID(selectedObjectName));
 };

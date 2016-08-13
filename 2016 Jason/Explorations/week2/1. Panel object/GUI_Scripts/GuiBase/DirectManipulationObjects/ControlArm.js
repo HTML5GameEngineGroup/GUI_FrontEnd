@@ -5,8 +5,6 @@ function ControlArm( xPos, yPos, length, verticle ) {
     this.updateArm(xPos, yPos, length);
     if (verticle === undefined) this.verticle = false;
     else this.verticle = verticle;
-    console.log('is verticle', this.verticle);
-
 }
 
 ControlArm.prototype.createControllerSquare = function (xPos, yPos, length) {
