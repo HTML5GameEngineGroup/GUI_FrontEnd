@@ -37,10 +37,11 @@ gGuiBase.SaveLoadSupport = (function() {
 		if (gGuiBase.Core.gRunning) {
 			//Back up game state
 			fileSave(true);
-			gGuiBase.DirectManipulationSupport.setPreventInteraction(true); // Don't allow direct editing while game is running
+			
 			$('#menuRun').css('background-color', 'grey');
 			gGuiBase.Core.emptyDetailsTab();
 			gGuiBase.Core.selectedGameObject = null;
+			gGuiBase.DirectManipulationSupport.setPreventInteraction(true); // Don't allow direct editing while game is running
 		} else {
 			//Load the backed-up game state
 			gGuiBase.LightSupport.removeLightReferences(); // Clear any light references from instances of LightRenderable/IllumRenderable
