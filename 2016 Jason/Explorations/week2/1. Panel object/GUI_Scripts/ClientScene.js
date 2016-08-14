@@ -17,8 +17,7 @@ function ClientScene(number) {
     this.mName = "Scene" + number;
     this.mID = "sceneListItem" + number;
     this.mNextCameraID = 0; // Due to the starting camera being 0
-    // this.mAllCamera = [];
-    // create camera layers
+
     this.MAX_CAMERA_LAYER = 5;
     this.MIN_CAMERA_LAYER = 0;
     this.mAllCamera = [];
@@ -28,8 +27,7 @@ function ClientScene(number) {
     this.mInstanceList = [];
     this.mAllUpdateSet = new GameObjectSet();
     this.isInitialized = false;
-    this.mAllTextures = {};
-	
+
 	this.mLightSet = new LightSet();
 	
 	this.selectObject = null;
@@ -209,6 +207,16 @@ ClientScene.prototype.update = function() {
 ClientScene.prototype.addInstance = function(inst) {
     this.mInstanceList.push(inst);
     return true;
+};
+
+ClientScene.prototype.removeInstance = function (inst) {
+    var index = this.mInstanceList.indexOf(this);
+    for(var i = 0; i < this.mInstanceList.length; i++) {
+        if (this.mInstanceList[i].mID === inst.mID) {
+            this.mInstanceList.splice(i, 1);
+            return;
+        }
+    }
 };
 
 ClientScene.prototype.addCamera = function(cam) {

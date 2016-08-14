@@ -263,7 +263,7 @@ GameObject.prototype.collisionExitTest = function () {
         var otherObj = this.mCollisionSet.mSet[i];
         if (!gGuiBase.SceneSupport.gCurrentScene.mAllUpdateSet.findObject(otherObj)) {
             this.onCollisionExit(otherObj);
-            this.mCollisionSet.removeFromSet(otherObj)
+            this.mCollisionSet.removeFromSet(otherObj);
             if (otherObj.mCollidableFlag) {
                 otherObj.onCollisionExit(this);
                 otherObj.mCollisionSet.removeFromSet(this);
@@ -284,10 +284,7 @@ GameObject.prototype.onCollisionEnter = function (otherObj) {
 GameObject.prototype.onCollisionExit = function (otherObj) {
 
 };
-GameObject.prototype.destory = function () {
-    
-    var index = gGuiBase.SceneSupport.gCurrentScene.mAllObject.indexOf(this);
-    if (index > -1)
-        gGuiBase.SceneSupport.gCurrentScene.mAllUpdateSet.splice(index, 1);
+GameObject.prototype.destroy = function () {
+    gGuiBase.SceneSupport.gCurrentScene.removeInstance(this);
     gEngine.LayerManager.removeFromLayer(this.mLayer,this);
 };
