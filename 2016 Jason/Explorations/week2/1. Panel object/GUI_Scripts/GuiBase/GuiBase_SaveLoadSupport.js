@@ -526,12 +526,12 @@ gGuiBase.SaveLoadSupport = (function() {
 
 				// Use gCurrentScene to hold current scene info
 				currentScene = new ClientScene(-1); // Number is temporary
+				currentScene.initialize();
 				currentScene.mName = sceneName;
 				currentScene.mID = "unset";
-				currentScene.mAllCamera = [];
 				currentScene.mAllObject = [];
 				currentScene.lightSet = new LightSet();
-				
+				currentScene.clearCameras();
 				var sceneList = gGuiBase.SceneSupport.getSceneList();
 				sceneList.push(currentScene);
 				gGuiBase.SceneSupport.selectScene(sceneList.length - 1); // This starts the scene
@@ -556,6 +556,8 @@ gGuiBase.SaveLoadSupport = (function() {
 
 						while (typeof(data[i]) !== "undefined") {
 							// add sceneCam to scene
+							// console.log('before', gGuiBase.SceneSupport.gCurrentScene);
+
 							if (data[i+1] === "SceneViewCamera") {
 								var name = data[i];
 								var cam = new Camera(
@@ -597,10 +599,11 @@ gGuiBase.SaveLoadSupport = (function() {
 								gGuiBase.CameraSupport.setCameraCodeByName(name, code);
 								gGuiBase.CameraSupport.setCameraByName(name, cam);
 							}
+							// console.log('after', gGuiBase.SceneSupport.gCurrentScene);
 							i += 8;
 						}
 						// Select the first scene when this process is done
-						gGuiBase.SceneSupport.selectScene(0);
+						// gGuiBase.SceneSupport.selectScene(0);
 					} else if (relativePath.endsWith("instances.json")) {
 						// This file contains (unless the user modified it) the data for every instance in the scene
 						var i = 0;

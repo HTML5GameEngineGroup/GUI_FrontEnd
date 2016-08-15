@@ -220,6 +220,8 @@ ClientScene.prototype.removeInstance = function (inst) {
 };
 
 ClientScene.prototype.addCamera = function(cam) {
+    console.log('add this cam', cam);
+    console.log('to this scene', this);
     if (!this.mAllCamera[cam.mLayer]) {
         this.mAllCamera[cam.mLayer] = [cam];
     } else {
