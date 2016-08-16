@@ -142,6 +142,7 @@ gGuiBase.Core = (function() {
 		var detailsTransform = new CameraTransformContent("CameraTransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
 		var detailsColor = new ColorCameraContent("ColorCameraContent", gGuiBase.View.CONTENT_STYLE, "Draw Color");
 		var interpolateContent = new CameraInterpolateContent("CameraInterpolateContent", gGuiBase.View.CONTENT_STYLE, "Interpolate");
+		var shakeContent = new CameraShakeContent("CameraShakeContent", gGuiBase.View.CONTENT_STYLE, "Shake");
 
 		var camera = gGuiBase.CameraSupport.getCameraByName(cameraName);
 		detailsTransform.updateFields(camera);
@@ -150,9 +151,11 @@ gGuiBase.Core = (function() {
 		detailsTab.addContent(detailsTransform);
 		detailsTab.addContent(detailsColor);
 		detailsTab.addContent(interpolateContent);
+		detailsTab.addContent(shakeContent);
 		gGuiBase.View.refreshAllTabContent();
 		detailsTransform.setLayerDropDown(gGuiBase.Core.selectedCamera);
 		interpolateContent.updateFields(camera);
+		shakeContent.updateFields(camera);
 	};
 	
 	// To be called on scene change

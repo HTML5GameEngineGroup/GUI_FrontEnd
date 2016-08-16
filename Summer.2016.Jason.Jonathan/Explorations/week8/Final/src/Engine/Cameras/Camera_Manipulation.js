@@ -135,5 +135,8 @@ Camera.prototype.configInterpolation = function (stiffness, duration) {
  * @returns {void}
  */
 Camera.prototype.shake = function (xDelta, yDelta, shakeFrequency, duration) {
-    this.mCameraShake = new CameraShake(this.mCameraState, xDelta, yDelta, shakeFrequency, duration);
+    if (shakeFrequency  || duration) {
+        this.mCameraShake = new CameraShake(this.mCameraState, xDelta, yDelta, shakeFrequency, duration);
+    } else {
+    }
 };
