@@ -138,5 +138,6 @@ Camera.prototype.shake = function (xDelta, yDelta, shakeFrequency, duration) {
     if (shakeFrequency  || duration) {
         this.mCameraShake = new CameraShake(this.mCameraState, xDelta, yDelta, shakeFrequency, duration);
     } else {
+        this.mCameraShake = new CameraShake(this.mCameraState, xDelta, yDelta, this.mShakeFrequency, this.mShakeDuration);
     }
 };

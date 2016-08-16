@@ -72,7 +72,11 @@ function Camera(wcCenter, wcWidth, viewportArray, bound) {
 
     // used to determine which camera is displayed on top, 0 is top higher numbers are lower (0 is above 1 is above 2)
     this.mLayer = 0;
-    //gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(this);
+    //gGuiBase.SceneSupport.gCurrentScene.mAllCamera.push(this); << may need something like this so that they are automatically added to scene!
+
+    // no idea what a normal shake frequency or duration is
+    this.mShakeFrequency = 5;
+    this.mShakeDuration = 300;
 }
 
 /**
@@ -313,5 +317,14 @@ Camera.prototype.clampAtBoundary = function (aXform, zone) {
 
 Camera.prototype.getInterpolateConfig = function () {
     return this.mCameraState.getConfig();
+};
+
+Camera.prototype.getShake = function () {
+    return [this.mShakeFrequency, this.mShakeDuration];
+};
+
+Camera.prototype.setShake = function ( frequency, duration) {
+    this.mShakeFrequency = frequency;
+    this.mShakeDuration = duration;
 };
 //</editor-fold>
