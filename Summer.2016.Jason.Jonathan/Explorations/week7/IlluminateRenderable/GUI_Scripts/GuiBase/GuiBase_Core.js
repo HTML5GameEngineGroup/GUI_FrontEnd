@@ -139,7 +139,7 @@ gGuiBase.Core = (function() {
 		// Rebuilds the details tab for Camera content
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		emptyDetailsTab();
-		var detailsTransform = new CameraTransformContent("CameraTransformContent", gGuiBase.View.CONTENT_STYLE, "Camera Transform");
+		var detailsTransform = new CameraInterpolateContent("CameraTransformContent", gGuiBase.View.CONTENT_STYLE, "Camera Transform");
 		var detailsColor = new ColorCameraContent("ColorCameraContent", gGuiBase.View.CONTENT_STYLE, "Camera Color");
 		
 		var camera = gGuiBase.CameraSupport.getCameraByName(cameraName);

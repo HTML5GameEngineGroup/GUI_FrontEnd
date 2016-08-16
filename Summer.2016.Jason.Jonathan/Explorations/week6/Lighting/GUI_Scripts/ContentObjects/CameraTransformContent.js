@@ -19,7 +19,7 @@ function CameraTransformContent(tabContentID, style, title) {
 	this.viewportH = null;
 
 	this.layerLabel = null;
-	this.layerDropDown = null;
+	this.layerDropdown = null;
 	//todo generate this from cameras support min max
 	this.layerOptions = [0,1,2,3,4,5];
 
@@ -54,7 +54,7 @@ CameraTransformContent.prototype.initialize = function () {
 	this.viewportWHText = new Text("viewportWHText", textStyle, "W / H");
 
 	this.layerLabel = new Text("layerLabel", textStyle, "Layer");
-	this.layerDropDown = new DropdownList("layerDropDown", textStyle, this.layerOptions);
+	this.layerDropdown = new DropdownList("layerDropDown", textStyle, this.layerOptions);
 	
 	this.widgetList.push(this.objectNameText);
 	this.widgetList.push(this.objectName);
@@ -72,7 +72,7 @@ CameraTransformContent.prototype.initialize = function () {
 	this.widgetList.push(this.viewportW);
 	this.widgetList.push(this.viewportH);
 	this.widgetList.push(this.layerLabel);
-	this.widgetList.push(this.layerDropDown);
+	this.widgetList.push(this.layerDropdown);
 };
 
 // initialize text fields
@@ -85,7 +85,7 @@ CameraTransformContent.prototype.initializeEventHandling = function () {
 	this.viewportY.setOnFocusOut(this.onTextFieldFocusOut);
 	this.viewportW.setOnFocusOut(this.onTextFieldFocusOut);
 	this.viewportH.setOnFocusOut(this.onTextFieldFocusOut);
-	this.layerDropDown.setOnSelect(this.onLayerSelect);
+	this.layerDropdown.setOnSelect(this.onLayerSelect);
 };
 
 // set camera to settings on focus out

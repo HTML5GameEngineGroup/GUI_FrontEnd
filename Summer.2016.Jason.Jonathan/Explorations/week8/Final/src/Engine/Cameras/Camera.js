@@ -310,4 +310,8 @@ Camera.prototype.clampAtBoundary = function (aXform, zone) {
     }
     return status;
 };
+
+Camera.prototype.getInterpolateConfig = function () {
+    return this.mCameraState.getConfig();
+};
 //</editor-fold>

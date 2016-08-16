@@ -92,7 +92,7 @@ gGuiBase.Core = (function() {
 	var selectDetailsCamera = function (cameraName) {
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		detailsTab.clearContent();
-		var detailsTransform = new CameraTransformContent("CameraTransformContent", gGuiBase.View.CONTENT_STYLE, "Camera Transform");
+		var detailsTransform = new CameraInterpolateContent("CameraTransformContent", gGuiBase.View.CONTENT_STYLE, "Camera Transform");
 		var detailsColor = new ColorCameraContent("ColorCameraContent", gGuiBase.View.CONTENT_STYLE, "Camera Color");
 		
 		var camera = gGuiBase.CameraSupport.getCameraByName(cameraName);

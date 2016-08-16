@@ -75,4 +75,8 @@ CameraState.prototype.configInterpolation = function (stiffness, duration) {
     this.mCenter.configInterpolation(stiffness, duration);
     this.mWidth.configInterpolation(stiffness, duration);
 };
+
+CameraState.prototype.getConfig = function () {
+    return this.mWidth.getConfig();
+};
 // </editor-fold>
