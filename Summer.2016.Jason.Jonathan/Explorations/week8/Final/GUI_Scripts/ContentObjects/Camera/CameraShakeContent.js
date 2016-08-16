@@ -33,10 +33,8 @@ CameraShakeContent.prototype.initializeEventHandling = function () {
 CameraShakeContent.prototype.onTextFieldFocusOut = function() {
     var frequency = $('#frequencyField').val();
     var duration = $('#shakeDurationField').val();
-    console.log('frequency:', frequency, 'duration:', duration);
     var camera = gGuiBase.Core.selectedCamera;
     camera.setShake(frequency, duration);
-    console.log(camera);
 };
 
 // sets transforms fields to the selected cameras

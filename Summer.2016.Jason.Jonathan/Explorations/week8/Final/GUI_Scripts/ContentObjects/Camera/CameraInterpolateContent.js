@@ -30,11 +30,9 @@ CameraInterpolateContent.prototype.initializeEventHandling = function () {
 
 // set interpolation to settings on focus out
 CameraInterpolateContent.prototype.onTextFieldFocusOut = function(textField) {
-    console.log("onfocusout interpolate");
     var value = textField.val();
     var stiffness = $('#stiffField').val();
     var duration = $('#durationField').val();
-    console.log('stiffness:', stiffness, 'duration:', duration);
     var camera = gGuiBase.Core.selectedCamera;
     camera.configInterpolation(stiffness, duration);
 };

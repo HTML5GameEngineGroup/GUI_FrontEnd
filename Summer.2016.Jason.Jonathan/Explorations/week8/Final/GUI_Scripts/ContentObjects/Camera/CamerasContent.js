@@ -44,7 +44,6 @@ CamerasContent.prototype.initializeEventHandling = function () {
 					gGuiBase.Core.selectDetailsCamera( cameraName );
 					break;
 				case 'edit':
-					console.log(ui.target.text());
 					gGuiBase.EditorSupport.createFloatingEditor( cameraName );
 					break;
 				case 'delete':
@@ -63,7 +62,6 @@ CamerasContent.prototype.buttonOnClick = function() {
 
 // left clicking a camera list item will select it in the details panel
 CamerasContent.prototype.onListSelect = function(ui) {
-	console.log(ui["selected"]["id"]);
 	var selectedCameraName = ui["selected"]["id"];
 	gGuiBase.Core.selectDetailsCamera( selectedCameraName );
 };
