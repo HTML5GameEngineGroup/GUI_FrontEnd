@@ -11,24 +11,26 @@ gGuiBase.View.inheritPrototype(CameraInterpolateContent, GuiTabContent);
 CameraInterpolateContent.prototype.initialize = function () {
     var textStyle = 'margin-left: 10px; margin-top: 4px';
     var textFieldStyle = 'width: 90%; margin-left: 10px';
+
     this.stiffnessLabel = new Text("stiffnessLabel", textStyle, "Stiffness");
-    this.viewportW = new TextField("stiffField", textFieldStyle, "640");
+    this.stiffField = new TextField("stiffField", textFieldStyle, "640");
     this.durationLabel = new Text("durationLabel", textStyle, "Duration");
-    this.viewportH = new TextField("durationField", textFieldStyle, "480");
+    this.durationField = new TextField("durationField", textFieldStyle, "480");
     this.widgetList.push(this.stiffnessLabel);
-    this.widgetList.push(this.viewportW);
+    this.widgetList.push(this.stiffField);
     this.widgetList.push(this.durationLabel);
-    this.widgetList.push(this.viewportH);
+    this.widgetList.push(this.durationField);
 };
 
 // initialize text fields
 CameraInterpolateContent.prototype.initializeEventHandling = function () {
-    this.viewportW.setOnFocusOut(this.onTextFieldFocusOut);
-    this.viewportH.setOnFocusOut(this.onTextFieldFocusOut);
+    this.stiffField.setOnFocusOut(this.onTextFieldFocusOut);
+    this.durationField.setOnFocusOut(this.onTextFieldFocusOut);
 };
 
 // set camera to settings on focus out
 CameraInterpolateContent.prototype.onTextFieldFocusOut = function(textField) {
+    console.log("onfocusout interpolate");
     var value = textField.val();
     var stiffness = $('#stiffField').val();
     var duration = $('#durationField').val();
@@ -39,12 +41,9 @@ CameraInterpolateContent.prototype.onTextFieldFocusOut = function(textField) {
 
 // sets transforms fields to the selected cameras
 CameraInterpolateContent.prototype.updateFields = function( camera ) {
-    var cam = gGuiBase.Core.selectedCamera;
-    if (cam == null || cam == undefined) return;
-    console.log(cam.getInterpolateConfig());
-    var interpolateVals = cam.getInterpolateConfig();
-    this.viewportW.setText(interpolateVals[0]);
-    this.viewportH.setText(interpolateVals[1]);
+    var interpolateVals = camera.getInterpolateConfig();
+    $('#stiffField').val(interpolateVals[0]);
+    $('#durationField').val(interpolateVals[1]);
 };
 
 // sets the selected camera's layer to this contents new layer setting

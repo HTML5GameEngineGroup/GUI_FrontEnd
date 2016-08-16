@@ -139,7 +139,7 @@ gGuiBase.Core = (function() {
 		// Rebuilds the details tab for Camera content
 		var detailsTab = gGuiBase.View.findTabByID("#Details");
 		emptyDetailsTab();
-		var detailsTransform = new CameraInterpolateContent("CameraTransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
+		var detailsTransform = new CameraTransformContent("CameraTransformContent", gGuiBase.View.CONTENT_STYLE, "Transform");
 		var detailsColor = new ColorCameraContent("ColorCameraContent", gGuiBase.View.CONTENT_STYLE, "Draw Color");
 		var interpolateContent = new CameraInterpolateContent("CameraInterpolateContent", gGuiBase.View.CONTENT_STYLE, "Interpolate");
 
@@ -152,6 +152,7 @@ gGuiBase.Core = (function() {
 		detailsTab.addContent(interpolateContent);
 		gGuiBase.View.refreshAllTabContent();
 		detailsTransform.setLayerDropDown(gGuiBase.Core.selectedCamera);
+		interpolateContent.updateFields(camera);
 	};
 	
 	// To be called on scene change
